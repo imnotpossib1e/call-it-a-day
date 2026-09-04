@@ -7,6 +7,9 @@ public class ItemDto {
     private int itemIncrease;
     private int itemType;
 
+    private ItemTypeDto itemTypeDto;
+
+
     public ItemDto() {
     }
 
@@ -57,6 +60,15 @@ public class ItemDto {
     public void setItemType(int itemType) {
         this.itemType = itemType;
     }
+
+    public ItemTypeDto getItemTypeDto() {
+        return itemTypeDto;
+    }
+
+    public void setItemTypeDto(ItemTypeDto itemTypeDto) {
+        this.itemTypeDto = itemTypeDto;
+    }
+
 
     @Override
     public String toString() {
