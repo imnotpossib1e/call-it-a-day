@@ -270,3 +270,6 @@ $RECYCLE.BIN/
 
 .idea/
 *.iml
+
+.env
+DbProperties.java
