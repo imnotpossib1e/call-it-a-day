@@ -3,7 +3,7 @@ package com.callitaday.monsterhunter.dto;
 public class ItemDto {
     private int itemId;
     private String itemName;
-    private int itmePrice;
+    private int itemPrice;
     private int itemIncrease;
     private int itemType;
 
@@ -13,10 +13,10 @@ public class ItemDto {
     public ItemDto() {
     }
 
-    public ItemDto(int itemId, String itemName, int itmePrice, int itemIncrease, int itemType) {
+    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, int itemType) {
         this.itemId = itemId;
         this.itemName = itemName;
-        this.itmePrice = itmePrice;
+        this.itemPrice = itemPrice;
         this.itemIncrease = itemIncrease;
         this.itemType = itemType;
     }
@@ -37,12 +37,12 @@ public class ItemDto {
         this.itemName = itemName;
     }
 
-    public int getItmePrice() {
-        return itmePrice;
+    public int getItemPrice() {
+        return itemPrice;
     }
 
-    public void setItmePrice(int itmePrice) {
-        this.itmePrice = itmePrice;
+    public void setItemPrice(int itemPrice) {
+        this.itemPrice = itemPrice;
     }
 
     public int getItemIncrease() {
@@ -75,7 +75,7 @@ public class ItemDto {
         final StringBuffer sb = new StringBuffer("ItemDto{");
         sb.append("itemId=").append(itemId);
         sb.append(", itemName='").append(itemName).append('\'');
-        sb.append(", itmePrice=").append(itmePrice);
+        sb.append(", itemPrice=").append(itemPrice);
         sb.append(", itemIncrease=").append(itemIncrease);
         sb.append(", itemType=").append(itemType);
         sb.append('}');
