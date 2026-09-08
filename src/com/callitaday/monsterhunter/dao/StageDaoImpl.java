@@ -8,6 +8,14 @@ public class StageDaoImpl implements StageDao {
 		return 0;
 	}
 
+	/**
+	 * 메인 전투
+	 */
+	@Override
+	public boolean mainfight() {
+		return false;
+	}
+
 	@Override
 	public int userDefend() {
 		// TODO Auto-generated method stub
