@@ -3,6 +3,8 @@ package com.callitaday.monsterhunter.view;
 import java.awt.Menu;
 import java.util.Scanner;
 
+import com.callitaday.monsterhunter.controller.InventoryController;
+
 public class MenuView {
     private static Scanner sc = new Scanner(System.in);
 
@@ -103,7 +105,23 @@ public class MenuView {
     /**
      * 인벤토리 메뉴
      */
-    public static void inventoryView(int userId){
+    public static void inventoryView(int userId) {
+    	while(true){
+            // Todo 세션 가져오기
 
+            System.out.println("========2=======");
+            System.out.println("1. 인벤토리  |  2. 나가기 ");
+            int menu = Integer.parseInt(sc.nextLine());
+            switch (menu){
+                case 1: // 전투
+                	InventoryController.getCharacterInfo(userId);
+                    break;
+                case 2: // 상점
+                    return;
+                    
+                default:
+                    System.out.println("메뉴를 다시 선택해주세요.");
+            }
+        }
     }
 }

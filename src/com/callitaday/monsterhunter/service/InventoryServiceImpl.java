@@ -18,6 +18,12 @@ public class InventoryServiceImpl implements InventoryService{
 	CharactorInfoDao cID = new CharactorInfoDaoImpl();
 	InventoryDao invenD = new InventoryDaoImpl();
 			
+	private static InventoryService instance = new InventoryServiceImpl();
+
+    public static InventoryService getInstance(){
+        return instance;
+    }
+	
 	/**
 	 * 처음 캐릭터 정보 조회
 	 * 
@@ -56,6 +62,7 @@ public class InventoryServiceImpl implements InventoryService{
 		ItemDto findID = null;
 		for(InventoryDto invenD : character.getInvenlist()) {
 			if(invenD.getItemDto().getItemName().equals(itemName)) findID = invenD.getItemDto();
+			else throw new NotFoundException("소지하지 않은 아이템입니다.");
 		}
 		
 		if(character.getEquiplist().size()>0) {			
