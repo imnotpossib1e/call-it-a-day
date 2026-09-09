@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDaoImpl implements ItemDao {
-
+    CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
     /**
      * 아이템 구매
      *
@@ -28,7 +28,7 @@ public class ItemDaoImpl implements ItemDao {
     public int getItemPurchase(int user_id, int quantity, int item_id) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
-        String sql = "insert into inventory(user_id, quantity, is_equipped, item_id) values(?, ?, 'N', ?) "
+        String sql = "insert into inventory(user_id, quantity, is_equipped, item_id) values(?, ?, 'F', ?) "
             + "on duplicate key update quantity = quantity + ?";
         int result = 0;
 
@@ -51,7 +51,6 @@ public class ItemDaoImpl implements ItemDao {
             }else{
                 // 인벤토리에 추가 성공
                 // 코인 차감 로직
-                CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
                 CharactorInfoDto charactorInfoDto =  charactorInfoDao.getCharactorByUserId(user_id);
                 if(charactorInfoDto.getCoin() < totalAmount){
                     // TODO 구매 불가능 예외 작성
