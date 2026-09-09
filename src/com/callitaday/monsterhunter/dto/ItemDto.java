@@ -5,6 +5,7 @@ public class ItemDto {
     private String itemName;
     private int itemPrice;
     private int itemIncrease;
+    private String itemExplanation;
     private int itemType;
 
     private ItemTypeDto itemTypeDto;
@@ -18,14 +19,23 @@ public class ItemDto {
         this.itemName = itemName;
     }
     
-    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, int itemType) {
+    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, String itemExplanation, int itemType) {
         this(itemId, itemName);
         this.itemPrice = itemPrice;
         this.itemIncrease = itemIncrease;
+        this.itemExplanation = itemExplanation;
         this.itemType = itemType;
     }
 
-    public int getItemId() {
+    public String getItemExplanation() {
+		return itemExplanation;
+	}
+
+	public void setItemExplanation(String itemExplanation) {
+		this.itemExplanation = itemExplanation;
+	}
+
+	public int getItemId() {
         return itemId;
     }
 

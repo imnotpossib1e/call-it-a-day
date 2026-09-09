@@ -12,6 +12,7 @@ public class CharactorInfoDto {
 	private int coin = 100;
 	private int stage_id;
 	
+	private List<ItemDto> equiplist;
 	private List<InventoryDto> invenlist;
 	private StageDto stageDto;
 	
@@ -29,7 +30,15 @@ public class CharactorInfoDto {
 		this.coin = coin;
 		this.stage_id = stage_id;
 	}
+	
+	public List<ItemDto> getEquiplist() {
+		return equiplist;
+	}
 
+	public void setEquiplist(List<ItemDto> equiplist) {
+		this.equiplist = equiplist;
+	}
+	
 	public List<InventoryDto> getInvenlist() {
 		return invenlist;
 	}
