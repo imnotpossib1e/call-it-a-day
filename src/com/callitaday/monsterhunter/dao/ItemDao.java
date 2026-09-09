@@ -3,6 +3,10 @@ package com.callitaday.monsterhunter.dao;
 import com.callitaday.monsterhunter.dto.CharactorInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.exception.PurchaseFailException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,7 +19,7 @@ public interface ItemDao {
      * 인벤토리: Insert
      * 코인 : update
      */
-    public int getItemPurchase(int user_id, int quantity, int item_id) throws SQLException;
+    public int purchaseItem(int user_id, int quantity, int item_id) throws SQLException, SQLException, AddException, ModifyException, PurchaseFailException, NotFoundException;
 
     /**
      * 내가 보유한 아이템 조회
@@ -38,5 +42,5 @@ public interface ItemDao {
 
     int getTotalAmount(int itemId, int quantity) throws SQLException;
 
-    public int getUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException;
+    public int updateUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException;
 }
