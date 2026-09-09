@@ -3,6 +3,8 @@ package com.callitaday.monsterhunter.view;
 import java.awt.Menu;
 import java.util.Scanner;
 
+import com.callitaday.monsterhunter.controller.InventoryController;
+
 public class MenuView {
     private static Scanner sc = new Scanner(System.in);
 
@@ -104,6 +106,6 @@ public class MenuView {
      * 인벤토리 메뉴
      */
     public static void inventoryView(int userId){
-
+    	InventoryController.getCharacterInfo(userId);
     }
 }
