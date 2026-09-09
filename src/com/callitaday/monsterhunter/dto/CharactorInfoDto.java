@@ -16,7 +16,6 @@ public class CharactorInfoDto {
 	}
 
 	public CharactorInfoDto(int userId, int hp, int mp, int atk, int def, int job, int coin, int stage_id) {
-
 		super();
 		this.userId = userId;
 		this.hp = hp;
@@ -25,9 +24,7 @@ public class CharactorInfoDto {
 		this.def = def;
 		this.job = job;
 		this.coin = coin;
-
 		this.stage_id = stage_id;
-
 	}
 
 	public int getUserId() {
