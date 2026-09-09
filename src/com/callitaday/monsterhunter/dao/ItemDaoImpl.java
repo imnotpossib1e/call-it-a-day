@@ -3,7 +3,12 @@ package com.callitaday.monsterhunter.dao;
 import com.callitaday.monsterhunter.dto.CharactorInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.exception.PurchaseFailException;
 import com.callitaday.monsterhunter.util.DbManager;
+import com.mysql.cj.jdbc.exceptions.NotUpdatable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,61 +21,69 @@ public class ItemDaoImpl implements ItemDao {
     /**
      * 아이템 구매
      *
-     * 인벤토리: Insert
-     * 코인 감소 : update
-     * insert into item(item_name, item_price, item_increase, item_type)
-     * values('갑옷', 200, 10, 3);
-     * insert into inventory values(1, 1, 'N', 2);
-     * 유저아이디, 수량, 장착여부, 아이템 번호
-     * @param
+     * 인벤토리에 아이템 추가: Insert
+     * 코인 감소: update
+     * @param user_id
+     * @param quantity
+     * @param item_id
      */
     @Override
-    public int getItemPurchase(int user_id, int quantity, int item_id) throws SQLException {
+    public int purchaseItem(int user_id, int quantity, int item_id) throws SQLException, AddException, ModifyException,PurchaseFailException, NotFoundException {
         Connection con = null;
         PreparedStatement ps = null;
+
         String sql = "insert into inventory(user_id, quantity, is_equipped, item_id) values(?, ?, 'F', ?) "
             + "on duplicate key update quantity = quantity + ?";
         int result = 0;
 
         try{
             con=DbManager.getConnection();
-            con.setAutoCommit(false);
+            con.setAutoCommit(false); // 자동 커밋 끄기
 
             ps = con.prepareStatement(sql);
             ps.setInt(1, user_id);
             ps.setInt(2, quantity);
             ps.setInt(3, item_id);
             ps.setInt(4, quantity);
+
+            // 회원 정보 찾기
+            CharactorInfoDto charactorInfoDto = null;
+
+            charactorInfoDto = charactorInfoDao.getCharactorByUserId(user_id);
+            if(charactorInfoDto == null){
+                con.rollback();
+                throw new NotFoundException( "유저 정보를 찾을 수 없습니다.");
+            }
+
+            // 구매 총액 계산
             int totalAmount = this.getTotalAmount(item_id, quantity);
 
             // 인벤토리에 추가
             result = ps.executeUpdate();
+
+            // 인벤토리 추가 실패
             if(result == 0){
                 con.rollback();
-                throw new SQLException("구매 실패했습니다.");
-            }else{
-                // 인벤토리에 추가 성공
-                // 코인 차감 로직
-                CharactorInfoDto charactorInfoDto =  charactorInfoDao.getCharactorByUserId(user_id);
+                throw new AddException("인벤토리 추가에 실패했습니다.");
+            }else{ // 인벤토리 추가 성공시
+                // 유저의 코인보다 구매 총액이 클 때
                 if(charactorInfoDto.getCoin() < totalAmount){
-                    // TODO 구매 불가능 예외 작성
                     con.rollback();
-                    throw new SQLException("코인이 부족합니다.");
-
+                    throw new PurchaseFailException("코인 차감에 실패했습니다..");
                 }
-                int re = this.getUserCoinPay(con, charactorInfoDto, totalAmount);
+
+                // 코인 차감
+                int re = this.updateUserCoinPay(con, charactorInfoDto, totalAmount);
                 if(re == 0){
                     con.rollback();
-                    throw new SQLException("구매에 실패했습니다.");
+                    throw new ModifyException("결제에 실패했습니다.");
                 }
 
                 con.commit();
-
             }
-
-
-        }finally {
-            con.commit();
+        }catch (SQLException e){
+            throw new SQLException("DB에 문제가 발생했습니다.");
+        } finally {
             DbManager.dbClose(con, ps);
         }
         return result;
@@ -195,7 +208,7 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public int getUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException {
+    public int updateUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException {
         PreparedStatement ps = null;
 
         int resultCoin = charactorInfoDto.getCoin() -totalAmount;
@@ -208,7 +221,8 @@ public class ItemDaoImpl implements ItemDao {
             ps.setInt(2, charactorInfoDto.getUserId());
             result = ps.executeUpdate();
 
-        }finally {
+        }
+        finally {
             DbManager.dbClose(null, ps);
         }
 
