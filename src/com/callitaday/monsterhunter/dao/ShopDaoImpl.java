@@ -1,6 +1,7 @@
 package com.callitaday.monsterhunter.dao;
 
 import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.exception.AddException;
 import com.callitaday.monsterhunter.exception.ModifyException;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 public class ShopDaoImpl implements ShopDAO{
     CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
     ItemDao itemDao = new ItemDaoImpl();
+    InventoryDao inventoryDao = new InventoryDaoImpl();
 
 
     @Override
@@ -42,6 +44,22 @@ public class ShopDaoImpl implements ShopDAO{
             if(charactorInfoDto == null){
                 con.rollback();
                 throw new NotFoundException( "유저 정보를 찾을 수 없습니다.");
+            }
+
+            // 인벤토리에 해당 아이템이 있는지 체크(quantity 체크)
+            InventoryDto inventoryDto = inventoryDao.getItemQuantity(user_id, item_id);
+            // 아이템 타입 체크
+            ItemDto itemDto = itemDao.getItemByItemId(item_id);
+            if(inventoryDto != null){
+                // 무기, 방어구 타입 아이템의 수량이 1을 넘어서는 경우 에러 발생
+                if(itemDto.getItemType().equals("무기") || itemDto.getItemType().equals("방어구")){
+
+                    if(inventoryDto.getQuantity()+quantity > 1){
+                        System.out.println(inventoryDto.getQuantity()+quantity);
+                        throw new PurchaseFailException("무기와 방어구는 하나만 보유할 수 있습니다.");
+                    }
+                    throw new PurchaseFailException("무기와 방어구는 하나만 보유할 수 있습니다.");
+                }
             }
 
             // 구매 총액 계산
