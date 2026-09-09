@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 import com.callitaday.monsterhunter.util.DbManager;
@@ -13,43 +12,9 @@ import com.callitaday.monsterhunter.util.DbManager;
 public class StageDaoImpl implements StageDao {
 
 	@Override
-	public CharactorInfoDto userInfoForFight(int userId) throws SQLException {
+	public StageDto enemyInfoForFight(int stageId) throws SQLException {
 		// TODO Auto-generated method stub
 		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		String sql = "select * from charactor_info where user_id = ?";
-		CharactorInfoDto cid = new CharactorInfoDto();
-		try {
-			con = DbManager.getConnection();
-			ps = con.prepareStatement(sql);
-			ps.setInt(1, userId);
-			
-			rs = ps.executeQuery();
-			if(rs.next()) {
-				cid = new CharactorInfoDto(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4),
-						rs.getInt(5), rs.getInt(6), rs.getInt(7));
-				cid.setStageDto(enemyInfoForFight(con, rs.getInt(8)));
-			}
-		} finally {
-			DbManager.dbClose(con, ps, rs);
-		}
-		
-		return cid;
-	}
-
-	/**
-	 * 메인 전투
-	 */
-	@Override
-	public boolean mainfight() {
-		return false;
-	}
-
-	@Override
-	public StageDto enemyInfoForFight(Connection con, int stageId) throws SQLException {
-		// TODO Auto-generated method stub
-		con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String sql = "select * from stage where stage_id = ?";

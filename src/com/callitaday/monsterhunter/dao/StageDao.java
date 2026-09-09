@@ -8,16 +8,11 @@ import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 
 public interface StageDao {
-
-	/**
-	 * 전투에 쓰일 유저 정보 가져오기
-	 */
-	public CharactorInfoDto userInfoForFight(int userId) throws SQLException;
 	
 	/**
 	 * 전투에 쓰일 적 정보 가져오기
 	 */
-	public StageDto enemyInfoForFight (Connection con, int stageId) throws SQLException;
+	public StageDto enemyInfoForFight (int stageId) throws SQLException;
 	
 	/**
 	 * 보상 아이템 조회
