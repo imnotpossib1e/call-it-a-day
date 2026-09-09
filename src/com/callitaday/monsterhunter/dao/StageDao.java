@@ -1,49 +1,31 @@
 package com.callitaday.monsterhunter.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.ItemDto;
+import com.callitaday.monsterhunter.dto.StageDto;
+
 public interface StageDao {
 
 	/**
-	 * 공격하기(유저)
+	 * 전투에 쓰일 유저 정보 가져오기
 	 */
-	public int userAttack ();
+	public CharactorInfoDto userInfoForFight(int userId) throws SQLException;
 	
 	/**
-	 * 방어하기(유저)
+	 * 전투에 쓰일 적 정보 가져오기
 	 */
-	public int userDefend ();
+	public StageDto enemyInfoForFight (Connection con, int stageId) throws SQLException;
 	
 	/**
-	 * 아이템 사용
+	 * 보상 아이템 조회
 	 */
-	public int useItem ();
+	public ItemDto getRewardItem (Connection con, int itemId) throws SQLException;
 	
 	/**
-	 * 스테이지 클리어 여부 체크
+	 * 전투에서 아이템 사용
 	 */
-	public boolean stageCleared ();
-	
-	/**
-	 * 스테이지 선택
-	 */
-	public int chooseStage ();
-	
-	/**
-	 * 전투 종료 후 획득 재화 조정
-	 */
-	public int randomGetCoin ();
-	
-	/**
-	 * 공격하기(상대)
-	 */
-	public int enemyAttack ();
-	
-	/**
-	 * 방어하기(상대)
-	 */
-	public int enemyDefend ();
-
-	/**
-	 * 메인 전투
-	 */
-	public boolean mainfight();
+	public int useItem (int userId, int itemId) throws SQLException;
 }

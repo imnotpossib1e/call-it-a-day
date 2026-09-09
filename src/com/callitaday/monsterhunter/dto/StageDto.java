@@ -6,18 +6,19 @@ public class StageDto {
 	private int enemyAtk;
 	private int enemyDef;
 	private int rewardCoin;
-	private int itemId;
+	
+	private ItemDto itemdto;
 	
 	public StageDto() {}
 
-	public StageDto(int stageId, int enemyHp, int enemyAtk, int enemyDef, int rewardCoin, int itemId) {
+	public StageDto(int stageId, int enemyHp, int enemyAtk, int enemyDef, int rewardCoin) {
 		super();
 		this.stageId = stageId;
 		this.enemyHp = enemyHp;
 		this.enemyAtk = enemyAtk;
 		this.enemyDef = enemyDef;
 		this.rewardCoin = rewardCoin;
-		this.itemId = itemId;
+
 	}
 
 	public int getStageId() {
@@ -60,12 +61,12 @@ public class StageDto {
 		this.rewardCoin = rewardCoin;
 	}
 
-	public int getItemId() {
-		return itemId;
+	public ItemDto getItemdto() {
+		return itemdto;
 	}
 
-	public void setItemId(int itemId) {
-		this.itemId = itemId;
+	public void setItemdto(ItemDto itemdto) {
+		this.itemdto = itemdto;
 	}
 
 	@Override
@@ -81,8 +82,8 @@ public class StageDto {
 		builder.append(enemyDef);
 		builder.append(", rewardCoin=");
 		builder.append(rewardCoin);
-		builder.append(", itemId=");
-		builder.append(itemId);
+		builder.append(", rewardItem=");
+		builder.append(itemdto.getItemName());
 		builder.append("]");
 		return builder.toString();
 	}

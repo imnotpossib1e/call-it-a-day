@@ -8,13 +8,15 @@ public class CharactorInfoDto {
 	private int def = 20;
 	private int job;
 	private int coin = 100;
+	private int stage_id;
 	
 	private StageDto stageDto;
 	
 	public CharactorInfoDto() {
 	}
 
-	public CharactorInfoDto(int userId, int hp, int mp, int atk, int def, int job, int coin, StageDto stageDto) {
+	public CharactorInfoDto(int userId, int hp, int mp, int atk, int def, int job, int coin, int stage_id) {
+
 		super();
 		this.userId = userId;
 		this.hp = hp;
@@ -23,7 +25,9 @@ public class CharactorInfoDto {
 		this.def = def;
 		this.job = job;
 		this.coin = coin;
-		this.stageDto = stageDto;
+
+		this.stage_id = stage_id;
+
 	}
 
 	public int getUserId() {
@@ -90,6 +94,14 @@ public class CharactorInfoDto {
 		this.stageDto = stageDto;
 	}
 
+	public int getStage_id() {
+		return stage_id;
+	}
+
+	public void setStage_id(int stage_id) {
+		this.stage_id = stage_id;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -107,9 +119,8 @@ public class CharactorInfoDto {
 		builder.append(job);
 		builder.append(", coin=");
 		builder.append(coin);
-		builder.append(", stageDto=");
-		builder.append(stageDto);
-		builder.append("]");
+		builder.append(", stage_id=");
+		builder.append(stage_id);
 		return builder.toString();
 	}
 }

@@ -13,9 +13,13 @@ public class ItemDto {
     public ItemDto() {
     }
 
-    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, int itemType) {
-        this.itemId = itemId;
+    public ItemDto(int itemId, String itemName) {
+    	this.itemId = itemId;
         this.itemName = itemName;
+    }
+    
+    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, int itemType) {
+        this(itemId, itemName);
         this.itemPrice = itemPrice;
         this.itemIncrease = itemIncrease;
         this.itemType = itemType;
