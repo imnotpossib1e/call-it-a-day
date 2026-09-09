@@ -13,7 +13,18 @@ public interface InventoryDao {
 	 * 컨트롤에서 유저 정보만 
 	 * */
 	public List<InventoryDto> getItemInfo(int userId) throws SQLException;
+	
 	/**
-	 * 장착한 아이템 조회(sql의 inventory + item + item_type 필요)
+	 * 아이템 장착
+	 * user_id와 item_id를 매개변수로 받아서 inventory 테이블에서 update로 변경
+	 * update inventory set is_equipped = T where user_id = ? and item_id = ?
 	 * */
+	public int equipItem(int user_id, int item_id) throws SQLException;
+	
+	/**
+	 * 아이템 탈착
+	 * user_id와 item_id를 매개변수로 받아서 inventory 테이블에서 update로 변경
+	 * update inventory set is_equipped = F where user_id = ? and item_id = ?
+	 * */
+	public int unequipItem(int user_id, int item_id) throws SQLException;
 }

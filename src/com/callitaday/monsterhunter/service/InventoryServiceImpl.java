@@ -11,6 +11,7 @@ import com.callitaday.monsterhunter.dao.InventoryDaoImpl;
 import com.callitaday.monsterhunter.dto.CharactorInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
+import com.callitaday.monsterhunter.exception.DuplicatedException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
 
 public class InventoryServiceImpl implements InventoryService{
@@ -41,11 +42,31 @@ public class InventoryServiceImpl implements InventoryService{
 		}
 		return character;
 	}
-	
+
 	/**
 	 * 소지한 아이템 중 장비 아이템 장착 및 교체 로직
 	 * 
-	 * -> 
+	 * 아이템 이름을 입력받아 user_id와 함께 매개변수로 받고
+	 * 인벤토리를 불러와서 장착된 아이템 존재 여부(F), 존재한다면 같은 타입인지 확인해서
+	 * 겹치지 않는 아이템만 장착 상태(T)로 dao에서 update로 변경
 	 * */
-	
+	@Override
+	public void changeEquipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException {
+		CharactorInfoDto character = loadCharInvenInfo(userId);
+		ItemDto findID = null;
+		for(InventoryDto invenD : character.getInvenlist()) {
+			if(invenD.getItemDto().getItemName().equals(itemName)) findID = invenD.getItemDto();
+		}
+		
+		if(character.getEquiplist().size()>0) {			
+			for(ItemDto id : character.getEquiplist()){
+				if(id.getItemName().equals(itemName)) throw new DuplicatedException();
+				// 이름이 중복되지 않고 장착된 아이템 타입(int)가 같다면 dao 로직으로 2번 update 실행(탈착)
+				else if(id.getItemType()==findID.getItemType()) {
+					invenD.unequipItem(userId, id.getItemId());
+					invenD.equipItem(userId, findID.getItemId());
+				};
+			}
+		} else invenD.equipItem(userId, findID.getItemId()); // 장착한 아이템이 없다면
+	}
 }
