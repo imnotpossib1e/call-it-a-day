@@ -49,7 +49,7 @@ public class ItemDaoImpl implements ItemDao {
                 ItemDto itemDto = new ItemDto();
                 itemDto.setItemName(rs.getString("item_name"));
                 itemDto.setItemIncrease(rs.getInt("item_increase"));
-                itemDto.setItemType(rs.getInt("item_type"));
+                itemDto.setItemType(rs.getString("item_type"));
                 inventoryDto.setItemDto(itemDto);
                 list.add(inventoryDto);
             }

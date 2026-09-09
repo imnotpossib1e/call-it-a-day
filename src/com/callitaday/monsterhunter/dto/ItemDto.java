@@ -6,10 +6,7 @@ public class ItemDto {
     private int itemPrice;
     private int itemIncrease;
     private String itemExplanation;
-    private int itemType;
-
-    private ItemTypeDto itemTypeDto;
-
+    private String itemType;
 
     public ItemDto() {
     }
@@ -19,7 +16,7 @@ public class ItemDto {
         this.itemName = itemName;
     }
     
-    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, String itemExplanation, int itemType) {
+    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, String itemExplanation, String itemType) {
         this(itemId, itemName);
         this.itemPrice = itemPrice;
         this.itemIncrease = itemIncrease;
@@ -67,22 +64,13 @@ public class ItemDto {
         this.itemIncrease = itemIncrease;
     }
 
-    public int getItemType() {
+    public String getItemType() {
         return itemType;
     }
 
-    public void setItemType(int itemType) {
+    public void setItemType(String itemType) {
         this.itemType = itemType;
     }
-
-    public ItemTypeDto getItemTypeDto() {
-        return itemTypeDto;
-    }
-
-    public void setItemTypeDto(ItemTypeDto itemTypeDto) {
-        this.itemTypeDto = itemTypeDto;
-    }
-
 
     @Override
     public String toString() {

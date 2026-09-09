@@ -44,7 +44,7 @@ public class InventoryDaoImpl implements InventoryDao {
                 itemDto.setItemName(rs.getString("item_name"));
                 itemDto.setItemIncrease(rs.getInt("item_increase"));
                 itemDto.setItemExplanation(rs.getString("item_explanation"));
-                itemDto.setItemType(rs.getInt("item_type"));
+                itemDto.setItemType(rs.getString("item_type"));
                 inventoryDto.setItemDto(itemDto);
                 list.add(inventoryDto);
             }
