@@ -14,14 +14,6 @@ import java.util.List;
 public interface ItemDao {
 
     /**
-     * 플아이템 구매
-     *
-     * 인벤토리: Insert
-     * 코인 : update
-     */
-    public int purchaseItem(int user_id, int quantity, int item_id) throws SQLException, SQLException, AddException, ModifyException, PurchaseFailException, NotFoundException;
-
-    /**
      * 내가 보유한 아이템 조회
      *
      * Select
@@ -38,9 +30,4 @@ public interface ItemDao {
      * 전체 아이템 조회
      */
     public List<ItemDto> getAllItemInfo() throws SQLException;
-
-
-    int getTotalAmount(int itemId, int quantity) throws SQLException;
-
-    public int updateUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException;
 }
