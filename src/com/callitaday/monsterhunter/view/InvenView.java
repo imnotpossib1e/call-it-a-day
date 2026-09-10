@@ -121,13 +121,24 @@ public class InvenView {
         System.out.println();
 	}
 	
-	public static void printInventoryInfo(List<InventoryDto> InvenList) {
-		System.out.println("아이템, 타입, 체력 증가치, 공격력 증가치, 수량, 장착 여부, 설명");
+	public static void printInventoryInfo(List<InventoryDto> InvenList) {		
+		System.out.println("아이템, 타입, 회복력, 공격력 증가치, 방어력 증가치, 수량, 장착 여부, 설명");
 		for(InventoryDto item : InvenList) {
+			int hpIncrease = 0;
+			int atkIncrease = 0;
+			int defIncrease = 0;
+			
 			String name = item.getItemDto().getItemName();
 			String type = item.getItemDto().getItemType();
-			String type = item.getItemDto().getItemType();
-			System.out.println();
+			
+			if (type.equals("회복포션")) hpIncrease = item.getItemDto().getItemIncrease();
+			else if (type.equals("무기")) atkIncrease = item.getItemDto().getItemIncrease();
+			else defIncrease = item.getItemDto().getItemIncrease();
+			
+			int qnt = item.getQuantity();
+			String isEquiped = item.isEquipped() ? "장착" : " X ";
+			String explain = item.getItemDto().getItemExplanation();
+			System.out.println(name + ", " + type + ", " + hpIncrease + ", " + atkIncrease + ", " + defIncrease + ", " + qnt  + ", " + isEquiped  + ", " + explain);
 		}
 	}
 	
