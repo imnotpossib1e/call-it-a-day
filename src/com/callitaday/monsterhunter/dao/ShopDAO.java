@@ -1,6 +1,6 @@
 package com.callitaday.monsterhunter.dao;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.exception.AddException;
 import com.callitaday.monsterhunter.exception.ModifyException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
@@ -29,10 +29,10 @@ public interface ShopDAO {
     /**
      * 코인 차감
      * @param con
-     * @param charactorInfoDto
+     * @param characterInfoDto
      * @param totalAmount
      * @return
      * @throws SQLException
      */
-    public int updateUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException;
+    public int updateUserCoinPay(Connection con, CharacterInfoDto characterInfoDto, int totalAmount) throws SQLException;
 }
