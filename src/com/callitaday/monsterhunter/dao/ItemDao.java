@@ -12,6 +12,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ItemDao {
+
+    /**
+     * 내가 보유한 아이템 조회
+     *
+     * Select
+     *
+     * @param userId
+     */
+    public List<InventoryDto> getItemInfo(int userId) throws SQLException;
+
     /**
      * 아이템 단일 조회
      */
