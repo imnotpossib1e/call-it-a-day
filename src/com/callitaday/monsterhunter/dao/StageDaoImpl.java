@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StageDaoImpl implements StageDao {
-	CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
+	private final CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
 	/**
 	 * 전투를 위한 적 정보 조회
 	 */
