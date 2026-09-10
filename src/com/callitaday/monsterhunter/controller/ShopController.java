@@ -18,7 +18,7 @@ public class ShopController {
     public static void purchaceItem(int user_id, int item_id, int quantity){
         try{
             service.purchaseItem(user_id,  item_id, quantity);
-
+            EndView.printMessage("구매 완료");
         }catch (PurchaseFailException | AddException | ModifyException | NotFoundException e){
             FailView.errorMessage(e.getMessage());
         }
