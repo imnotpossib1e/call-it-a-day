@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDaoImpl implements ItemDao {
+
     CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
 
     /**
@@ -80,7 +81,7 @@ public class ItemDaoImpl implements ItemDao {
             ps.setInt(1, item_id);
             rs = ps.executeQuery();
             if(rs.next()){
-                itemDto = new ItemDto(rs.getInt("item_id"), rs.getString("item_name"), rs.getInt("item_price"), rs.getInt("item_increase"), rs.getInt("item_type"));
+                itemDto = new ItemDto(rs.getInt("item_id"), rs.getString("item_name"), rs.getInt("item_price"), rs.getInt("item_increase"), rs.getString("item_explanation"), rs.getString("item_type"));
             }
         }finally {
             DbManager.dbClose(con, ps, rs);
@@ -112,7 +113,8 @@ public class ItemDaoImpl implements ItemDao {
                     rs.getString("item_name"),
                     rs.getInt("item_price"),
                     rs.getInt("item_increase"),
-                    rs.getInt("item_type") );
+                    rs.getString("item_explanation"),
+                    rs.getString("item_type") );
                 list.add(itemdto);
             }
         }finally {

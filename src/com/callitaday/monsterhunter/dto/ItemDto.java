@@ -72,6 +72,7 @@ public class ItemDto {
         this.itemType = itemType;
     }
 
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ItemDto{");
@@ -79,6 +80,7 @@ public class ItemDto {
         sb.append(", itemName='").append(itemName).append('\'');
         sb.append(", itemPrice=").append(itemPrice);
         sb.append(", itemIncrease=").append(itemIncrease);
+        sb.append(", itemExplanation='").append(itemExplanation).append('\'');
         sb.append(", itemType=").append(itemType);
         sb.append('}');
         return sb.toString();

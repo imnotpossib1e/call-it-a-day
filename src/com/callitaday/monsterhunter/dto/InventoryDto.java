@@ -4,6 +4,7 @@ public class InventoryDto {
 	private int userId;
 	private int quantity;
 	private boolean isEquipped;
+	private int itemId;
 	
 	private ItemDto itemDto;
 	
@@ -11,10 +12,11 @@ public class InventoryDto {
 		
 	}
 
-	public InventoryDto(int userId, int quantity, boolean isEquipped) {
+	public InventoryDto(int userId, int quantity, boolean isEquipped, int itemId) {
 		this.userId = userId;
 		this.quantity = quantity;
 		this.isEquipped = isEquipped;
+		this.itemId = itemId;
 	}
 
 	public int getUserId() {
@@ -39,6 +41,14 @@ public class InventoryDto {
 
 	public void setEquipped(boolean isEquipped) {
 		this.isEquipped = isEquipped;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
 	}
 
 	public ItemDto getItemDto() {

@@ -16,4 +16,9 @@ public interface InventoryDao {
 	/**
 	 * 장착한 아이템 조회(sql의 inventory + item + item_type 필요)
 	 * */
+
+	/**
+	 * 아이템 보유 수량 체크
+	 */
+	public InventoryDto getItemQuantity(int user_id, int item_id) throws SQLException;
 }
