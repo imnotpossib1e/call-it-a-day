@@ -20,7 +20,7 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "select * from charactor_info where user_id = ?";
+        String sql = "select * from character_info where user_id = ?";
         CharacterInfoDto characterInfoDto = null;
 
         try {
