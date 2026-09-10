@@ -18,7 +18,7 @@ public class EndView {
         int colWidth = 35; // 한 칸의 너비 지정
 
         // 1. 출력하고 싶은 카테고리 순서를 배열로 미리 지정합니다.
-        String[] targetTypes = {"회복포션", "마나포션", "무기", "방어구"};
+        String[] targetTypes = {"회복포션", "마나포션", "무기", "방어구", "쿠폰"};
         for(String targetType : targetTypes){
             StringBuilder nameLine = new StringBuilder();
 //            StringBuilder effectLine = new StringBuilder();
@@ -37,12 +37,17 @@ public class EndView {
                     case "마나포션": itemType="MP"; break;
                     case "방어구" : itemType="DEF"; break;
                     case "무기" : itemType="ATK"; break;
+                    case "쿠폰" : itemType="POWER"; break;
                 }
 
                 // 데이터 누적
                 nameLine.append(padRight(item.getItemName() + " " + itemType + " +" + item.getItemIncrease(), colWidth));
 //                effectLine.append(padRight("효과 " + itemType+  " +" +item.getItemIncrease(), colWidth));
-                priceLine.append(padRight("가격 " + item.getItemPrice(), colWidth));
+                if(item.getItemType().equals("쿠폰")){
+                    priceLine.append(padRight("가격 증표 " + item.getItemPrice() + "개", colWidth));
+                }else{
+                    priceLine.append(padRight("가격 " + item.getItemPrice(), colWidth));
+                }
                 descLine.append(padRight(item.getItemExplanation(), colWidth));
 
             }
