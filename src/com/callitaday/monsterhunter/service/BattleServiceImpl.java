@@ -65,7 +65,12 @@ public class BattleServiceImpl implements BattleService{
 			} else {
 				user.setHp(user.getHp() - userDice);
 			}
+		} else {
+			throw new SQLException("공격 실패");
 		}
+		
+		if(user.getStageDto().getEnemyHp() <= 0)
+			throw new SQLException("스테이지를 클리어하였습니다.");
 
 		return result;
 	}

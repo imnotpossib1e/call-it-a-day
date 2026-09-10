@@ -2,6 +2,7 @@ package com.callitaday.monsterhunter.controller;
 
 import java.sql.SQLException;
 
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.exception.NotFoundException;
 import com.callitaday.monsterhunter.service.BattleService;
 import com.callitaday.monsterhunter.service.BattleServiceImpl;
@@ -16,16 +17,36 @@ public class BattleController {
     
     public static void attack(int userId) {
     	try {
-    		int enemyHp = characterInfoService.selectCharInfoByUserId(userId).getStageDto().getEnemyHp();
     		int userAtk = battleService.userAttack(userId);
+    		int enemyHp = characterInfoService.selectCharInfoByUserId(userId).getStageDto().getEnemyHp();
     		
     		int result = enemyHp - userAtk;
     		
-    	} catch (SQLException e) {
+    		characterInfoService.selectCharInfoByUserId(userId).getStageDto().setEnemyHp(result);
+    		
+    		enemyHp = characterInfoService.selectCharInfoByUserId(userId).getStageDto().getEnemyHp();
+    		
+    		if(enemyHp <= 0) {
+    			throw new SQLException("스테이지를 클리어하였습니다.");
+    		} else {
+    			battleService.enemyAttack(userId);
+    		}  		
+    		
+    	} catch (SQLException | NotFoundException e) {
     		FailView.errorMessage(e.getMessage());
-    	} catch (NotFoundException e) {
-			// TODO Auto-generated catch block
+    	} 
+    }
+    
+    public static void defend(int userId) {
+    	try {
+    		int userDefendResult = battleService.userDefend(userId);
+    		CharacterInfoDto user = characterInfoService.selectCharInfoByUserId(userId);
+    		int userHp = user.getHp() - userDefendResult;
+    		user.setHp(userHp);
+    		
+    	} catch(SQLException | NotFoundException e) {
     		FailView.errorMessage(e.getMessage());
-		}
+    	} 
+    	
     }
 }
