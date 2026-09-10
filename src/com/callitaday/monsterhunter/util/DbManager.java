@@ -24,7 +24,7 @@ public class DbManager {
             //외부 properteis파일 로딩하기
             proFile.load(new FileInputStream("resources/dbInfo.properties"));
             Class.forName(proFile.getProperty("driverName"));
-            queryProfile.load(new FileInputStream("resources/query,properties"));
+            queryProfile.load(new FileInputStream("resources/query.properties"));
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
