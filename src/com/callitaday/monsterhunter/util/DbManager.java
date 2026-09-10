@@ -10,7 +10,12 @@ import java.util.Properties;
 
 public class DbManager {
     private static Properties proFile = new Properties();
+    private static Properties queryProfile = new Properties();
 
+
+    public static Properties getQueryProfile(){
+        return queryProfile;
+    }
     /**
      * 로드
      */
@@ -19,6 +24,8 @@ public class DbManager {
             //외부 properteis파일 로딩하기
             proFile.load(new FileInputStream("resources/dbInfo.properties"));
             Class.forName(proFile.getProperty("driverName"));
+            queryProfile.load(new FileInputStream("resources/query,properties"));
+
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }catch (Exception e){

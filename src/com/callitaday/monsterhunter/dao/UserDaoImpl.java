@@ -12,6 +12,7 @@ import com.callitaday.monsterhunter.util.DbManager;
 
 // UserDao 를 구현한 클래스
 public class UserDaoImpl implements UserDao {
+	Properties pro = DbManager.getQueryProfile();
 
 	// ---------- 회원가입 메소드----------
 	@Override
@@ -20,8 +21,7 @@ public class UserDaoImpl implements UserDao {
 		PreparedStatement ps = null;
 		int result = 0;
 
-		Properties queryProFile = DbManager.getQueryProFile();
-		String sql = queryProFile.getProperty("joinQuery");
+		String sql = pro.getProperty("joinQuery");
 
 		try {
 			con = DbManager.getConnection();
@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 			throw new AddException(" -- 회원가입 중 오류가 발생했습니다. -- ");
 		} finally {
-			DbManager.close(con, ps, null);
+			DbManager.dbClose(con, ps);
 		}
 		return result;
 	}
@@ -47,8 +47,7 @@ public class UserDaoImpl implements UserDao {
 		ResultSet rs = null;
 		UserDto userDto = null;
 
-		Properties queryProFile = DbManager.getQueryProFile();
-		String sql = queryProFile.getProperty("loginQuery");
+		String sql = pro.getProperty("loginQuery");
 		try {
 			con = DbManager.getConnection();
 			ps = con.prepareStatement(sql);
@@ -61,7 +60,7 @@ public class UserDaoImpl implements UserDao {
 				userDto = new UserDto(rs.getInt("user_id"), rs.getString("id"), rs.getInt("password"));
 			}
 		} finally {
-			DbManager.close(con, ps, rs);
+			DbManager.dbClose(con, ps, rs);
 		}
 		return userDto;
 	}
@@ -74,8 +73,7 @@ public class UserDaoImpl implements UserDao {
 		ResultSet rs = null;
 		UserDto userDto = null;
 
-		Properties queryProFile = DbManager.getQueryProFile();
-		String sql = queryProFile.getProperty("checkQuery");
+		String sql = pro.getProperty("checkQuery");
 
 		try {
 			con = DbManager.getConnection();
@@ -88,7 +86,7 @@ public class UserDaoImpl implements UserDao {
 				userDto = new UserDto(rs.getInt("user_id"), rs.getString("id"), rs.getInt("password"));
 			}
 		} finally {
-			DbManager.close(con, ps, rs);
+			DbManager.dbClose(con, ps, rs);
 		}
 		return userDto;
 	}
