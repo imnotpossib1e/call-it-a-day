@@ -42,6 +42,7 @@ public class InventoryDaoImpl implements InventoryDao {
                 inventoryDto.setQuantity(rs.getInt("quantity"));
                 inventoryDto.setEquipped("T".equals(rs.getString("is_equipped")));
                 ItemDto itemDto = new ItemDto();
+                itemDto.setItemId(rs.getInt("item_id"));
                 itemDto.setItemName(rs.getString("item_name"));
                 itemDto.setItemIncrease(rs.getInt("item_increase"));
                 itemDto.setItemExplanation(rs.getString("item_explanation"));
@@ -66,7 +67,7 @@ public class InventoryDaoImpl implements InventoryDao {
 	public int equipItem(int user_id, int item_id) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
-		String sql = "update inventory set is_equipped = T where user_id = ? and item_id = ?";
+		String sql = "update inventory set is_equipped = 'T' where user_id = ? and item_id = ?";
 		int result = 0;
 		
 		try {
@@ -90,7 +91,7 @@ public class InventoryDaoImpl implements InventoryDao {
 	public int unequipItem(int user_id, int item_id) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
-		String sql = "update inventory set is_equipped = F where user_id = ? and item_id = ?";
+		String sql = "update inventory set is_equipped = 'F' where user_id = ? and item_id = ?";
 		int result = 0;
 		
 		try {

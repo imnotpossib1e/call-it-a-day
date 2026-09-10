@@ -8,6 +8,7 @@ import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.exception.DuplicatedException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.exception.SearchWrongException;
 
 public interface InventoryService {
 	/**
@@ -28,7 +29,7 @@ public interface InventoryService {
 	 * 인벤토리를 불러와서 장착된 아이템 존재 여부(F), 존재한다면 같은 타입인지 확인해서
 	 * 겹치지 않는 아이템만 장착 상태(T)로 dao에서 update로 변경
 	 * */
-	public String changeEquipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException;
+	public String changeEquipStatement(int userId, String itemName) throws SearchWrongException, DuplicatedException, NotFoundException, SQLException;
 
 	/**
 	 * 소지한 아이템 중 장비 아이템 장착 및 교체 로직
@@ -37,5 +38,5 @@ public interface InventoryService {
 	 * 인벤토리를 불러와서 장착된 아이템 존재 여부(F), 존재한다면 같은 타입인지 확인해서
 	 * 겹치지 않는 아이템만 장착 상태(T)로 dao에서 update로 변경
 	 * */
-	public int unequipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException;
+	public String unequipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException;
 }

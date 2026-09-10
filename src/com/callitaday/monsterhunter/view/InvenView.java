@@ -131,7 +131,7 @@ public class InvenView {
 			String name = item.getItemDto().getItemName();
 			String type = item.getItemDto().getItemType();
 			
-			if (type.equals("회복포션")) hpIncrease = item.getItemDto().getItemIncrease();
+			if (type.equals("포션")) hpIncrease = item.getItemDto().getItemIncrease();
 			else if (type.equals("무기")) atkIncrease = item.getItemDto().getItemIncrease();
 			else defIncrease = item.getItemDto().getItemIncrease();
 			

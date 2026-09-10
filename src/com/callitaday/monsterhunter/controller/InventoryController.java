@@ -3,7 +3,9 @@ package com.callitaday.monsterhunter.controller;
 
 import java.sql.SQLException;
 
+import com.callitaday.monsterhunter.exception.DuplicatedException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.exception.SearchWrongException;
 import com.callitaday.monsterhunter.service.InventoryService;
 import com.callitaday.monsterhunter.service.InventoryServiceImpl;
 import com.callitaday.monsterhunter.view.EndView;
@@ -32,6 +34,29 @@ public class InventoryController {
         try{
         	InvenView.printInventoryInfo(service.loadInventoryInfo(user_id));
         }catch (NotFoundException | SQLException e){
+            FailView.errorMessage(e.getMessage());
+        }
+    }
+    
+    /**
+	 * 소지 아이템에서 선택한 아이템 이름을 입력받아 장착 또는 교체
+	 * */
+    public static void equipItem(int user_id, String itemName){
+        try{
+        	String result = "아이템을 " + service.changeEquipStatement(user_id, itemName) + "하였습니다.";
+        	EndView.printMessage(result);
+        }catch (SearchWrongException | NotFoundException | DuplicatedException | SQLException e){
+            FailView.errorMessage(e.getMessage());
+        }
+    }
+    
+    /**
+	 * 장착 중인 아이템 이름을 입력받아 탈착
+	 * */
+    public static void unequipItem(int user_id, String itemName){
+        try{
+        	EndView.printMessage(service.unequipStatement(user_id, itemName));
+        }catch (NotFoundException | DuplicatedException | SQLException e){
             FailView.errorMessage(e.getMessage());
         }
     }
