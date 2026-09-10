@@ -234,6 +234,12 @@ public class StageDaoImpl implements StageDao {
 					throw new NotFoundException("유저 정보를 찾을 수 없습니다.");
 				}
 
+				// 리워드 코인 불러오기
+				int rewardCoin = this.enemyInfoForFight(stageId).getRewardCoin();
+
+
+
+
 				// 증표 인벤토리에 추가
 		        result = ps.executeUpdate();
 
@@ -243,7 +249,7 @@ public class StageDaoImpl implements StageDao {
 					throw new AddException("증표 증정에 실패했습니다.");
 				}else{
 					// 코인 추가 로직 구현
-					int re = this.addCoin(con, userId, coin);
+					int re = this.addCoin(con, userId, rewardCoin);
 					if(re == 0){
 						con.rollback();
 						throw new ModifyException("코인 증정에 실패했습니다.");
