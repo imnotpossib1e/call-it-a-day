@@ -121,25 +121,133 @@ public class InvenView {
         System.out.println();
 	}
 	
-	public static void printInventoryInfo(List<InventoryDto> InvenList) {		
-		System.out.println("아이템, 타입, 회복력, 공격력 증가치, 방어력 증가치, 수량, 장착 여부, 설명");
-		for(InventoryDto item : InvenList) {
-			int hpIncrease = 0;
-			int atkIncrease = 0;
-			int defIncrease = 0;
-			
-			String name = item.getItemDto().getItemName();
-			String type = item.getItemDto().getItemType();
-			
-			if (type.equals("포션")) hpIncrease = item.getItemDto().getItemIncrease();
-			else if (type.equals("무기")) atkIncrease = item.getItemDto().getItemIncrease();
-			else defIncrease = item.getItemDto().getItemIncrease();
-			
-			int qnt = item.getQuantity();
-			String isEquiped = item.isEquipped() ? "장착" : " X ";
-			String explain = item.getItemDto().getItemExplanation();
-			System.out.println(name + ", " + type + ", " + hpIncrease + ", " + atkIncrease + ", " + defIncrease + ", " + qnt  + ", " + isEquiped  + ", " + explain);
-		}
+	public static void printInventoryInfo(List<InventoryDto> invenList) {		
+//		System.out.println("아이템, 타입, 회복력, 공격력 증가치, 방어력 증가치, 수량, 장착 여부, 설명");
+//		for(InventoryDto item : invenList) {
+//			int hpIncrease = 0;
+//			int atkIncrease = 0;
+//			int defIncrease = 0;
+//			
+//			String name = item.getItemDto().getItemName();
+//			String type = item.getItemDto().getItemType();
+//			
+//			if (type.equals("포션")) hpIncrease = item.getItemDto().getItemIncrease();
+//			else if (type.equals("무기")) atkIncrease = item.getItemDto().getItemIncrease();
+//			else defIncrease = item.getItemDto().getItemIncrease();
+//			
+//			int qnt = item.getQuantity();
+//			String isEquiped = item.isEquipped() ? "장착" : " X ";
+//			String explain = item.getItemDto().getItemExplanation();
+//			System.out.println(name + ", " + type + ", " + hpIncrease + ", " + atkIncrease + ", " + defIncrease + ", " + qnt  + ", " + isEquiped  + ", " + explain);
+//		}
+		
+		 final int ITEM_WIDTH = 15;
+		    final int TYPE_WIDTH = 10;
+		    final int HP_WIDTH = 7;
+		    final int ATK_WIDTH = 8;
+		    final int DEF_WIDTH = 8;
+		    final int QNT_WIDTH = 6;
+		    final int EQUIP_WIDTH = 9;
+		    final int EXPLAIN_WIDTH = 30;
+
+		    int totalWidth =
+		            ITEM_WIDTH
+		            + TYPE_WIDTH
+		            + HP_WIDTH
+		            + ATK_WIDTH
+		            + DEF_WIDTH
+		            + QNT_WIDTH
+		            + EQUIP_WIDTH
+		            + EXPLAIN_WIDTH
+		            + 7 * 3 + 1;
+
+		    System.out.println();
+		    System.out.println("+" + "=".repeat(totalWidth) + "+");
+
+		    System.out.println(
+		            "|"
+		            + center("INVENTORY INFORMATION", totalWidth)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "=".repeat(totalWidth) + "+");
+
+		    // 헤더
+		    System.out.println(
+		            "|"
+		            + center("ITEM", ITEM_WIDTH)
+		            + "|"
+		            + center("TYPE", TYPE_WIDTH)
+		            + "|"
+		            + center("HP", HP_WIDTH)
+		            + "|"
+		            + center("ATK", ATK_WIDTH)
+		            + "|"
+		            + center("DEF", DEF_WIDTH)
+		            + "|"
+		            + center("QTY", QNT_WIDTH)
+		            + "|"
+		            + center("EQUIP", EQUIP_WIDTH)
+		            + "|"
+		            + center("DESCRIPTION", EXPLAIN_WIDTH)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "-".repeat(totalWidth) + "+");
+
+		    for (InventoryDto item : invenList) {
+
+		        int hpIncrease = 0;
+		        int atkIncrease = 0;
+		        int defIncrease = 0;
+
+		        String name = item.getItemDto().getItemName();
+		        String type = item.getItemDto().getItemType();
+
+		        if (type.equals("포션")) {
+
+		            hpIncrease = item.getItemDto().getItemIncrease();
+
+		        } else if (type.equals("무기")) {
+
+		            atkIncrease = item.getItemDto().getItemIncrease();
+
+		        } else if (type.equals("방어구")) {
+
+		            defIncrease = item.getItemDto().getItemIncrease();
+		        }
+
+		        int qnt = item.getQuantity();
+
+		        String isEquipped =
+		                item.isEquipped() ? "O" : "X";
+
+		        String explain =
+		                item.getItemDto().getItemExplanation();
+
+		        System.out.println(
+		                "|"
+		                + center(name, ITEM_WIDTH)
+		                + "|"
+		                + center(type, TYPE_WIDTH)
+		                + "|"
+		                + center(String.valueOf(hpIncrease), HP_WIDTH)
+		                + "|"
+		                + center(String.valueOf(atkIncrease), ATK_WIDTH)
+		                + "|"
+		                + center(String.valueOf(defIncrease), DEF_WIDTH)
+		                + "|"
+		                + center(String.valueOf(qnt), QNT_WIDTH)
+		                + "|"
+		                + center(isEquipped, EQUIP_WIDTH)
+		                + "|"
+		                + center(explain, EXPLAIN_WIDTH)
+		                + "|"
+		        );
+		    }
+
+		    System.out.println("+" + "=".repeat(totalWidth) + "+");
+		    System.out.println();
 	}
 	
 	/**
