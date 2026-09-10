@@ -1,6 +1,8 @@
 package com.callitaday.monsterhunter.service;
 
 import java.sql.SQLException;
+
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 import com.callitaday.monsterhunter.exception.AddException;
 import com.callitaday.monsterhunter.exception.ModifyException;
@@ -41,7 +43,7 @@ public interface BattleService {
 	/**
 	 * 아이템 사용
 	 */
-	int useItem(int userId) throws SQLException;
+	CharacterInfoDto useItem(int userId) throws SQLException;
 	
 	/**
 	 * 스테이지 클리어 저장

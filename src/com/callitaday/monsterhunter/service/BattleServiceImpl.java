@@ -141,21 +141,35 @@ public class BattleServiceImpl implements BattleService{
 	 * 포션 아이템 사용
 	 */
 	@Override
-	public int useItem(int userId) throws SQLException {
+	public CharacterInfoDto useItem(int userId) throws SQLException {
 		// TODO Auto-generated method stub
 		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
 		List<InventoryDto> invenList = user.getInvenlist();
-		int result = 0;
 		
 		for(InventoryDto invenItem : invenList) {
 			String ItemType = invenItem.getItemDto().getItemType();
 			
-			if(ItemType.equals("회복포션") || ItemType.equals("마나포션")) {
-				result = invenItem.getItemDto().getItemIncrease();
+			if(ItemType.equals("회복포션")) {
+				int i = invenItem.getItemDto().getItemIncrease();
+				i += user.getHp();
+				if (i > 100) {
+					user.setHp(100);
+				} else {
+					user.setHp(i);
+				}
+			} else if(ItemType.equals("마나포션")) {
+				int i = invenItem.getItemDto().getItemIncrease();
+				i += user.getMp();
+				if (i > 100) {
+					user.setMp(100);
+				} else {
+					user.setMp(i);
+				}
 			}
+			
 		}
 		
-		return result;
+		return user;
 	}
 	
 	/**

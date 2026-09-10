@@ -18,7 +18,8 @@ public class BattleController {
     public static void attack(int userId) {
     	try {
     		int userAtk = battleService.userAttack(userId);
-    		int enemyHp = characterInfoService.selectCharInfoByUserId(userId).getStageDto().getEnemyHp();
+    		CharacterInfoDto user = characterInfoService.selectCharInfoByUserId(userId);
+    		int enemyHp = user.getStageDto().getEnemyHp();
     		
     		int result = enemyHp - userAtk;
     		
@@ -30,6 +31,9 @@ public class BattleController {
     			throw new SQLException("스테이지를 클리어하였습니다.");
     		} else {
     			battleService.enemyAttack(userId);
+    			if(user.getHp() <= 0) {
+    				throw new SQLException("패배하였습니다.");
+    			}
     		}  		
     		
     	} catch (SQLException | NotFoundException e) {
@@ -44,9 +48,23 @@ public class BattleController {
     		int userHp = user.getHp() - userDefendResult;
     		user.setHp(userHp);
     		
+    		if(user.getHp() <= 0) {
+    			throw new SQLException("패배하였습니다.");
+    		}
+    		
     	} catch(SQLException | NotFoundException e) {
     		FailView.errorMessage(e.getMessage());
     	} 
     	
+    }
+    
+    public static void useItem(int userId) {
+    	try {
+			CharacterInfoDto user = characterInfoService.selectCharInfoByUserId(userId);
+			int itemFigure = battleService.useItem(userId);
+		} catch (NotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
