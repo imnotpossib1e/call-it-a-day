@@ -36,14 +36,18 @@ public class InventoryServiceImpl implements InventoryService{
 		if(character==null) {
 			throw new NotFoundException("캐릭터 정보를 찾을 수 없습니다. 로그인 정보를 확인해주세요.");
 		}
-		List<InventoryDto> invenList = loadInventoryInfo(userId);
-		character.setInvenlist(invenList);
-		if(invenList.size()>0) {
-			List<ItemDto> equipList = new ArrayList<>();
-			for(InventoryDto id : invenList) {
-				if(id.isEquipped()) equipList.add(id.getItemDto());
+		try {
+			List<InventoryDto> invenList = loadInventoryInfo(userId);
+			character.setInvenlist(invenList);
+			if(invenList.size()>0) {
+				List<ItemDto> equipList = new ArrayList<>();
+				for(InventoryDto id : invenList) {
+					if(id.isEquipped()) equipList.add(id.getItemDto());
+				}
+				character.setEquiplist(equipList);
 			}
-			character.setEquiplist(equipList);
+		} catch(NotFoundException e) {
+			return character;
 		}
 		return character;
 	}
@@ -69,7 +73,7 @@ public class InventoryServiceImpl implements InventoryService{
 	public String changeEquipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException {
 		CharacterInfoDto character = loadCharInvenInfo(userId);
 		ItemDto findID = null;
-		String result = "장착";;
+		String result = "장착";
 		for(InventoryDto invenD : character.getInvenlist()) {
 			if(invenD.getItemDto().getItemName().equals(itemName)) findID = invenD.getItemDto();
 			else throw new NotFoundException("소지하지 않은 아이템입니다.");
@@ -86,6 +90,28 @@ public class InventoryServiceImpl implements InventoryService{
 				};
 			}
 		} else invenD.equipItem(userId, findID.getItemId()); // 장착한 아이템이 없다면
+		return result;
+	}
+	
+	/**
+	 * 장착한 아이템 헤제
+	 * 
+	 * 아이템 이름을 입력받아 user_id와 함께 매개변수로 받고
+	 * CharactorInfoDto 내의 equiplist가 비어있으면 NotFoundException
+	 * 있다면 입력받은 아이템 이름으로 일치하는 ItemDto를 찾아
+	 * InventoryDaoImpl.unequipItem()
+	 * */
+	@Override
+	public int unequipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException {
+		CharactorInfoDto character = loadCharInvenInfo(userId);
+		int result = 0;
+		if(character.getEquiplist().size()>0) {			
+			for(ItemDto id : character.getEquiplist()){
+				if(id.getItemName().equals(itemName)) {
+					result = invenD.unequipItem(userId, id.getItemId());
+				}
+				}
+			} else throw new NotFoundException("장착 중인 아이템이 없습니다."); // 장착한 아이템이 없다면
 		return result;
 	}
 }
