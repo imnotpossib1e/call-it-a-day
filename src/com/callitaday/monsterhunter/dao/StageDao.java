@@ -3,9 +3,10 @@ package com.callitaday.monsterhunter.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
+import java.util.List;
 
 public interface StageDao {
 	
@@ -32,10 +33,15 @@ public interface StageDao {
 	/**
 	 * 스테이지 클리어 저장
 	 */
-	int saveBattle(CharactorInfoDto user) throws SQLException;
+	int saveBattle(CharacterInfoDto user) throws SQLException;
 	
 	/**
 	 * 클리어 보상 증표 지급
 	 */
 	int addRewardItem(int userId, int stageId) throws SQLException;
+
+	/**
+	 * 전체 스테이지 조회
+	 */
+	List<StageDto> selectAllStage() throws SQLException;
 }

@@ -13,6 +13,7 @@ import com.callitaday.monsterhunter.util.DbManager;
 
 public class InventoryDaoImpl implements InventoryDao {
 //	CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
+	
 	/**
      * 내가 보유한 아이템 조회
      *
@@ -55,6 +56,55 @@ public class InventoryDaoImpl implements InventoryDao {
 
         return list;
     }
+    
+    /**
+	 * 아이템 장착
+	 * user_id와 item_id를 매개변수로 받아서 inventory 테이블에서 update로 변경
+	 * update inventory set is_equipped = T where user_id = ? and item_id = ?
+	 * */
+	@Override
+	public int equipItem(int user_id, int item_id) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = "update inventory set is_equipped = T where user_id = ? and item_id = ?";
+		int result = 0;
+		
+		try {
+			con = DbManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, user_id);
+			ps.setInt(2, item_id);
+			result = ps.executeUpdate();
+		} finally {
+			DbManager.dbClose(con, ps); // -> 상위 method에서 finally 구문에 close가 있으므로 con은 여기서 다루지 않음.
+		}
+		return result;
+	}
+
+	/**
+	 * 아이템 탈착
+	 * user_id와 item_id를 매개변수로 받아서 inventory 테이블에서 update로 변경
+	 * update inventory set is_equipped = F where user_id = ? and item_id = ?
+	 * */
+	@Override
+	public int unequipItem(int user_id, int item_id) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		String sql = "update inventory set is_equipped = F where user_id = ? and item_id = ?";
+		int result = 0;
+		
+		try {
+			con = DbManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, user_id);
+			ps.setInt(2, item_id);
+			result = ps.executeUpdate();
+		} finally {
+			DbManager.dbClose(con, ps); // -> 상위 method에서 finally 구문에 close가 있으므로 con은 여기서 다루지 않음.
+		}
+		return result;
+	}
+    
 
     /**
      * 아이템 보유 수량 체크
@@ -87,4 +137,5 @@ public class InventoryDaoImpl implements InventoryDao {
         }
         return inventoryDto;
     }
+
 }

@@ -2,6 +2,8 @@ package com.callitaday.monsterhunter.view;
 
 import com.callitaday.monsterhunter.controller.ItemController;
 import com.callitaday.monsterhunter.controller.ShopController;
+import com.callitaday.monsterhunter.controller.StageController;
+import com.sun.tools.javac.Main;
 import java.awt.Menu;
 import java.util.Scanner;
 
@@ -52,7 +54,7 @@ public class MenuView {
             int menu = Integer.parseInt(sc.nextLine());
             switch (menu){
                 case 1: // 전투
-                    MenuView.battleView(userId);
+                    MenuView.stageView(userId);
                     break;
                 case 2: // 상점
                     MenuView.shopView(userId);
@@ -91,10 +93,33 @@ public class MenuView {
     }
 
     /**
+     * 스테이지 선택 메뉴
+     */
+    public static void stageView(int userId){
+        boolean validInput = true;
+        // 선택지가 유효할 때 까지 반복
+        while(validInput){
+            StageController.selectStage(userId);
+            String choice = sc.nextLine();
+            switch(choice){
+                case "Y":
+                    battleView(userId);
+                    validInput = false;
+                    break;
+                case "N":
+                    System.out.println("메인 메뉴로 돌아갑니다.");
+                    validInput = false;
+                    break;
+                default:
+                    System.out.println("다시 입력해주세요.");
+            }
+        }
+    }
+
+    /**
      * 전투 메뉴
      */
     public static void battleView(int userId){
-
     }
 
     /**
@@ -118,7 +143,24 @@ public class MenuView {
     /**
      * 인벤토리 메뉴
      */
-    public static void inventoryView(int userId){
-    	InventoryController.getCharacterInfo(userId);
+    public static void inventoryView(int userId) {
+    	while(true){
+            // Todo 세션 가져오기
+
+            System.out.println("========2=======");
+            System.out.println("1. 인벤토리  |  2. 나가기 ");
+            int menu = Integer.parseInt(sc.nextLine());
+            switch (menu){
+                case 1: // 전투
+                	InventoryController.getCharacterInfo(userId);
+                    break;
+                case 2: // 상점
+                    return;
+                    
+                default:
+                    System.out.println("메뉴를 다시 선택해주세요.");
+            }
+        }
+
     }
 }
