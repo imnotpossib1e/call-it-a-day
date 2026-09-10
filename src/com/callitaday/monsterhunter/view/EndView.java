@@ -116,7 +116,7 @@ public class EndView {
             System.out.print("\t\t");
         }
         System.out.println();
-        System.out.print("[STAGE " + num + "] 입장 하시겠습니까? [Y / N] > ");
+        System.out.print("[STAGE " + (num+1) + "] 입장 하시겠습니까? [Y / N] > ");
     }
     
     /**
