@@ -1,5 +1,8 @@
 package com.callitaday.monsterhunter.dao;
 
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StageDaoImpl implements StageDao {
-
+	CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
 	/**
 	 * 전투를 위한 적 정보 조회
 	 */
@@ -166,51 +169,91 @@ public class StageDaoImpl implements StageDao {
 		 String sql = "update charactor_info "
 		            + "set hp = ?, mp = ?, stage_id = ?, coin = ? "
 		            + "where user_id = ?";
-		 
+
 		 int result = 0;
-	        try {
-	            con = DbManager.getConnection();
-	            ps = con.prepareStatement(sql);
-	            
-	            ps.setInt(1, character.getHp());
-	            ps.setInt(2, character.getMp());
-	            ps.setInt(3, character.getStage_id());
-	            ps.setInt(4, character.getCoin());
-	            ps.setInt(5, character.getUserId());
-	            	            
-	            result = ps.executeUpdate();
-	            
-	        } finally {
-	        	DbManager.dbClose(con, ps);
-	        }
-	        
-	        return result;
-	    }
-	 
-	 @Override
-	 public int addRewardItem(int userId, int stageId) throws SQLException{
+
+		 try {
+			con = DbManager.getConnection();
+			ps = con.prepareStatement(sql);
+
+			ps.setInt(1, character.getHp());
+			ps.setInt(2, character.getMp());
+			ps.setInt(3, character.getStage_id());
+			ps.setInt(4, character.getCoin());
+			ps.setInt(5, character.getUserId());
+
+			result = ps.executeUpdate();
+
+		 } finally {
+		 	DbManager.dbClose(con, ps);
+		 }
+		 return result;
+	 }
+
+
+	/**
+	 * 스테이지 클리어 보상
+	 *
+	 * 1. 코인, 증표
+	 * @param userId
+	 * @param stageId
+	 * @return
+	 * @throws SQLException
+	 */
+	@Override
+	 public int addRewardItem(int userId, int stageId) throws SQLException, NotFoundException, AddException, ModifyException{
 		    Connection con = null;
 		    PreparedStatement ps = null;
 
 		    int badge = 100 + stageId;
+			// 보상 코인 난수 지정
+//			int coin = 100 * ((int)(Math.random() * 9) +1);
+			int coin = 100*stageId;
 
+
+		// 증표
 		    String sql = "insert into inventory "
 		    		+ "(user_id, quantity, is_equipped, item_id) "
 		            + "values (?, 1, 'F', ?)";
 
 		    int result = 0;
-		    
+
 		    try{
 		        con = DbManager.getConnection();
-		        ps = con.prepareStatement(sql);
+				con.setAutoCommit(false);
 
+				ps = con.prepareStatement(sql);
 		        ps.setInt(1, userId);
 		        ps.setInt(2, badge);
 
+				// 회원 정보 찾기
+				CharacterInfoDto characterInfoDto = null;
+
+				characterInfoDto = characterInfoDao.getCharacterByUserId(userId);
+				if(characterInfoDto == null){
+					con.rollback();
+					throw new NotFoundException("유저 정보를 찾을 수 없습니다.");
+				}
+
+				// 증표 인벤토리에 추가
 		        result = ps.executeUpdate();
-		        
-		    } finally {
-		    	DbManager.dbClose(con, ps, null);
+
+				// 증표 인벤토리 추가 실패
+				if(result == 0){
+					con.rollback();
+					throw new AddException("증표 증정에 실패했습니다.");
+				}else{
+					// 코인 추가 로직 구현
+					int re = this.addCoin(con, userId, coin);
+					if(re == 0){
+						con.rollback();
+						throw new ModifyException("코인 증정에 실패했습니다.");
+					}
+				}
+				con.commit();
+		    }
+			finally {
+		    	DbManager.dbClose(con, ps);
 		    }
 		    
 		    return result;
@@ -244,5 +287,32 @@ public class StageDaoImpl implements StageDao {
 		}
 
 		return list;
+	}
+
+	/**
+	 * 코인 추가 로직
+	 */
+	/**
+	 * 코인 추가 로직
+	 *
+	 * @param userId
+	 * @param coin
+	 */
+	@Override
+	public int addCoin(Connection con, int userId, int coin) throws  SQLException {
+		PreparedStatement ps = null;
+
+		String sql = "UPDATE character_info set coin= coin+? where user_id = ?";
+		int result = 0;
+		try{
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, coin);
+			ps.setInt(2, userId);
+			result = ps.executeUpdate();
+
+		}finally {
+			DbManager.dbClose(null, ps);
+		}
+		return result;
 	}
 }
