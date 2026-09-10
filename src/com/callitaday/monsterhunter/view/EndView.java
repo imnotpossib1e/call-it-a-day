@@ -1,5 +1,7 @@
 package com.callitaday.monsterhunter.view;
+
 import com.callitaday.monsterhunter.dto.ItemDto;
+import com.callitaday.monsterhunter.dto.StageDto;
 import java.util.List;
 
 public class EndView {
@@ -52,8 +54,6 @@ public class EndView {
             System.out.println(); // 아이템 목록 끝난 후 빈 줄 추가
         }
 
-
-
     }
 
     /**
@@ -79,6 +79,21 @@ public class EndView {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * 스테이지 선택 뷰
+     */
+    public static void printStageSelect(List<StageDto> stageList,  int num){
+        for(int i = 0; i<stageList.size(); i++){
+            System.out.print("[STAGE " + stageList.get(i).getStageId() + "]");
+            if(i<num){
+                System.out.print(" - CLEAR");
+            }
+            System.out.print("\t\t");
+        }
+        System.out.println();
+        System.out.print("[STAGE " + num + "] 입장 하시겠습니까? [Y / N] > ");
     }
 }
 

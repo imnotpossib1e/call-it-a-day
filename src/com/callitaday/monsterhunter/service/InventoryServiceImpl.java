@@ -4,18 +4,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.callitaday.monsterhunter.dao.CharactorInfoDao;
-import com.callitaday.monsterhunter.dao.CharactorInfoDaoImpl;
+import com.callitaday.monsterhunter.dao.CharacterInfoDao;
+import com.callitaday.monsterhunter.dao.CharacterInfoDaoImpl;
 import com.callitaday.monsterhunter.dao.InventoryDao;
 import com.callitaday.monsterhunter.dao.InventoryDaoImpl;
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.exception.DuplicatedException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
 
 public class InventoryServiceImpl implements InventoryService{
-	CharactorInfoDao cID = new CharactorInfoDaoImpl();
+	CharacterInfoDao cID = new CharacterInfoDaoImpl();
 	InventoryDao invenD = new InventoryDaoImpl();
 	private static InventoryService instance = new InventoryServiceImpl();
 
@@ -31,8 +31,8 @@ public class InventoryServiceImpl implements InventoryService{
 	 * -> 소지 아이템은 ItemDaoImpl의 getItemInfo(userId) 재활용.
 	 * */
 	@Override
-	public CharactorInfoDto loadCharInvenInfo(int userId) throws NotFoundException, SQLException {
-		CharactorInfoDto character = cID.getCharactorByUserId(userId);
+	public CharacterInfoDto loadCharInvenInfo(int userId) throws NotFoundException, SQLException {
+		CharacterInfoDto character = cID.getCharacterByUserId(userId);
 		if(character==null) {
 			throw new NotFoundException("캐릭터 정보를 찾을 수 없습니다. 로그인 정보를 확인해주세요.");
 		}
@@ -67,7 +67,7 @@ public class InventoryServiceImpl implements InventoryService{
 	 * */
 	@Override
 	public String changeEquipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException {
-		CharactorInfoDto character = loadCharInvenInfo(userId);
+		CharacterInfoDto character = loadCharInvenInfo(userId);
 		ItemDto findID = null;
 		String result = "장착";;
 		for(InventoryDto invenD : character.getInvenlist()) {

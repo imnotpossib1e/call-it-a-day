@@ -2,7 +2,7 @@ package com.callitaday.monsterhunter.dto;
 
 import java.util.List;
 
-public class CharactorInfoDto {
+public class CharacterInfoDto {
 	private int userId;
 	private int hp = 100;
 	private int mp = 100;
@@ -16,10 +16,10 @@ public class CharactorInfoDto {
 	private List<InventoryDto> invenlist;
 	private StageDto stageDto;
 	
-	public CharactorInfoDto() {
+	public CharacterInfoDto() {
 	}
 
-	public CharactorInfoDto(int userId, int hp, int mp, int atk, int def, int job, int coin, int stage_id) {
+	public CharacterInfoDto(int userId, int hp, int mp, int atk, int def, int job, int coin, int stage_id) {
 		super();
 		this.userId = userId;
 		this.hp = hp;
@@ -122,7 +122,7 @@ public class CharactorInfoDto {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CharactorInfoDto [userId=");
+		builder.append("CharacterInfoDto [userId=");
 		builder.append(userId);
 		builder.append(", hp=");
 		builder.append(hp);

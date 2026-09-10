@@ -1,14 +1,8 @@
 package com.callitaday.monsterhunter.dao;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
-import com.callitaday.monsterhunter.exception.AddException;
-import com.callitaday.monsterhunter.exception.ModifyException;
-import com.callitaday.monsterhunter.exception.NotFoundException;
-import com.callitaday.monsterhunter.exception.PurchaseFailException;
 import com.callitaday.monsterhunter.util.DbManager;
-import com.mysql.cj.jdbc.exceptions.NotUpdatable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +12,7 @@ import java.util.List;
 
 public class ItemDaoImpl implements ItemDao {
 
-    CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
+    CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
 
     /**
      * 내가 보유한 아이템 조회

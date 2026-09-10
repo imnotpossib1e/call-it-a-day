@@ -2,12 +2,12 @@ package com.callitaday.monsterhunter.view;
 
 import java.util.List;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 
 public class InvenView {
-	public static void printCharacterInfo(CharactorInfoDto charactorInfoDto) {
+	public static void printCharacterInfo(CharacterInfoDto charactorInfoDto) {
 		int addAtk = 0;
 		int addDef = 0;
 		

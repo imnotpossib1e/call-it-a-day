@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 import com.callitaday.monsterhunter.util.DbManager;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StageDaoImpl implements StageDao {
 
@@ -31,7 +33,7 @@ public class StageDaoImpl implements StageDao {
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				st = new StageDto(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4),
-						rs.getInt(5));
+						rs.getInt(5), rs.getInt(6));
 				
 				ItemDto badge = getRewardItem(con, 100 + stageId);
 
@@ -158,7 +160,7 @@ public class StageDaoImpl implements StageDao {
 	  * 스테이지 클리어 저장
 	  */
 	 @Override
-	 public int saveBattle(CharactorInfoDto character) throws SQLException {
+	 public int saveBattle(CharacterInfoDto character) throws SQLException {
 		 Connection con = null;
 		 PreparedStatement ps = null;
 		 String sql = "update charactor_info "
@@ -213,5 +215,34 @@ public class StageDaoImpl implements StageDao {
 		    
 		    return result;
 	 }
- 
+
+	/**
+	 * 전체 스테이지 조회
+	 */
+	@Override
+	public List<StageDto> selectAllStage() throws SQLException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		String sql = "select * from stage";
+
+		List<StageDto> list = new ArrayList<StageDto>();
+
+		try{
+			con = DbManager.getConnection();
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			while(rs.next()){
+				list.add(new StageDto(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4),
+				                      rs.getInt(5), rs.getInt(6)));
+				ItemDto badge = getRewardItem(con, 100 + rs.getInt(1));
+			}
+		}finally {
+			DbManager.dbClose(con, ps, rs);
+		}
+
+		return list;
+	}
 }
