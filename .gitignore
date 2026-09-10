@@ -13,6 +13,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+/src/com/callitaday/monsterhunter/util/dbInfo.properties
 
 # External tool builders
 .externalToolBuilders/
