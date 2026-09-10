@@ -101,23 +101,5 @@ public class EndView {
         System.out.print("[STAGE " + (num+1) + "] 입장 하시겠습니까? [Y / N] > ");
     }
     
-    /**
-     * 공격하기 뷰
-     */
-    public static void attackView(int userId) {
-    	
-    }
-    /**
-     * 방어하기 뷰
-     */
-    public static void defendView(int userId) {
-    	
-    }
-    /**
-     * 아이템 사용하기 뷰
-     */
-    public static void useItemView(int userId) {
-    	
-    }
 }
 

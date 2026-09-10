@@ -3,10 +3,12 @@ package com.callitaday.monsterhunter.view;
 import com.callitaday.monsterhunter.controller.ItemController;
 import com.callitaday.monsterhunter.controller.ShopController;
 import com.callitaday.monsterhunter.controller.StageController;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.sun.tools.javac.Main;
 import java.awt.Menu;
 import java.util.Scanner;
 
+import com.callitaday.monsterhunter.controller.BattleController;
 import com.callitaday.monsterhunter.controller.InventoryController;
 
 public class MenuView {
@@ -117,26 +119,82 @@ public class MenuView {
     }
 
     /**
-     * 전투 메뉴
+     * 전투 진입
      */
-    public static void battleView(int userId){
+    public static void battleView(int userId) {
+        BattleController.openBattle(userId, sc);
+    }
+    
+    /**
+     * 전투 메뉴 호출
+     */
+    public static void runBattle(int userId, Scanner scanner){
+    	
+    	if (!BattleController.start(userId)) {
+            return;
+        }
     	
     	while(true) {
+    		CharacterInfoDto user = BattleController.getState(userId);
+    		if(user == null) return;
     		
-        	System.out.println("-----------------------------------------");
-        	System.out.print("|1. 공격하기                                 |\n");
-        	System.out.print("|2. 방어하기                                 |\n");
-        	System.out.print("|3. 아이템 사용                               |\n");
-        	System.out.println("-----------------------------------------");
+    		System.out.println("-------------------------------------------");
+    		System.out.println("몬스터 HP: " + user.getStageDto().getEnemyHp());
+    		System.out.println("-------------------------------------------");
+    		System.out.println();
+    		System.out.println();
+    		System.out.println();
+    		System.out.println("-------------------------------------------");
+    		System.out.println ("내 HP: " + user.getHp()				
+                    + "내 MP: " + user.getMp()						
+                    );
+    		System.out.println("-------------------------------------------");
+    		System.out.println();
+        	System.out.println("-------------------------------------------");
+        	System.out.print("|1. 공격하기									|\n");
+        	System.out.print("|2. 방어하기									|\n");
+        	System.out.print("|3. 아이템 사용								|\n");
+        	System.out.println("-------------------------------------------");
+        	
+        	boolean defeated = user.getHp() <= 0;
+        	boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0;
+        	
+        	if (defeated || victory) {
+                System.out.println(victory ? "승리했습니다!" : "패배했습니다.");
+                
+                saveBattleAndExit(userId, scanner);
+            	return;
+        	}
         	
         	int result = Integer.parseInt(sc.nextLine());
         	switch (result) {
     	    	case 1:EndView.attackView(userId);break;
     	    	case 2:EndView.defendView(userId);break;
-    	    	case 3:EndView.useItemView(userId);break;
+    	    	case 3:System.out.print("사용할 포션 번호 > ");
+                BattleController.useItem(userId, scanner.nextLine());break;
+    	    	default: System.out.println("메뉴를 다시 선택해주세요.");
         	}
 
     	}
+    }
+    /**
+     * 전투 종료 및 저장
+     */
+    private static void saveBattleAndExit(int userId, Scanner scanner) {
+
+        while (true) {
+            if (BattleController.save(userId)) {
+                System.out.println("전투 결과를 저장했습니다.");
+                return;
+            }
+
+            System.out.println(
+                    "저장을 완료하지 못했습니다. "
+                    + "Enter를 누르면 저장을 재시도합니다."
+            );
+
+            scanner.nextLine();
+        }
     }
 
     /**
