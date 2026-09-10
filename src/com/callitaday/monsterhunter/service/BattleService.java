@@ -1,11 +1,10 @@
 package com.callitaday.monsterhunter.service;
 
 import java.sql.SQLException;
-import java.util.List;
-
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
-import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.StageDto;
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
 
 public interface BattleService {
 	
@@ -42,10 +41,10 @@ public interface BattleService {
 	/**
 	 * 아이템 사용
 	 */
-	int userItem(int userId) throws SQLException;
+	int useItem(int userId) throws SQLException;
 	
 	/**
 	 * 스테이지 클리어 저장
 	 */
-	public void saveBattle(int userId) throws SQLException;
+	public int saveBattle(int userId) throws SQLException, NotFoundException, AddException, ModifyException;
 }

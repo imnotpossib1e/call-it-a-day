@@ -11,9 +11,9 @@ import java.util.List;
 public class StageServiceImpl implements StageService{
     StageDao stageDao = new StageDaoImpl();
 
-    private static StageService instace = new StageServiceImpl();
-    public static StageService getInstace(){
-        return instace;
+    private static StageService instance = new StageServiceImpl();
+    public static StageService getInstance(){
+        return instance;
     }
 
     /**

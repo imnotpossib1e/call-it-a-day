@@ -3,17 +3,22 @@ package com.callitaday.monsterhunter.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.callitaday.monsterhunter.dao.CharactorInfoDao;
-import com.callitaday.monsterhunter.dao.CharactorInfoDaoImpl;
+import com.callitaday.monsterhunter.dao.CharacterInfoDao;
+import com.callitaday.monsterhunter.dao.CharacterInfoDaoImpl;
+
 import com.callitaday.monsterhunter.dao.StageDao;
 import com.callitaday.monsterhunter.dao.StageDaoImpl;
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.StageDto;
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 
 public class BattleServiceImpl implements BattleService{
 	StageDao stageDao = new StageDaoImpl();
-	CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();	
+	CharacterInfoDao charactorInfoDao = new CharacterInfoDaoImpl();	
 	private static BattleService instance = new BattleServiceImpl();
 	
     public static BattleService getInstance(){
@@ -26,7 +31,7 @@ public class BattleServiceImpl implements BattleService{
 	@Override
 	public StageDto startBattle(int userId) throws SQLException {
 		// TODO Auto-generated method stub
-		StageDto enemyInfoForFight = charactorInfoDao.getCharactorByUserId(userId).getStageDto();
+		StageDto enemyInfoForFight = charactorInfoDao.getCharacterByUserId(userId).getStageDto();
 		
 		return enemyInfoForFight;
 	}
@@ -49,7 +54,7 @@ public class BattleServiceImpl implements BattleService{
 		// TODO Auto-generated method stub
 		int userDice = randomDice();
 		int enemyDice = randomDice();
-		CharactorInfoDto user = charactorInfoDao.getCharactorByUserId(userId);
+		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
 		int result = 0;
 		
 		if (userDice > enemyDice) {
@@ -75,7 +80,7 @@ public class BattleServiceImpl implements BattleService{
 		int enemyDice = randomDice();
 		int result = 0;
 		
-		CharactorInfoDto user = charactorInfoDao.getCharactorByUserId(userId);
+		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
 		StageDto enemy = user.getStageDto();
 		
 		if (enemyDice > userDice ) {
@@ -95,7 +100,7 @@ public class BattleServiceImpl implements BattleService{
 		int enemyDice = randomDice();
 		int result = 0;
 		
-		CharactorInfoDto user = charactorInfoDao.getCharactorByUserId(userId);
+		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
 		StageDto enemy = user.getStageDto();
 		
 		if (enemyDice > userDice) {
@@ -117,7 +122,7 @@ public class BattleServiceImpl implements BattleService{
 		int userDice = randomDice();
 		int enemyDice = randomDice();
 		int result = 0;
-		CharactorInfoDto user = charactorInfoDao.getCharactorByUserId(userId);
+		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
 		StageDto enemy = user.getStageDto();
 		
 		if (userDice > enemyDice) {
@@ -127,18 +132,42 @@ public class BattleServiceImpl implements BattleService{
 		return result;
 	}
 
+	/**
+	 * 포션 아이템 사용
+	 */
 	@Override
-	public int userItem(int userId, List<InventoryDto> itemList) throws SQLException {
+	public int useItem(int userId) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
+		List<InventoryDto> invenList = user.getInvenlist();
+		int result = 0;
+		
+		for(InventoryDto invenItem : invenList) {
+			String ItemType = invenItem.getItemDto().getItemType();
+			
+			if(ItemType.equals("회복포션") || ItemType.equals("마나포션")) {
+				result = invenItem.getItemDto().getItemIncrease();
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
 	 * 스테이지 클리어 저장
 	 */
 	@Override
-	public void saveBattle(int userId) throws SQLException{
-		
+	public int saveBattle(int userId) throws SQLException, NotFoundException, AddException, ModifyException {
+		CharacterInfoDto user = charactorInfoDao.getCharacterByUserId(userId);
+		int result = stageDao.addRewardItem(userId, user.getStage_id());
+		if(result == 0) {
+			throw new SQLException("클리어하지 못했습니다.");
+			
+		} else {
+			result = stageDao.saveBattle(user);
+		}
+				
+		return result;
 	}
 	
 }

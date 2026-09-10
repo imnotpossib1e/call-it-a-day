@@ -167,7 +167,7 @@ public class StageDaoImpl implements StageDao {
 		 Connection con = null;
 		 PreparedStatement ps = null;
 		 String sql = "update charactor_info "
-		            + "set hp = ?, mp = ?, stage_id = ?, coin = ? "
+		            + "set hp = ?, mp = ?, stage_id = ? "
 		            + "where user_id = ?";
 
 		 int result = 0;
@@ -179,8 +179,7 @@ public class StageDaoImpl implements StageDao {
 			ps.setInt(1, character.getHp());
 			ps.setInt(2, character.getMp());
 			ps.setInt(3, character.getStage_id());
-			ps.setInt(4, character.getCoin());
-			ps.setInt(5, character.getUserId());
+			ps.setInt(4, character.getUserId());
 
 			result = ps.executeUpdate();
 

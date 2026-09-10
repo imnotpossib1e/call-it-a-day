@@ -12,7 +12,7 @@ import com.callitaday.monsterhunter.view.FailView;
 import java.util.List;
 
 public class StageController {
-    public static StageService stageService = StageServiceImpl.getInstace();
+    public static StageService stageService = StageServiceImpl.getInstance();
     public static CharacterInfoService characterInfoService = CharacterInfoServiceImpl.getInstance();
 
     /**

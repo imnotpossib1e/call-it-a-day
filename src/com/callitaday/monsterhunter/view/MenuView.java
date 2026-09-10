@@ -120,6 +120,23 @@ public class MenuView {
      * 전투 메뉴
      */
     public static void battleView(int userId){
+    	
+    	while(true) {
+    		
+        	System.out.println("-----------------------------------------");
+        	System.out.print("|1. 공격하기                                 |\n");
+        	System.out.print("|2. 방어하기                                 |\n");
+        	System.out.print("|3. 아이템 사용                               |\n");
+        	System.out.println("-----------------------------------------");
+        	
+        	int result = Integer.parseInt(sc.nextLine());
+        	switch (result) {
+    	    	case 1:EndView.attackView(userId);break;
+    	    	case 2:EndView.defendView(userId);break;
+    	    	case 3:EndView.useItemView(userId);break;
+        	}
+
+    	}
     }
 
     /**
