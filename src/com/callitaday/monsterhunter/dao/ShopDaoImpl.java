@@ -1,6 +1,6 @@
 package com.callitaday.monsterhunter.dao;
 
-import com.callitaday.monsterhunter.dto.CharactorInfoDto;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.exception.AddException;
@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ShopDaoImpl implements ShopDAO{
-    CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
+    CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
     ItemDao itemDao = new ItemDaoImpl();
     InventoryDao inventoryDao = new InventoryDaoImpl();
 
@@ -38,10 +38,10 @@ public class ShopDaoImpl implements ShopDAO{
             ps.setInt(4, quantity);
 
             // 회원 정보 찾기
-            CharactorInfoDto charactorInfoDto = null;
+            CharacterInfoDto characterInfoDto = null;
 
-            charactorInfoDto = charactorInfoDao.getCharactorByUserId(user_id);
-            if(charactorInfoDto == null){
+            characterInfoDto = characterInfoDao.getCharacterByUserId(user_id);
+            if(characterInfoDto == null){
                 con.rollback();
                 throw new NotFoundException( "유저 정보를 찾을 수 없습니다.");
             }
@@ -74,13 +74,13 @@ public class ShopDaoImpl implements ShopDAO{
                 throw new AddException("인벤토리 추가에 실패했습니다.");
             }else{ // 인벤토리 추가 성공시
                 // 유저의 코인보다 구매 총액이 클 때
-                if(charactorInfoDto.getCoin() < totalAmount){
+                if(characterInfoDto.getCoin() < totalAmount){
                     con.rollback();
                     throw new PurchaseFailException("코인 차감에 실패했습니다..");
                 }
 
                 // 코인 차감
-                int re = this.updateUserCoinPay(con, charactorInfoDto, totalAmount);
+                int re = this.updateUserCoinPay(con, characterInfoDto, totalAmount);
                 if(re == 0){
                     con.rollback();
                     throw new ModifyException("결제에 실패했습니다.");
@@ -112,17 +112,17 @@ public class ShopDaoImpl implements ShopDAO{
     }
 
     @Override
-    public int updateUserCoinPay(Connection con, CharactorInfoDto charactorInfoDto, int totalAmount) throws SQLException {
+    public int updateUserCoinPay(Connection con, CharacterInfoDto characterInfoDto, int totalAmount) throws SQLException {
         PreparedStatement ps = null;
 
-        int resultCoin = charactorInfoDto.getCoin() -totalAmount;
+        int resultCoin = characterInfoDto.getCoin() -totalAmount;
 
         String sql = "update charactor_info set coin=? where user_id = ? ";
         int result = 0;
         try{
             ps = con.prepareStatement(sql);
             ps.setInt(1, resultCoin);
-            ps.setInt(2, charactorInfoDto.getUserId());
+            ps.setInt(2, characterInfoDto.getUserId());
             result = ps.executeUpdate();
 
         }
