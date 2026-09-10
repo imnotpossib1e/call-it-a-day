@@ -143,18 +143,6 @@ public class MenuView {
      * 상점 메뉴
      */
     public static void shopView(int userId){
-//        // 판매 목록 띄우기
-//        ItemController.selectAllItem();
-//
-//        // 내가 보유한 아이템 띄우기
-//
-//        // 구매할 아이템, 수량 받기
-//        System.out.println("메인 메뉴로 돌아가기 : Q");
-//        System.out.print("구매할 아이템 번호 > ");
-//        int item_id = Integer.parseInt(sc.nextLine());
-//        System.out.print("구매할 아이템 수량 > ");
-//        int quantity = Integer.parseInt(sc.nextLine());
-//        ShopController.purchaceItem(userId, item_id, quantity);
 
         ItemController.selectAllItem();
         boolean validInput = true;
