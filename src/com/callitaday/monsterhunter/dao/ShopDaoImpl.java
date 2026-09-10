@@ -117,7 +117,7 @@ public class ShopDaoImpl implements ShopDAO{
 
         int resultCoin = characterInfoDto.getCoin() -totalAmount;
 
-        String sql = "update charactor_info set coin=? where user_id = ? ";
+        String sql = "update character_info set coin=? where user_id = ? ";
         int result = 0;
         try{
             ps = con.prepareStatement(sql);

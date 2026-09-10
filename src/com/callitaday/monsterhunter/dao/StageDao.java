@@ -1,5 +1,8 @@
 package com.callitaday.monsterhunter.dao;
 
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -38,10 +41,15 @@ public interface StageDao {
 	/**
 	 * 클리어 보상 증표 지급
 	 */
-	int addRewardItem(int userId, int stageId) throws SQLException;
+	int addRewardItem(int userId, int stageId) throws SQLException, NotFoundException, AddException, ModifyException;
 
 	/**
 	 * 전체 스테이지 조회
 	 */
 	List<StageDto> selectAllStage() throws SQLException;
+
+	/**
+	 * 코인 추가 로직
+	 */
+	int addCoin(Connection con, int userId, int coin) throws ModifyException, SQLException;
 }
