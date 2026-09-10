@@ -19,6 +19,7 @@ public interface InventoryDao {
 	 * user_id와 item_id를 매개변수로 받아서 inventory 테이블에서 update로 변경
 	 * update inventory set is_equipped = T where user_id = ? and item_id = ?
 	 * */
+	
 	public int equipItem(int user_id, int item_id) throws SQLException;
 	
 	/**
@@ -27,4 +28,11 @@ public interface InventoryDao {
 	 * update inventory set is_equipped = F where user_id = ? and item_id = ?
 	 * */
 	public int unequipItem(int user_id, int item_id) throws SQLException;
+
+
+	/**
+	 * 아이템 보유 수량 체크
+	 */
+	public InventoryDto getItemQuantity(int user_id, int item_id) throws SQLException;
+
 }

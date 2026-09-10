@@ -8,24 +8,34 @@ import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 
 public interface StageDao {
-
-	/**
-	 * 전투에 쓰일 유저 정보 가져오기
-	 */
-	public CharactorInfoDto userInfoForFight(int userId) throws SQLException;
 	
 	/**
 	 * 전투에 쓰일 적 정보 가져오기
 	 */
-	public StageDto enemyInfoForFight (Connection con, int stageId) throws SQLException;
+	StageDto enemyInfoForFight(int stageId) throws SQLException;
 	
 	/**
 	 * 보상 아이템 조회
 	 */
-	public ItemDto getRewardItem (Connection con, int itemId) throws SQLException;
+	ItemDto getRewardItem(Connection con, int itemId) throws SQLException;
 	
 	/**
 	 * 전투에서 아이템 사용
 	 */
-	public int useItem (int userId, int itemId) throws SQLException;
+	int useItem (int userId, int itemId) throws SQLException;
+	
+	/**
+	 * 스테이지 클리어 여부 확인
+	 */
+	boolean isStageCleared(int userId, int stageId) throws SQLException;
+	
+	/**
+	 * 스테이지 클리어 저장
+	 */
+	int saveBattle(CharactorInfoDto user) throws SQLException;
+	
+	/**
+	 * 클리어 보상 증표 지급
+	 */
+	int addRewardItem(int userId, int stageId) throws SQLException;
 }

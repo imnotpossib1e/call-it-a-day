@@ -17,13 +17,12 @@ import com.callitaday.monsterhunter.exception.NotFoundException;
 public class InventoryServiceImpl implements InventoryService{
 	CharactorInfoDao cID = new CharactorInfoDaoImpl();
 	InventoryDao invenD = new InventoryDaoImpl();
-			
 	private static InventoryService instance = new InventoryServiceImpl();
 
     public static InventoryService getInstance(){
         return instance;
     }
-	
+
 	/**
 	 * 처음 캐릭터 정보 조회
 	 * 
