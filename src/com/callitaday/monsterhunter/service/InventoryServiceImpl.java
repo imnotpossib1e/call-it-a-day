@@ -13,6 +13,7 @@ import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.exception.DuplicatedException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.exception.SearchWrongException;
 
 public class InventoryServiceImpl implements InventoryService{
 	CharacterInfoDao cID = new CharacterInfoDaoImpl();
@@ -36,16 +37,30 @@ public class InventoryServiceImpl implements InventoryService{
 		if(character==null) {
 			throw new NotFoundException("캐릭터 정보를 찾을 수 없습니다. 로그인 정보를 확인해주세요.");
 		}
-		List<InventoryDto> invenList = invenD.getItemInfo(userId);
-		character.setInvenlist(invenList);
-		if(invenList.size()>0) {
-			List<ItemDto> equipList = new ArrayList<>();
-			for(InventoryDto id : invenList) {
-				if(id.isEquipped()) equipList.add(id.getItemDto());
+		try {
+			List<InventoryDto> invenList = loadInventoryInfo(userId);
+			character.setInvenlist(invenList);
+			if(invenList.size()>0) {
+				List<ItemDto> equipList = new ArrayList<>();
+				for(InventoryDto id : invenList) {
+					if(id.isEquipped()) equipList.add(id.getItemDto());
+				}
+				character.setEquiplist(equipList);
 			}
-			character.setEquiplist(equipList);
+		} catch(NotFoundException e) {
+			return character;
 		}
 		return character;
+	}
+	
+	/**
+	 * 소지한 아이템 목록 조회
+	 * */
+	@Override
+	public List<InventoryDto> loadInventoryInfo(int userId) throws NotFoundException, SQLException {
+		List<InventoryDto> invenList = invenD.getItemInfo(userId);
+		if(invenList.size() == 0) throw new NotFoundException("소지한 아이템이 없습니다.");
+		return invenList;
 	}
 
 	/**
@@ -56,23 +71,62 @@ public class InventoryServiceImpl implements InventoryService{
 	 * 겹치지 않는 아이템만 장착 상태(T)로 dao에서 update로 변경
 	 * */
 	@Override
-	public void changeEquipStatement(int userId, String itemName) throws DuplicatedException, NotFoundException, SQLException {
+	public String changeEquipStatement(int userId, String itemName) throws SearchWrongException, DuplicatedException, NotFoundException, SQLException {
 		CharacterInfoDto character = loadCharInvenInfo(userId);
 		ItemDto findID = null;
-		for(InventoryDto invenD : character.getInvenlist()) {
-			if(invenD.getItemDto().getItemName().equals(itemName)) findID = invenD.getItemDto();
-			else throw new NotFoundException("소지하지 않은 아이템입니다.");
+		String result = "장착";
+		for (InventoryDto invenDto : character.getInvenlist()) {
+		    if (itemName.equals(invenDto.getItemDto().getItemName())) {
+		        if ("무기".equals(invenDto.getItemDto().getItemType())
+		                || "방어구".equals(invenDto.getItemDto().getItemType())) {
+		            findID = invenDto.getItemDto();
+		            break;
+		        } else {
+		            throw new SearchWrongException("장비 아이템이 아닙니다.");
+		        }
+		    }
+		}
+
+		if (findID == null) {
+		    throw new NotFoundException("소지하지 않은 아이템입니다.");
 		}
 		
-		if(character.getEquiplist().size()>0) {			
+		System.out.println(findID);
+		
+		if(character.getEquiplist().size()>0) {
 			for(ItemDto id : character.getEquiplist()){
-				if(id.getItemName().equals(itemName)) throw new DuplicatedException();
+				if(itemName.equals(id.getItemName())) throw new DuplicatedException("이미 장착 중인 아이템입니다.");
 				// 이름이 중복되지 않고 장착된 아이템 타입(int)가 같다면 dao 로직으로 2번 update 실행(탈착)
-				else if(id.getItemType()==findID.getItemType()) {
+				else if(findID.getItemType().equals(id.getItemType())) {
 					invenD.unequipItem(userId, id.getItemId());
 					invenD.equipItem(userId, findID.getItemId());
+					result = "교체";
+					break;
 				};
 			}
+			invenD.equipItem(userId, findID.getItemId()); // 장착 리스트에 같은 타입의 아이템이 없으니 입력받은 아이템 장착
 		} else invenD.equipItem(userId, findID.getItemId()); // 장착한 아이템이 없다면
+		return result;
+	}
+	
+	/**
+	 * 장착한 아이템 헤제
+	 * 
+	 * 아이템 이름을 입력받아 user_id와 함께 매개변수로 받고
+	 * CharactorInfoDto 내의 equiplist가 비어있으면 NotFoundException
+	 * 있다면 입력받은 아이템 이름으로 일치하는 ItemDto를 찾아
+	 * InventoryDaoImpl.unequipItem()
+	 * */
+	@Override
+	public String unequipStatement(int userId, String itemName) throws NotFoundException, SQLException {
+		CharacterInfoDto character = loadCharInvenInfo(userId);
+		int result = 0;
+		if(character.getEquiplist().size()>0) {
+			for(ItemDto id : character.getEquiplist()){
+				if(itemName.equals(id.getItemName())) result = invenD.unequipItem(userId, id.getItemId());
+				}
+			if(result == 0) throw new NotFoundException("입력하신 아이템을 장착하고 있지 않습니다.");
+			} else throw new NotFoundException("장착 중인 아이템이 없습니다."); // 장착한 아이템이 없다면
+		return itemName + " 장비를 헤제합니다.";
 	}
 }

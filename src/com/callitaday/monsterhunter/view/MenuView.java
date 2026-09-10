@@ -194,15 +194,42 @@ public class MenuView {
     public static void inventoryView(int userId) {
     	while(true){
             // Todo 세션 가져오기
-
+    		
             System.out.println("========2=======");
-            System.out.println("1. 인벤토리  |  2. 나가기 ");
+            InventoryController.getCharacterInfo(userId);
+            System.out.println("1. 인벤토리 조회 |  2. 나가기 ");
             int menu = Integer.parseInt(sc.nextLine());
             switch (menu){
-                case 1: // 전투
-                	InventoryController.getCharacterInfo(userId);
+                case 1: // 인벤토리 조회
+                	MenuView.equipView(userId);
                     break;
                 case 2: // 상점
+                    return;
+                    
+                default:
+                    System.out.println("메뉴를 다시 선택해주세요.");
+            }
+        }
+
+    }
+    
+    public static void equipView(int userId) {
+    	while(true){
+
+            System.out.println("========2=======");
+            InventoryController.getInventoryInfo(userId);
+            System.out.println("1. 장비 아이템 장착  |  2. 장착 중인 장비 해제  |  3. 뒤로가기 ");
+            int menu = Integer.parseInt(sc.nextLine());
+            switch (menu){
+                case 1: // 장비 장착 및 교체
+                	String equipName = sc.nextLine();
+                	InventoryController.equipItem(userId, equipName);
+                    break;
+                case 2: // 장비 해제
+                	String unequipName = sc.nextLine();
+                	InventoryController.unequipItem(userId, unequipName);
+                    break;
+                case 3: // 뒤로가기
                     return;
                     
                 default:

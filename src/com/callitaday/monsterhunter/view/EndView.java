@@ -1,5 +1,5 @@
 package com.callitaday.monsterhunter.view;
-import com.callitaday.monsterhunter.dto.CharacterInfoDto;
+
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 import java.util.List;
@@ -85,24 +85,6 @@ public class EndView {
 
         return sb.toString();
     }
-  
-    public static void printCharacterInfo(CharacterInfoDto characterInfoDto) {
-        int addAtk = 0;
-        int addDef = 0;
-
-        if(characterInfoDto.getEquiplist().size()>0) {
-            for(ItemDto id : characterInfoDto.getEquiplist()) {
-                if("무기".equals(id.getItemType())) addAtk = id.getItemIncrease();
-                else if("방어구".equals(id.getItemType())) addDef = id.getItemIncrease();
-            }
-        }
-
-        System.out.println(characterInfoDto.getUserId()+"님의 캐릭터 정보");
-        System.out.println();
-        System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s%n", "체력", "마나", "공격력 + 무기", "방어력 + 방어구", "소지금", "스테이지");
-        System.out.printf("%-5d %-5d %d + %-5d %d + %-5d %-5d %-5d%n", characterInfoDto.getHp(), characterInfoDto.getMp(), characterInfoDto.getAtk(), addAtk, characterInfoDto.getDef(), addDef, characterInfoDto.getCoin(), 0);
-    }
-
 
     /**
      * 스테이지 선택 뷰
