@@ -112,15 +112,14 @@ public class MenuView {
 			}
 
 			password = Integer.parseInt(passwordInput);
-			pwSuccess = UserController.login(id, password).getUserId();
-
-			if (pwSuccess != 0) {
+			UserDto loginUser = UserController.login(id, password); // 먼저 UserDto로 받기
+			if (loginUser != null) {
+				pwSuccess = loginUser.getUserId(); // null이 아닐 때만 getUserId() 호출
 				printMainView(pwSuccess);
 				return; // 성공하면 바로 종료
 			}
 			System.out.print("비밀번호를 다시 입력하세요 ");
 		}
-
 		System.out.println("비밀번호 3회 오류로 메인화면으로 돌아갑니다");
 		menu();
 	}
@@ -257,6 +256,7 @@ public class MenuView {
             }
         }
     }
+
 	/**
 	 * 아이템 구매 메뉴
 	 */
