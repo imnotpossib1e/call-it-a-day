@@ -197,24 +197,24 @@ public class InvenView {
 
 		    for (InventoryDto item : invenList) {
 
-		        int hpIncrease = 0;
-		        int atkIncrease = 0;
-		        int defIncrease = 0;
+		        String hpIncrease = "  ";
+		        String atkIncrease = "  ";
+		        String defIncrease = "  ";
 
 		        String name = item.getItemDto().getItemName();
 		        String type = item.getItemDto().getItemType();
 
 		        if (type.equals("포션")) {
 
-		            hpIncrease = item.getItemDto().getItemIncrease();
+		            hpIncrease = "+" + item.getItemDto().getItemIncrease();
 
 		        } else if (type.equals("무기")) {
 
-		            atkIncrease = item.getItemDto().getItemIncrease();
+		            atkIncrease = "+" + item.getItemDto().getItemIncrease();
 
 		        } else if (type.equals("방어구")) {
 
-		            defIncrease = item.getItemDto().getItemIncrease();
+		            defIncrease = "+" + item.getItemDto().getItemIncrease();
 		        }
 
 		        int qnt = item.getQuantity();
@@ -231,11 +231,11 @@ public class InvenView {
 		                + "|"
 		                + center(type, TYPE_WIDTH)
 		                + "|"
-		                + center(String.valueOf(hpIncrease), HP_WIDTH)
+		                + center(hpIncrease, HP_WIDTH)
 		                + "|"
-		                + center(String.valueOf(atkIncrease), ATK_WIDTH)
+		                + center(atkIncrease, ATK_WIDTH)
 		                + "|"
-		                + center(String.valueOf(defIncrease), DEF_WIDTH)
+		                + center(defIncrease, DEF_WIDTH)
 		                + "|"
 		                + center(String.valueOf(qnt), QNT_WIDTH)
 		                + "|"
@@ -247,6 +247,80 @@ public class InvenView {
 		    }
 
 		    System.out.println("+" + "=".repeat(totalWidth) + "+");
+		    System.out.println();
+	}
+	
+	public static void printPotionInfo(List<InventoryDto> invenList) {		
+		 final int ITEM_WIDTH = 15;
+		    final int TYPE_WIDTH = 10;
+		    final int HP_WIDTH = 7;
+		    final int QNT_WIDTH = 6;
+		    final int EXPLAIN_WIDTH = 55;
+
+		    int totalWidth =
+		            ITEM_WIDTH
+		            + TYPE_WIDTH
+		            + HP_WIDTH
+		            + QNT_WIDTH
+		            + EXPLAIN_WIDTH
+		            + 7 * 3 + 1;
+
+		    System.out.println();
+		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
+
+		    System.out.println(
+		            "|"
+		            + center("INVENTORY INFORMATION", totalWidth-25)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
+
+		    // 헤더
+		    System.out.println(
+		            "|"
+		            + center("ITEM", ITEM_WIDTH)
+		            + "|"
+		            + center("TYPE", TYPE_WIDTH)
+		            + "|"
+		            + center("HP", HP_WIDTH)
+		            + "|"
+		            + center("QTY", QNT_WIDTH)
+		            + "|"
+		            + center("DESCRIPTION", EXPLAIN_WIDTH)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "-".repeat(totalWidth-25) + "+");
+
+		    for (InventoryDto item : invenList) {
+
+		        int hpIncrease = item.getItemDto().getItemIncrease();
+
+		        String name = item.getItemDto().getItemName();
+		        String type = item.getItemDto().getItemType();
+
+		        int qnt = item.getQuantity();
+
+		        String explain =
+		                item.getItemDto().getItemExplanation();
+
+		        System.out.println(
+		                "|"
+		                + center(name, ITEM_WIDTH)
+		                + "|"
+		                + center(type, TYPE_WIDTH)
+		                + "|"
+		                + center("+" + String.valueOf(hpIncrease), HP_WIDTH)
+		                + "|"
+		                + center(String.valueOf(qnt), QNT_WIDTH)
+		                + "|"
+		                + center(explain, EXPLAIN_WIDTH)
+		                + "|"
+		        );
+		    }
+
+		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
 		    System.out.println();
 	}
 	

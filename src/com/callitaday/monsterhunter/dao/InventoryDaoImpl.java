@@ -59,6 +59,49 @@ public class InventoryDaoImpl implements InventoryDao {
     }
     
     /**
+     * 내가 보유한 포션 아이템 조회
+     * 
+     * @param userId, itemType
+     */
+    @Override
+    public List<InventoryDto> getItemByItemTypeInfo(int userId, String itemType) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String sql = "select * from v_user_inventory where user_id = ? and item_type LIKE ?";
+        List<InventoryDto> list = new ArrayList<InventoryDto>();
+
+        try{
+            con = DbManager.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setString(2, "%" + itemType + "%");
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                InventoryDto inventoryDto = new InventoryDto();
+                inventoryDto.setUserId(rs.getInt("user_id"));
+                inventoryDto.setQuantity(rs.getInt("quantity"));
+                inventoryDto.setEquipped("T".equals(rs.getString("is_equipped")));
+                ItemDto itemDto = new ItemDto();
+                itemDto.setItemId(rs.getInt("item_id"));
+                itemDto.setItemName(rs.getString("item_name"));
+                itemDto.setItemIncrease(rs.getInt("item_increase"));
+                itemDto.setItemExplanation(rs.getString("item_explanation"));
+                itemDto.setItemType(rs.getString("item_type"));
+                inventoryDto.setItemDto(itemDto);
+                list.add(inventoryDto);
+            }
+        }
+        finally {
+            DbManager.dbClose(con, ps, rs);
+        }
+
+        return list;
+    }
+    
+    /**
 	 * 아이템 장착
 	 * user_id와 item_id를 매개변수로 받아서 inventory 테이블에서 update로 변경
 	 * update inventory set is_equipped = T where user_id = ? and item_id = ?
