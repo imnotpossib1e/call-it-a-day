@@ -16,10 +16,16 @@ public class UserDto {
 		this.password = password;
 	}
 
-	// 전체 필드를 받는 생성자
-	public UserDto(int userId, String id, int password) {
+//보안을 위한 생성자
+	public UserDto(int userId, String id) {
 		this.userId = userId;
 		this.id = id;
+
+	}
+
+	// 전체 필드를 받는 생성자
+	public UserDto(int userId, String id, int password) {
+		this(userId, id);
 		this.password = password;
 	}
 

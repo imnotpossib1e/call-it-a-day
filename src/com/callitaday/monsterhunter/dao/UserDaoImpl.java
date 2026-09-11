@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
 			rs = ps.executeQuery();
 
 			if (rs.next()) {
-				userDto = new UserDto(rs.getInt("user_id"), rs.getString("id"), rs.getInt("password"));
+				userDto = new UserDto(rs.getInt("user_id"), rs.getString("id"));
 			}
 		} finally {
 			DbManager.dbClose(con, ps, rs);

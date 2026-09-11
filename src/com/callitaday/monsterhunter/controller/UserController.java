@@ -6,8 +6,8 @@ import com.callitaday.monsterhunter.dto.UserDto;
 import com.callitaday.monsterhunter.exception.AddException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
 import com.callitaday.monsterhunter.service.UserServiceImpl;
-import com.callitaday.monsterhunter.view.FailView;
 import com.callitaday.monsterhunter.view.EndView;
+import com.callitaday.monsterhunter.view.FailView;
 
 public class UserController {
 	private static UserServiceImpl userService = new UserServiceImpl();
@@ -25,18 +25,17 @@ public class UserController {
 
 	}
 
-	public static boolean login(String id, int password) {
-	    try {
-	        UserDto userDto = userService.login(id, password);
+	public static UserDto login(String id, int password) {
+		UserDto userDto = null;
+		try {
+			userDto = userService.login(id, password);
 			EndView.printMessage("전장에 입장하였습니다.");
-	        return true;
-	    } catch (SQLException e) {
-	        FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
-	        return false;
-	    } catch (NotFoundException n) {
-	        FailView.errorMessage("로그인 정보 오류 : " + n.getMessage());
-	        return false;
-	    }
+		} catch (SQLException e) {
+			FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
+		} catch (NotFoundException n) {
+			FailView.errorMessage("로그인 정보 오류 : " + n.getMessage());
+		}
+		return userDto;
 
 	}
 
