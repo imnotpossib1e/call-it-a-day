@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
 		if (userDto == null) {
 			throw new NotFoundException(" 비밀번호가 일치하지 않습니다.");
 		}
+
 		Session session = new Session(id);
 		SessionSet sessionSet = SessionSet.getInstance();// 세션셋 얻어오고
 		sessionSet.add(session); // 인증된사용자를 SessionSet에 저장한다.
