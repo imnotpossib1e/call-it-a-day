@@ -103,12 +103,26 @@ public class EndView {
     }
 
     /**
+     * 공격 뷰
+     */
+    public static void attackView(int userId){
+        BattleController.attack(userId);
+    }
+
+
+    /**
      * 방어 뷰
      */
     public static void defendView(int userId){
-
+        BattleController.defend(userId);
     }
 
-    
+    /**
+     * 공격 성공/실패 여부 출력
+     */
+    public static void attackResult(String message){
+        System.out.println(message);
+    }
+
 }
 
