@@ -39,4 +39,20 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
 
         return characterInfoDto;
     }
+
+    public int updateCharactoryByUserId(Connection con, int userId) throws SQLException{
+        PreparedStatement ps = null;
+
+        String sql = "update character_info set atk = atk+10 , def = def+10 where user_id = ?";
+        int re = 0;
+        try{
+            ps=con.prepareStatement(sql);
+            ps.setInt(1, userId);
+            re = ps.executeUpdate();
+        }finally {
+            DbManager.dbClose(null, ps);
+        }
+
+        return 0;
+    }
 }
