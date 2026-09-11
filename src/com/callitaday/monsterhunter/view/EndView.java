@@ -25,7 +25,8 @@ public class EndView {
 //            StringBuilder effectLine = new StringBuilder();
             StringBuilder priceLine = new StringBuilder();
             StringBuilder descLine = new StringBuilder();
-
+            StringBuilder descLine2 = new StringBuilder();
+            boolean b  = false;
             System.out.println("> " + targetType);
 
             for(ItemDto item: list){
@@ -49,7 +50,18 @@ public class EndView {
                 }else{
                     priceLine.append(padRight("가격 " + item.getItemPrice(), colWidth));
                 }
-                descLine.append(padRight(item.getItemExplanation(), colWidth));
+                if(item.getItemType().equals("무기") || item.getItemType().equals("방어구")){
+                    String explanation = item.getItemExplanation();
+                    if(explanation.contains("F")){
+                        String[] part = explanation.split("F");
+                        descLine.append(padRight(part[0].trim(), colWidth));
+                        descLine2.append(padRight(part[1].trim(), colWidth));
+                        b = true;
+
+                    }
+                }else {
+                    descLine.append(padRight(item.getItemExplanation(), colWidth));
+                }
 
             }
             // 출력
@@ -57,6 +69,9 @@ public class EndView {
 //            System.out.println(effectLine.toString());
             System.out.println(priceLine.toString());
             System.out.println(descLine.toString());
+            if(b){
+                System.out.println(descLine2.toString());
+            }
             System.out.println(); // 아이템 목록 끝난 후 빈 줄 추가
         }
 
