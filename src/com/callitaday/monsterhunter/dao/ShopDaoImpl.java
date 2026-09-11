@@ -117,7 +117,7 @@ public class ShopDaoImpl implements ShopDAO{
                     // 유저의 코인보다 구매 총액이 클 때
                     if(characterInfoDto.getCoin() < totalAmount){
                         con.rollback();
-                        throw new PurchaseFailException("코인 차감에 실패했습니다..");
+                        throw new PurchaseFailException("코인이 부족합니다.");
                     }
 
                     // 코인 차감

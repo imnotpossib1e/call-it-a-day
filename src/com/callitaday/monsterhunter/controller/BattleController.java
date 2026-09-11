@@ -1,10 +1,21 @@
 package com.callitaday.monsterhunter.controller;
 
+import com.callitaday.monsterhunter.dao.ItemDao;
+import com.callitaday.monsterhunter.dao.ItemDaoImpl;
+import com.callitaday.monsterhunter.dto.DefendDto;
+import com.callitaday.monsterhunter.dto.InventoryDto;
+import com.callitaday.monsterhunter.service.InventoryService;
+import com.callitaday.monsterhunter.service.InventoryServiceImpl;
+import com.callitaday.monsterhunter.service.ItemService;
+import com.callitaday.monsterhunter.service.ItemServiceImpl;
 import com.callitaday.monsterhunter.view.EndView;
+import com.callitaday.monsterhunter.view.InvenView;
+import java.security.interfaces.EdECKey;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 import com.callitaday.monsterhunter.dto.CharacterInfoDto;
+import com.callitaday.monsterhunter.dto.DefendDto;
 import com.callitaday.monsterhunter.exception.NotFoundException;
 import com.callitaday.monsterhunter.service.BattleService;
 import com.callitaday.monsterhunter.service.BattleServiceImpl;
@@ -12,10 +23,12 @@ import com.callitaday.monsterhunter.service.CharacterInfoService;
 import com.callitaday.monsterhunter.service.CharacterInfoServiceImpl;
 import com.callitaday.monsterhunter.view.FailView;
 import com.callitaday.monsterhunter.view.MenuView;
+import javax.swing.border.EmptyBorder;
 
 public class BattleController {
 	public static final BattleService battleService = BattleServiceImpl.getInstance();
-    
+    public static final InventoryService inventoryService = InventoryServiceImpl.getInstance();
+
 	/**
 	 * 전투화면 진입
 	 */
@@ -121,9 +134,23 @@ public class BattleController {
     		if (user.getHp() <= 0 || user.getStageDto().getEnemyHp() <= 0) {
                 return;
             }
+            EndView.printMessage("적의 공격을 방어합니다.");
+            timeDelay();
+            // 방어 서비스 호출
+            EndView.printMessage("적의 턴입니다.");
 
-            //
-    		battleService.userDefend(userId);
+
+             DefendDto defendDto = battleService.userDefend(userId);
+             if(defendDto.isResult()){ // 방어에 성공한 경우
+                 EndView.printMessage("방어에 성공하셨습니다. -> 데미지 반사");
+                 EndView.attackResult("상대 HP -"+ defendDto.getDamage());
+             }else{
+                 EndView.printMessage("방어에 실패했습니다.");
+                 EndView.attackResult("내 HP -" + defendDto.getDamage());
+             }
+
+
+
 
             // Todo 방어 뷰 작성 (방어에성공하셨습니다)
 
@@ -144,10 +171,10 @@ public class BattleController {
     		if (user.getHp() <= 0 || user.getStageDto().getEnemyHp() <= 0) {
                 return;
     		}
-    		
+
     		battleService.useItem(userId, itemId);
     		
-		} catch (SQLException e) {
+		} catch (SQLException  e) {
 			// TODO Auto-generated catch block
 			FailView.errorMessage(e.getMessage());
 		}

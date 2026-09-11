@@ -103,17 +103,17 @@ public class EndView {
     }
 
     /**
-     * 방어 뷰
-     */
-    public static void defendView(int userId){
-
-    }
-
-    /**
      * 공격 뷰
      */
     public static void attackView(int userId){
         BattleController.attack(userId);
+    }
+
+    /**
+     * 방어 뷰
+     */
+    public static void defendView(int userId){
+        BattleController.defend(userId);
     }
 
     /**
