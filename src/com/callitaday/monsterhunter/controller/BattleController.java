@@ -1,27 +1,19 @@
 package com.callitaday.monsterhunter.controller;
 
-
+import com.callitaday.monsterhunter.service.InventoryService;
+import com.callitaday.monsterhunter.service.InventoryServiceImpl;
 import com.callitaday.monsterhunter.view.BattleView;
-
-
 import com.callitaday.monsterhunter.view.EndView;
-import com.callitaday.monsterhunter.view.InvenView;
-import java.security.interfaces.EdECKey;
 import java.sql.SQLException;
-import java.util.Scanner;
-
 import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.DefendDto;
-import com.callitaday.monsterhunter.exception.NotFoundException;
 import com.callitaday.monsterhunter.service.BattleService;
 import com.callitaday.monsterhunter.service.BattleServiceImpl;
-import com.callitaday.monsterhunter.service.CharacterInfoService;
-import com.callitaday.monsterhunter.service.CharacterInfoServiceImpl;
 import com.callitaday.monsterhunter.view.FailView;
-import com.callitaday.monsterhunter.view.MenuView;
-import javax.swing.border.EmptyBorder;
+import java.util.Scanner;
 
 public class BattleController {
+
 	public static final BattleService battleService = BattleServiceImpl.getInstance();
     public static final InventoryService inventoryService = InventoryServiceImpl.getInstance();
 
