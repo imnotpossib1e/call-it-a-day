@@ -34,5 +34,11 @@ public interface InventoryDao {
 	 * 아이템 보유 수량 체크
 	 */
 	public InventoryDto getItemQuantity(int user_id, int item_id) throws SQLException;
-
+	
+	/**
+     * 내가 보유한 포션 아이템 조회
+     * 
+     * @param userId, itemType
+     */
+    public List<InventoryDto> getItemByItemTypeInfo(int userId, String itemType) throws SQLException;
 }

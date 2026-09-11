@@ -129,4 +129,15 @@ public class InventoryServiceImpl implements InventoryService{
 			} else throw new NotFoundException("장착 중인 아이템이 없습니다."); // 장착한 아이템이 없다면
 		return itemName + " 장비를 헤제합니다.";
 	}
+
+	/**
+	 * 소지한 아이템 목록 중 입력받은 아이템 타입에 해당하는 아이템들만 조회
+	 * */
+	@Override
+	public List<InventoryDto> loadInventoryByItemTypeInfo(int userId, String itemType)
+			throws NotFoundException, SQLException {
+		List<InventoryDto> invenList = invenD.getItemByItemTypeInfo(userId, itemType);
+		if(invenList.size() == 0) throw new NotFoundException("소지한 아이템이 없습니다.");
+		return invenList;
+	}
 }

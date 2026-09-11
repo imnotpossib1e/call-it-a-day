@@ -39,6 +39,17 @@ public class InventoryController {
     }
     
     /**
+	 * 소지한 아이템 목록 중 포션 아이템만 조회
+	 * */
+    public static void getInventoryByItemTypeInfo(int user_id){
+        try{
+        	InvenView.printPotionInfo(service.loadInventoryByItemTypeInfo(user_id, "포션"));
+        }catch (NotFoundException | SQLException e){
+            FailView.errorMessage(e.getMessage());
+        }
+    }
+    
+    /**
 	 * 소지 아이템에서 선택한 아이템 이름을 입력받아 장착 또는 교체
 	 * */
     public static void equipItem(int user_id, String itemName){
