@@ -7,7 +7,6 @@ import com.callitaday.monsterhunter.dao.UserDaoImpl;
 import com.callitaday.monsterhunter.dto.UserDto;
 import com.callitaday.monsterhunter.exception.AddException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
-import com.callitaday.monsterhunter.session.Session;
 import com.callitaday.monsterhunter.session.SessionSet;
 
 public class UserServiceImpl implements UserService {
@@ -31,9 +30,9 @@ public class UserServiceImpl implements UserService {
 		if (userDto == null) {
 			throw new NotFoundException(" 비밀번호가 일치하지 않습니다.");
 		}
-		Session session = new Session(id);
+
 		SessionSet sessionSet = SessionSet.getInstance();// 세션셋 얻어오고
-		sessionSet.add(session); // 인증된사용자를 SessionSet에 저장한다.
+		sessionSet.setList(userDto); // 인증된사용자를 SessionSet에 저장한다.
 		return userDto;
 	}
 
