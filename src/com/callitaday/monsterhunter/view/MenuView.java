@@ -122,7 +122,7 @@ public class MenuView {
      * 전투 진입
      */
     public static void battleView(int userId) {
-        BattleController.openBattle(userId);
+        BattleController.openBattle(userId, sc);
     }
     
     /**
