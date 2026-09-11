@@ -122,21 +122,35 @@ public class MenuView {
      * 전투 진입
      */
     public static void battleView(int userId) {
-        BattleController.openBattle(userId, sc);
+        BattleController.openBattle(userId);
     }
     
     /**
      * 전투 메뉴 호출
      */
-    public static void runBattle(int userId, Scanner scanner){
+    public static void runBattle(int userId){
     	
     	if (!BattleController.start(userId)) {
             return;
         }
     	
     	while(true) {
+            // 전투중인 유저 존재 여부 받아오기
     		CharacterInfoDto user = BattleController.getState(userId);
     		if(user == null) return;
+
+            boolean defeated = user.getHp() <= 0; // 패배 여부 확인
+            boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0; // 승리 여부 확인
+
+            /**
+             * 전투 결과 저장
+             */
+            if (defeated || victory) {
+                System.out.println(victory ? "승리했습니다!" : "패배했습니다.");
+
+                saveBattleAndExit(userId);
+                return;
+            }
     		
     		System.out.println("-------------------------------------------");
     		System.out.println("몬스터 HP: " + user.getStageDto().getEnemyHp());
@@ -146,7 +160,7 @@ public class MenuView {
     		System.out.println();
     		System.out.println("-------------------------------------------");
     		System.out.println ("내 HP: " + user.getHp()				
-                    + "내 MP: " + user.getMp()						
+                    + "   내 MP: " + user.getMp()
                     );
     		System.out.println("-------------------------------------------");
     		System.out.println();
@@ -156,22 +170,15 @@ public class MenuView {
         	System.out.print("|3. 아이템 사용								|\n");
         	System.out.println("-------------------------------------------");
         	
-        	boolean defeated = user.getHp() <= 0;
-        	boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0;
-        	
-        	if (defeated || victory) {
-                System.out.println(victory ? "승리했습니다!" : "패배했습니다.");
-                
-                saveBattleAndExit(userId, scanner);
-            	return;
-        	}
+
         	
         	int result = Integer.parseInt(sc.nextLine());
         	switch (result) {
     	    	case 1:EndView.attackView(userId);break;
     	    	case 2:EndView.defendView(userId);break;
     	    	case 3:System.out.print("사용할 포션 번호 > ");
-                BattleController.useItem(userId, scanner.nextLine());break;
+                int itemId = Integer.parseInt(sc.nextLine());
+                BattleController.useItem(userId, itemId);break;
     	    	default: System.out.println("메뉴를 다시 선택해주세요.");
         	}
 
@@ -180,7 +187,7 @@ public class MenuView {
     /**
      * 전투 종료 및 저장
      */
-    private static void saveBattleAndExit(int userId, Scanner scanner) {
+    private static void saveBattleAndExit(int userId) {
 
         while (true) {
             if (BattleController.save(userId)) {
@@ -193,7 +200,7 @@ public class MenuView {
                     + "Enter를 누르면 저장을 재시도합니다."
             );
 
-            scanner.nextLine();
+            sc.nextLine();
         }
     }
 

@@ -136,21 +136,22 @@ public class BattleServiceImpl implements BattleService{
         int enemyDice = randomDice();
         int manaCost = userDice;
         int previousMp = user.getMp();
-        
+
+		// 적의 난수가 더 크면 공격 실패?
         if (userDice <= enemyDice) {
             return 0;
         }
         
-        int damage = Math.max(0, user.getAtk() - enemy.getEnemyDef());
-        int actualDamage = Math.min(damage, enemy.getEnemyHp());
+        int damage = Math.max(0, user.getAtk() - enemy.getEnemyDef()); // 데미지 계산
+        int actualDamage = Math.min(damage, enemy.getEnemyHp()); // 들어갈 데미지
         
-        enemy.setEnemyHp(enemy.getEnemyHp() - actualDamage);
+        enemy.setEnemyHp(enemy.getEnemyHp() - actualDamage); // 적의 데미지 로컬에 적용
         
-        int missingMana = Math.max(0, manaCost - previousMp);
+        int missingMana = Math.max(0, manaCost - previousMp); // 내가 잃을 마나 계산
         
-        user.setHp(Math.max(0,  user.getHp() - missingMana * 10));
+        user.setHp(Math.max(0,  user.getHp() - missingMana * 10)); // 나의 마나 차감
 
-		return actualDamage;
+		return actualDamage; // 현재 적의 데미지 반환 - 왜??
 	}
 
 	/**
@@ -183,8 +184,8 @@ public class BattleServiceImpl implements BattleService{
 	 */
 	@Override
 	public int userDefend(int userId) throws SQLException {
-		// TODO Auto-generated method stub
 		CharacterInfoDto user = getBattleUser(userId);
+		// 적의 상태 불러오기
 	    StageDto enemy = user.getStageDto();
 	    
 	    int userDice = randomDice();
@@ -265,7 +266,7 @@ public class BattleServiceImpl implements BattleService{
         StageDto enemy = user.getStageDto();
         
         boolean victory = user.getHp() > 0 && enemy.getEnemyHp() <= 0;
-        int result = stageDao.saveBattle(user);
+        int result = stageDao.saveBattle(user, victory);
         
         if (result > 1) {
             throw new ModifyException("user 정보가 중복됩니다.");
