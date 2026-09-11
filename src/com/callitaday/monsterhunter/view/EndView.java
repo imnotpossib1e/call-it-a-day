@@ -1,5 +1,6 @@
 package com.callitaday.monsterhunter.view;
 
+import com.callitaday.monsterhunter.controller.BattleController;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 import java.util.List;
@@ -92,14 +93,34 @@ public class EndView {
     public static void printStageSelect(List<StageDto> stageList,  int num){
         for(int i = 0; i<stageList.size(); i++){
             System.out.print("[STAGE " + stageList.get(i).getStageId() + "]");
-            if(i<num){
+            if(i<num-1){
                 System.out.print(" - CLEAR");
             }
             System.out.print("\t\t");
         }
         System.out.println();
-        System.out.print("[STAGE " + (num+1) + "] 입장 하시겠습니까? [Y / N] > ");
+        System.out.print("[STAGE " + num + "] 입장 하시겠습니까? [Y / N] > ");
     }
-    
+
+    /**
+     * 방어 뷰
+     */
+    public static void defendView(int userId){
+
+    }
+
+    /**
+     * 공격 뷰
+     */
+    public static void attackView(int userId){
+        BattleController.attack(userId);
+    }
+
+    /**
+     * 공격 성공/실패 여부 출력
+     */
+    public static void attackResult(String message){
+        System.out.println(message);
+    }
 }
 

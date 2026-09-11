@@ -36,7 +36,7 @@ public interface StageDao {
 	/**
 	 * 스테이지 클리어 저장
 	 */
-	int saveBattle(CharacterInfoDto user) throws SQLException;
+	int saveBattle(CharacterInfoDto user, boolean victory) throws SQLException;
 	
 	/**
 	 * 클리어 보상 증표 지급
