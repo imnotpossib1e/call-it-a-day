@@ -1,5 +1,6 @@
 package com.callitaday.monsterhunter.service;
 
+import com.callitaday.monsterhunter.dto.DefendDto;
 import java.sql.SQLException;
 
 import com.callitaday.monsterhunter.dto.CharacterInfoDto;
@@ -43,7 +44,7 @@ public interface BattleService {
 	/**
 	 * 방어하기 (유저)
 	 */
-	int userDefend(int userId) throws SQLException;
+	DefendDto userDefend(int userId) throws SQLException;
 
 	/**
 	 * 아이템 사용

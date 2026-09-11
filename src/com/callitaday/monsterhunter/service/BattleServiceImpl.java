@@ -1,5 +1,6 @@
 package com.callitaday.monsterhunter.service;
 
+import com.callitaday.monsterhunter.dto.DefendDto;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -183,30 +184,43 @@ public class BattleServiceImpl implements BattleService{
 	 * 유저의 방어
 	 */
 	@Override
-	public int userDefend(int userId) throws SQLException {
+	public DefendDto userDefend(int userId) throws SQLException {
 		CharacterInfoDto user = getBattleUser(userId);
 		// 적의 상태 불러오기
 	    StageDto enemy = user.getStageDto();
+
+		DefendDto defendDto = null;
 	    
 	    int userDice = randomDice();
 	    int enemyDice = randomDice();
-	    
+		int reflectionDamage = 0;
+		boolean result = false;
+
+		// 적의 데미지 계산
 	    if (userDice >= enemyDice) {
+			// 나의 방어가 성공해서 공격 데미지가 반사되는 경우
 	    	if(userDice == 10) {
 	    		int counterDamage = (userDice - enemyDice) * 10;
-	    		
-	    		enemy.setEnemyHp(Math.max(0, enemy.getEnemyHp() - counterDamage));
+
+				enemy.setEnemyHp(Math.max(0, enemy.getEnemyHp() - counterDamage));
+				// 적이 받는 반사데미지
+				reflectionDamage = Math.max(0, enemy.getEnemyHp() - counterDamage);
+				result = true;
+				defendDto = new DefendDto(reflectionDamage, result);
 	    	}
-	    	
-	    	return 0;
+			// 내가 받는 데미지는 0, 적이 받는 데미지 있음.
+			return defendDto;
 	    }
-	    	    
+		// 방어에 실패해서 적의 공격을 받는 경우
 	    int damage = Math.max(0, enemy.getEnemyAtk() - user.getDef());
 	    int actualDamage = Math.min(damage, user.getHp());
 
+		// 유저 데미지 적용
 	    user.setHp(user.getHp() - actualDamage);
+		defendDto = new DefendDto(actualDamage, result);
 
-	    return actualDamage;
+		// 유저가 받는 데미지
+	    return defendDto;
 	}
 
 	/**
