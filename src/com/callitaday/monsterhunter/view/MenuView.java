@@ -105,7 +105,7 @@ public class MenuView {
             String choice = sc.nextLine();
             switch(choice){
                 case "Y":
-                    battleView(userId);
+                	BattleView.battleView(userId, sc);
                     validInput = false;
                     break;
                 case "N":

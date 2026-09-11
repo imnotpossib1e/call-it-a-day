@@ -109,6 +109,7 @@ public class EndView {
         BattleController.attack(userId);
     }
 
+
     /**
      * 방어 뷰
      */
@@ -122,5 +123,6 @@ public class EndView {
     public static void attackResult(String message){
         System.out.println(message);
     }
+
 }
 

@@ -1,13 +1,9 @@
 package com.callitaday.monsterhunter.controller;
 
-import com.callitaday.monsterhunter.dao.ItemDao;
-import com.callitaday.monsterhunter.dao.ItemDaoImpl;
-import com.callitaday.monsterhunter.dto.DefendDto;
-import com.callitaday.monsterhunter.dto.InventoryDto;
-import com.callitaday.monsterhunter.service.InventoryService;
-import com.callitaday.monsterhunter.service.InventoryServiceImpl;
-import com.callitaday.monsterhunter.service.ItemService;
-import com.callitaday.monsterhunter.service.ItemServiceImpl;
+
+import com.callitaday.monsterhunter.view.BattleView;
+
+
 import com.callitaday.monsterhunter.view.EndView;
 import com.callitaday.monsterhunter.view.InvenView;
 import java.security.interfaces.EdECKey;
@@ -32,9 +28,9 @@ public class BattleController {
 	/**
 	 * 전투화면 진입
 	 */
-	public static void openBattle(int userId) {
+	public static void openBattle(int userId, Scanner sc) {
 		try {
-			MenuView.runBattle(userId);
+			BattleView.runBattle(userId, sc);
 		} catch (Exception e) {
 			FailView.errorMessage("전투 화면 지속이 불가능합니다.");
 		}
@@ -94,7 +90,7 @@ public class BattleController {
 
             // 유저의 공격
     		int myDamage = battleService.userAttack(userId);
-            EndView.attackResult("상대 HP -"+myDamage);
+    		BattleView.attackResult("상대 HP -"+myDamage);
 
             timeDelay();
 
@@ -105,7 +101,7 @@ public class BattleController {
     		if (user.getHp() > 0 && user.getStageDto().getEnemyHp() > 0) {
                 // 적의 공격
                 int enemyDamage = battleService.enemyAttack(userId);
-                EndView.attackResult("내 HP -"+enemyDamage);
+                BattleView.attackResult("내 HP -"+enemyDamage);
                 timeDelay();
             }
 
@@ -116,7 +112,7 @@ public class BattleController {
 
     private static void timeDelay(){
         try {
-            Thread.sleep(1500); // 1.5초 동안 지연
+            Thread.sleep(1000); // 1.0초 동안 지연
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
