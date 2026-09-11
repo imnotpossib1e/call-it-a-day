@@ -14,5 +14,10 @@ public interface CharacterInfoDao {
      * user_id에 맞는 캐릭터 hp,mp 수정하기
      *
      */
-    public int updateCharactoryByUserId(Connection con, int user_id) throws SQLException;
+    public int updateCharacterByUserId(Connection con, int user_id) throws SQLException;
+
+    /**
+     * 회원가입 시 유저의 characterInfo 생성하기
+     */
+    public int insertCharacterInfo(int user_id) throws SQLException;
 }

@@ -30,10 +30,7 @@ public class UserDaoImpl implements UserDao {
 			ps.setInt(2, userDto.getPassword());
 
 			result = ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new AddException(" -- 회원가입 중 오류가 발생했습니다. -- ");
-		} finally {
+		}finally {
 			DbManager.dbClose(con, ps);
 		}
 		return result;

@@ -40,7 +40,7 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
         return characterInfoDto;
     }
 
-    public int updateCharactoryByUserId(Connection con, int userId) throws SQLException{
+    public int updateCharacterByUserId(Connection con, int userId) throws SQLException{
         PreparedStatement ps = null;
 
         String sql = "update character_info set atk = atk+10 , def = def+10 where user_id = ?";
@@ -54,5 +54,31 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
         }
 
         return 0;
+    }
+
+
+    /**
+     * 회원가입 시 유저의 characterInfo 생성하기
+     *
+     * @param user_id
+     */
+    @Override
+    public int insertCharacterInfo(int user_id) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        String sql = "insert into character_info(user_id) values(?)";
+        int result = 0;
+
+        try{
+            con = DbManager.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, user_id);
+
+            result = ps.executeUpdate();
+        }finally {
+            DbManager.dbClose(con, ps);
+        }
+        return result;
     }
 }
