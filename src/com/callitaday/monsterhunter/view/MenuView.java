@@ -14,16 +14,11 @@ import com.callitaday.monsterhunter.session.SessionSet;
 
 public class MenuView {
 	private static Scanner sc = new Scanner(System.in);
-
-	// 임시 유저 설정
-	private static int userId = 1;
+	static SessionSet ss = SessionSet.getInstance();// 세션 기록
 
 	public static void menu() {
 		// Todo 세션 받아오기
 		while (true) { // 세션 기록 추가
-			SessionSet ss = SessionSet.getInstance();
-			System.out.println("ss.getSet() = " + ss.getSet());
-
 			MenuView.printLoginMenu();
 			String menu = sc.nextLine();
 			switch (menu) {
@@ -32,8 +27,6 @@ public class MenuView {
 				break;
 			case "2": // 로그인
 				MenuView.login();
-				// 임시 자동 로그인
-				MenuView.printMainView(userId);
 			default:
 				System.out.println("안녕히가세요");
 				System.exit(0);
@@ -55,8 +48,7 @@ public class MenuView {
 	public static void printMainView(int userId) {
 		while (true) {
 			// Todo 세션 가져오기
-			SessionSet ss = SessionSet.getInstance();// 세션 기록
-			System.out.println("ss.getSet() = " + ss.getSet());
+			System.out.println(ss.getList().getId() + " 반갑습니다 ");
 
 			System.out.println("========2=======");
 			System.out.println("1. 전투  |  2. 상점  |  3. 인벤토리  |  4. 로그아웃");
@@ -109,7 +101,7 @@ public class MenuView {
 
 		System.out.print("비밀번호를 입력하세요 ");
 		int password = 0;
-		boolean pwSuccess = false;
+		int pwSuccess = 0;
 		String passwordInput = null;
 
 		for (int i = 1; i <= 3; i++) {
@@ -120,10 +112,10 @@ public class MenuView {
 			}
 
 			password = Integer.parseInt(passwordInput);
-			pwSuccess = UserController.login(id, password);
+			pwSuccess = UserController.login(id, password).getUserId();
 
-			if (pwSuccess) {
-				printMainView(password);
+			if (pwSuccess != 0) {
+				printMainView(pwSuccess);
 				return; // 성공하면 바로 종료
 			}
 			System.out.print("비밀번호를 다시 입력하세요 ");
@@ -139,13 +131,16 @@ public class MenuView {
 	public static boolean logout(int userId) {
 		String choice;
 		boolean out = true;
+
 		// 선택지가 유효할 때 까지 반복
 		while (out) {
 			System.out.print("로그아웃 하시겠습니까? (Y/N) ");
 			choice = sc.nextLine();
 			switch (choice) {
 			case "Y", "y", "ㅛ":
+				ss.setList(null);
 				return true;
+
 			case "N", "n", "ㅜ":
 				return false;
 			default:
