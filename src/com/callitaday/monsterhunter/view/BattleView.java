@@ -11,6 +11,7 @@ public class BattleView {
      * 전투 진입
      */
     public static void battleView(int userId, Scanner sc) {
+
         BattleController.openBattle(userId, sc);
     }
     
@@ -18,27 +19,29 @@ public class BattleView {
      * 전투 메뉴 호출
      */
     public static void runBattle(int userId, Scanner sc){
-    	
+
     	if (!BattleController.start(userId)) {
             return;
         }
+        // 전투중인 유저 존재 여부 받아오기
+        CharacterInfoDto user = BattleController.getState(userId);
+        if(user == null) return;
+
+        int nowStage = user.getStage_id();
+        EndView.printMessage("[현재 스테이지: " + nowStage + "]");
     	
     	while(true) {
-            // 전투중인 유저 존재 여부 받아오기
-    		CharacterInfoDto user = BattleController.getState(userId);
-    		if(user == null) return;
-    		
-    		BattleView.runBattle(user, sc);
+    		BattleView.doBattle(user, sc);
         	
-        	int result = Integer.parseInt(sc.nextLine());
+        	String result = sc.nextLine();
         	switch (result) {
-    	    	case 1:BattleView.attackView(userId);break;
-    	    	case 2:EndView.defendView(userId);break;
-    	    	case 3:
+    	    	case "1":BattleView.attackView(userId);break;
+    	    	case "2":EndView.defendView(userId);break;
+    	    	case "3":
                     InventoryController.getInventoryByItemTypeInfo(userId);
                     System.out.print("사용할 포션 번호 > ");
-                int itemId = Integer.parseInt(sc.nextLine());
-                BattleController.useItem(userId, itemId);break;
+                    int itemId = Integer.parseInt(sc.nextLine());
+                    BattleController.useItem(userId, itemId);break;
     	    	default: System.out.println("메뉴를 다시 선택해주세요.");
         	}
 
@@ -46,9 +49,9 @@ public class BattleView {
     }
 	
 	/**
-     * 전투 메뉴 호출
+     * 전투 과정
      */
-    public static void runBattle(CharacterInfoDto user, Scanner sc){
+    public static void doBattle(CharacterInfoDto user, Scanner sc){
 
             boolean defeated = user.getHp() <= 0; // 패배 여부 확인
             boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0; // 승리 여부 확인

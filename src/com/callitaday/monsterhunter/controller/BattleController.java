@@ -106,7 +106,7 @@ public class BattleController {
 
     private static void timeDelay(){
         try {
-            Thread.sleep(1000); // 1.0초 동안 지연
+            Thread.sleep(200); // 1.0초 동안 지연
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

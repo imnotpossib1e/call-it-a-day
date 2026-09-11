@@ -47,23 +47,21 @@ public class MenuView {
 	 */
 	public static void printMainView(int userId) {
 		while (true) {
-			// Todo 세션 가져오기
-			System.out.println(ss.getList().getId() + " 반갑습니다 ");
 
 			System.out.println("========2=======");
 			System.out.println("1. 전투  |  2. 상점  |  3. 인벤토리  |  4. 로그아웃");
-			int menu = Integer.parseInt(sc.nextLine());
+			String menu = sc.nextLine();
 			switch (menu) {
-			case 1: // 전투
+			case "1": // 전투
 				MenuView.stageView(userId);
 				break;
-			case 2: // 상점
+			case "2": // 상점
 				MenuView.shopView(userId);
 				break;
-			case 3: // 인벤토리
+			case "3": // 인벤토리
 				MenuView.inventoryView(userId);
 				break;
-			case 4: // 로그아웃
+			case "4": // 로그아웃
 				boolean choiceY = logout(userId);
 				if (choiceY) {
 					menu();
@@ -115,8 +113,8 @@ public class MenuView {
 			pwSuccess = UserController.login(id, password).getUserId();
 
 			if (pwSuccess != 0) {
+				System.out.println(ss.getList().getId() + " 반갑습니다 ");
 				printMainView(pwSuccess);
-				return; // 성공하면 바로 종료
 			}
 			System.out.print("비밀번호를 다시 입력하세요 ");
 		}
