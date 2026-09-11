@@ -113,15 +113,14 @@ public class MenuView {
 			}
 
 			password = Integer.parseInt(passwordInput);
-			pwSuccess = UserController.login(id, password).getUserId();
-
-			if (pwSuccess != 0) {
+			UserDto loginUser = UserController.login(id, password); // 먼저 UserDto로 받기
+			if (loginUser != null) {
+				pwSuccess = loginUser.getUserId(); // null이 아닐 때만 getUserId() 호출
 				printMainView(pwSuccess);
 				return; // 성공하면 바로 종료
 			}
 			System.out.print("비밀번호를 다시 입력하세요 ");
 		}
-
 		System.out.println("비밀번호 3회 오류로 메인화면으로 돌아갑니다");
 		menu();
 	}
@@ -303,38 +302,39 @@ public class MenuView {
 	}
 
 	/**
-     * 상점 메뉴
-     */
-    public static void shopView(int userId){
+	 * 상점 메뉴
+	 */
+	public static void shopView(int userId) {
 
-        ItemController.selectAllItem();
-        boolean validInput = true;
-        // 선택지가 유효할 때 까지 반복
-        while(validInput){
-            // 구매할 아이템, 수량 받기
-            System.out.println("메인 메뉴로 돌아가기 : Q");
-            System.out.print("구매할 아이템 번호 > ");
-            String input = sc.nextLine();
+		ItemController.selectAllItem();
+		boolean validInput = true;
+		// 선택지가 유효할 때 까지 반복
+		while (validInput) {
+			// 구매할 아이템, 수량 받기
+			System.out.println("메인 메뉴로 돌아가기 : Q");
+			System.out.print("구매할 아이템 번호 > ");
+			String input = sc.nextLine();
 
-            if (input.equalsIgnoreCase("Q")) {
-                System.out.println("메인 메뉴로 돌아갑니다.");
-                break;
-            }
+			if (input.equalsIgnoreCase("Q")) {
+				System.out.println("메인 메뉴로 돌아갑니다.");
+				break;
+			}
 
-            try {
-                int item_id = Integer.parseInt(input);
-                if(item_id < 1 || item_id > 7){
-                    System.out.println("올바른 번호를 입력해주세요.");
-                    continue;
-                }
-                System.out.print("구매할 아이템 수량 > ");
-                int quantity = Integer.parseInt(sc.nextLine());
-                ShopController.purchaceItem(userId, item_id, quantity);
-            } catch (NumberFormatException e) {
-                System.out.println("올바른 번호를 입력해주세요.");
-            }
-        }
-    }
+			try {
+				int item_id = Integer.parseInt(input);
+				if (item_id < 1 || item_id > 7) {
+					System.out.println("올바른 번호를 입력해주세요.");
+					continue;
+				}
+				System.out.print("구매할 아이템 수량 > ");
+				int quantity = Integer.parseInt(sc.nextLine());
+				ShopController.purchaceItem(userId, item_id, quantity);
+			} catch (NumberFormatException e) {
+				System.out.println("올바른 번호를 입력해주세요.");
+			}
+		}
+	}
+
 	/**
 	 * 아이템 구매 메뉴
 	 */
