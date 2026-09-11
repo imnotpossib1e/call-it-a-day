@@ -179,6 +179,8 @@ public class StageDaoImpl implements StageDao {
 
 		 try {
 			con = DbManager.getConnection();
+			con.setAutoCommit(false);
+
 			ps = con.prepareStatement(sql);
 
 			ps.setInt(1, character.getHp());
@@ -187,6 +189,19 @@ public class StageDaoImpl implements StageDao {
 			ps.setInt(4, character.getUserId());
 
 			result = ps.executeUpdate();
+			if(result == 0){
+				con.rollback();
+				throw new SQLException("전투 결과 저장에 실패했습니다.");
+			}
+			// 승리한 경우 ATK, DEF 수치 변경
+			if(victory){
+				int re = characterInfoDao.updateCharactoryByUserId(con, character.getUserId());
+
+				if(re == 0){
+					con.rollback();
+					throw new SQLException();
+				}
+			}
 
 		 } finally {
 		 	DbManager.dbClose(con, ps);
