@@ -1,5 +1,6 @@
 package com.callitaday.monsterhunter.controller;
 
+import com.callitaday.monsterhunter.view.BattleView;
 import com.callitaday.monsterhunter.view.EndView;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -19,9 +20,9 @@ public class BattleController {
 	/**
 	 * 전투화면 진입
 	 */
-	public static void openBattle(int userId) {
+	public static void openBattle(int userId, Scanner sc) {
 		try {
-			MenuView.runBattle(userId);
+			BattleView.runBattle(userId, sc);
 		} catch (Exception e) {
 			FailView.errorMessage("전투 화면 지속이 불가능합니다.");
 		}
@@ -81,7 +82,7 @@ public class BattleController {
 
             // 유저의 공격
     		int myDamage = battleService.userAttack(userId);
-            EndView.attackResult("상대 HP -"+myDamage);
+    		BattleView.attackResult("상대 HP -"+myDamage);
 
             timeDelay();
 
@@ -92,7 +93,7 @@ public class BattleController {
     		if (user.getHp() > 0 && user.getStageDto().getEnemyHp() > 0) {
                 // 적의 공격
                 int enemyDamage = battleService.enemyAttack(userId);
-                EndView.attackResult("내 HP -"+enemyDamage);
+                BattleView.attackResult("내 HP -"+enemyDamage);
                 timeDelay();
             }
 
@@ -103,7 +104,7 @@ public class BattleController {
 
     private static void timeDelay(){
         try {
-            Thread.sleep(1500); // 1.5초 동안 지연
+            Thread.sleep(1000); // 1.0초 동안 지연
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
