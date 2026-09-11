@@ -30,7 +30,7 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
             rs = ps.executeQuery();
 
             if(rs.next()){
-                characterInfoDto = new CharacterInfoDto(rs.getInt("user_id"), rs.getInt("hp"), rs.getInt("mp"), rs.getInt("atk"),rs.getInt("def"), rs.getInt("job"), rs.getInt("coin"), rs.getInt("stage_id"));
+                characterInfoDto = new CharacterInfoDto(rs.getInt("user_id"), rs.getInt("hp"), rs.getInt("mp"), rs.getInt("atk"),rs.getInt("def"), rs.getInt("coin"), rs.getInt("stage_id"));
             }
 
         }finally {
