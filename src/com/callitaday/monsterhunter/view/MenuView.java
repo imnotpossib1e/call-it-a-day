@@ -226,6 +226,10 @@ public class MenuView {
 
             try {
                 int item_id = Integer.parseInt(input);
+                if(item_id < 1 || item_id > 7){
+                    System.out.println("올바른 번호를 입력해주세요.");
+                    continue;
+                }
                 System.out.print("구매할 아이템 수량 > ");
                 int quantity = Integer.parseInt(sc.nextLine());
                 ShopController.purchaceItem(userId, item_id, quantity);
