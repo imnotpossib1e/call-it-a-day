@@ -1,5 +1,6 @@
 package com.callitaday.monsterhunter.view;
 
+import com.callitaday.monsterhunter.controller.InventoryController;
 import java.util.Scanner;
 
 import com.callitaday.monsterhunter.controller.BattleController;
@@ -33,7 +34,9 @@ public class BattleView {
         	switch (result) {
     	    	case 1:BattleView.attackView(userId);break;
     	    	case 2:EndView.defendView(userId);break;
-    	    	case 3:System.out.print("사용할 포션 번호 > ");
+    	    	case 3:
+                    InventoryController.getInventoryByItemTypeInfo(userId);
+                    System.out.print("사용할 포션 번호 > ");
                 int itemId = Integer.parseInt(sc.nextLine());
                 BattleController.useItem(userId, itemId);break;
     	    	default: System.out.println("메뉴를 다시 선택해주세요.");

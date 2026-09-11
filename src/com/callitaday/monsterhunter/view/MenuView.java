@@ -13,6 +13,7 @@ import com.callitaday.monsterhunter.dto.UserDto;
 import com.callitaday.monsterhunter.session.SessionSet;
 
 public class MenuView {
+
 	private static Scanner sc = new Scanner(System.in);
 	static SessionSet ss = SessionSet.getInstance();// 세션 기록
 
@@ -302,35 +303,38 @@ public class MenuView {
 	}
 
 	/**
-	 * 상점 메뉴
-	 */
-	public static void shopView(int userId) {
+     * 상점 메뉴
+     */
+    public static void shopView(int userId){
 
-		ItemController.selectAllItem();
-		boolean validInput = true;
-		// 선택지가 유효할 때 까지 반복
-		while (validInput) {
-			// 구매할 아이템, 수량 받기
-			System.out.println("메인 메뉴로 돌아가기 : Q");
-			System.out.print("구매할 아이템 번호 > ");
-			String input = sc.nextLine();
+        ItemController.selectAllItem();
+        boolean validInput = true;
+        // 선택지가 유효할 때 까지 반복
+        while(validInput){
+            // 구매할 아이템, 수량 받기
+            System.out.println("메인 메뉴로 돌아가기 : Q");
+            System.out.print("구매할 아이템 번호 > ");
+            String input = sc.nextLine();
 
-			if (input.equalsIgnoreCase("Q")) {
-				System.out.println("메인 메뉴로 돌아갑니다.");
-				break;
-			}
+            if (input.equalsIgnoreCase("Q")) {
+                System.out.println("메인 메뉴로 돌아갑니다.");
+                break;
+            }
 
-			try {
-				int item_id = Integer.parseInt(input);
-				System.out.print("구매할 아이템 수량 > ");
-				int quantity = Integer.parseInt(sc.nextLine());
-				ShopController.purchaceItem(userId, item_id, quantity);
-			} catch (NumberFormatException e) {
-				System.out.println("올바른 번호를 입력해주세요.");
-			}
-		}
-	}
-
+            try {
+                int item_id = Integer.parseInt(input);
+                if(item_id < 1 || item_id > 7){
+                    System.out.println("올바른 번호를 입력해주세요.");
+                    continue;
+                }
+                System.out.print("구매할 아이템 수량 > ");
+                int quantity = Integer.parseInt(sc.nextLine());
+                ShopController.purchaceItem(userId, item_id, quantity);
+            } catch (NumberFormatException e) {
+                System.out.println("올바른 번호를 입력해주세요.");
+            }
+        }
+    }
 	/**
 	 * 아이템 구매 메뉴
 	 */
@@ -388,5 +392,4 @@ public class MenuView {
 		}
 
 	}
-
 }

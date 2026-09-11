@@ -8,7 +8,6 @@ public class CharacterInfoDto {
 	private int mp = 100;
 	private int atk = 20;
 	private int def = 20;
-	private int job;
 	private int coin = 100;
 	private int stage_id;
 	
@@ -19,14 +18,13 @@ public class CharacterInfoDto {
 	public CharacterInfoDto() {
 	}
 
-	public CharacterInfoDto(int userId, int hp, int mp, int atk, int def, int job, int coin, int stage_id) {
+	public CharacterInfoDto(int userId, int hp, int mp, int atk, int def, int coin, int stage_id) {
 		super();
 		this.userId = userId;
 		this.hp = hp;
 		this.mp = mp;
 		this.atk = atk;
 		this.def = def;
-		this.job = job;
 		this.coin = coin;
 		this.stage_id = stage_id;
 	}
@@ -87,14 +85,6 @@ public class CharacterInfoDto {
 		this.def = def;
 	}
 
-	public int getJob() {
-		return job;
-	}
-
-	public void setJob(int job) {
-		this.job = job;
-	}
-
 	public int getCoin() {
 		return coin;
 	}
@@ -132,8 +122,6 @@ public class CharacterInfoDto {
 		builder.append(atk);
 		builder.append(", def=");
 		builder.append(def);
-		builder.append(", job=");
-		builder.append(job);
 		builder.append(", coin=");
 		builder.append(coin);
 		builder.append(", stage_id=");
