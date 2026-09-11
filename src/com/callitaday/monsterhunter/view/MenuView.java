@@ -271,6 +271,7 @@ public class MenuView {
 
             System.out.println("========2=======");
             InventoryController.getInventoryInfo(userId);
+            //InventoryController.getInventoryByItemTypeInfo(userId);
             System.out.println("1. 장비 아이템 장착  |  2. 장착 중인 장비 해제  |  3. 뒤로가기 ");
             int menu = Integer.parseInt(sc.nextLine());
             switch (menu){

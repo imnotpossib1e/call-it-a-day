@@ -23,6 +23,11 @@ public interface InventoryService {
 	public List<InventoryDto> loadInventoryInfo(int userId) throws NotFoundException, SQLException;
 	
 	/**
+	 * 소지한 아이템 목록 중 입력받은 아이템 타입에 해당하는 아이템들만 조회
+	 * */
+	public List<InventoryDto> loadInventoryByItemTypeInfo(int userId, String itemType) throws NotFoundException, SQLException;
+	
+	/**
 	 * 소지한 아이템 중 장비 아이템 장착 및 교체 로직
 	 * 
 	 * 아이템 이름을 입력받아 user_id와 함께 매개변수로 받고
