@@ -195,7 +195,7 @@ public class StageDaoImpl implements StageDao {
 			}
 			// 승리한 경우 ATK, DEF 수치 변경
 			if(victory){
-				int re = characterInfoDao.updateCharactoryByUserId(con, character.getUserId());
+				int re = characterInfoDao.updateCharacterByUserId(con, character.getUserId());
 
 				if(re == 0){
 					con.rollback();
