@@ -12,6 +12,8 @@ import com.callitaday.monsterhunter.service.BattleServiceImpl;
 import com.callitaday.monsterhunter.view.FailView;
 import java.util.Scanner;
 
+
+
 public class BattleController {
 
 	public static final BattleService battleService = BattleServiceImpl.getInstance();

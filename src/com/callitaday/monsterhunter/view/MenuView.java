@@ -8,7 +8,6 @@ import com.callitaday.monsterhunter.controller.ItemController;
 import com.callitaday.monsterhunter.controller.ShopController;
 import com.callitaday.monsterhunter.controller.StageController;
 import com.callitaday.monsterhunter.controller.UserController;
-import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.UserDto;
 import com.callitaday.monsterhunter.session.SessionSet;
 
@@ -140,7 +139,6 @@ public class MenuView {
 			case "Y", "y", "ㅛ":
 				ss.setList(null);
 				return true;
-
 			case "N", "n", "ㅜ":
 				return false;
 			default:
@@ -225,115 +223,39 @@ public class MenuView {
 		BattleController.openBattle(userId, sc);
 	}
 
-	/**
-	 * 전투 메뉴 호출
-	 */
-	public static void runBattle(int userId, Scanner scanner) {
+    /**
+     * 상점 메뉴
+     */
+    public static void shopView(int userId){
 
-		if (!BattleController.start(userId)) {
-			return;
-		}
+        ItemController.selectAllItem();
+        boolean validInput = true;
+        // 선택지가 유효할 때 까지 반복
+        while(validInput){
+            // 구매할 아이템, 수량 받기
+            System.out.println("메인 메뉴로 돌아가기 : Q");
+            System.out.print("구매할 아이템 번호 > ");
+            String input = sc.nextLine();
 
-		while (true) {
-			CharacterInfoDto user = BattleController.getState(userId);
-			if (user == null)
-				return;
+            if (input.equalsIgnoreCase("Q")) {
+                System.out.println("메인 메뉴로 돌아갑니다.");
+                break;
+            }
 
-			System.out.println("-------------------------------------------");
-			System.out.println("몬스터 HP: " + user.getStageDto().getEnemyHp());
-			System.out.println("-------------------------------------------");
-			System.out.println();
-			System.out.println();
-			System.out.println();
-			System.out.println("-------------------------------------------");
-			System.out.println("내 HP: " + user.getHp() + "내 MP: " + user.getMp());
-			System.out.println("-------------------------------------------");
-			System.out.println();
-			System.out.println("-------------------------------------------");
-			System.out.print("|1. 공격하기									|\n");
-			System.out.print("|2. 방어하기									|\n");
-			System.out.print("|3. 아이템 사용								|\n");
-			System.out.println("-------------------------------------------");
-
-			boolean defeated = user.getHp() <= 0;
-			boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0;
-
-			if (defeated || victory) {
-				System.out.println(victory ? "승리했습니다!" : "패배했습니다.");
-
-				saveBattleAndExit(userId, scanner);
-				return;
-			}
-
-			int result = Integer.parseInt(sc.nextLine());
-			switch (result) {
-			case 1:
-				EndView.attackView(userId);
-				break;
-			case 2:
-				EndView.defendView(userId);
-				break;
-			case 3:
-				System.out.print("사용할 포션 번호 > ");
-				BattleController.useItem(userId, scanner.nextLine());
-				break;
-			default:
-				System.out.println("메뉴를 다시 선택해주세요.");
-			}
-
-		}
-	}
-
-	/**
-	 * 전투 종료 및 저장
-	 */
-	private static void saveBattleAndExit(int userId, Scanner scanner) {
-
-		while (true) {
-			if (BattleController.save(userId)) {
-				System.out.println("전투 결과를 저장했습니다.");
-				return;
-			}
-
-			System.out.println("저장을 완료하지 못했습니다. " + "Enter를 누르면 저장을 재시도합니다.");
-
-			scanner.nextLine();
-		}
-	}
-
-	/**
-	 * 상점 메뉴
-	 */
-	public static void shopView(int userId) {
-
-		ItemController.selectAllItem();
-		boolean validInput = true;
-		// 선택지가 유효할 때 까지 반복
-		while (validInput) {
-			// 구매할 아이템, 수량 받기
-			System.out.println("메인 메뉴로 돌아가기 : Q");
-			System.out.print("구매할 아이템 번호 > ");
-			String input = sc.nextLine();
-
-			if (input.equalsIgnoreCase("Q")) {
-				System.out.println("메인 메뉴로 돌아갑니다.");
-				break;
-			}
-
-			try {
-				int item_id = Integer.parseInt(input);
-				if (item_id < 1 || item_id > 7) {
-					System.out.println("올바른 번호를 입력해주세요.");
-					continue;
-				}
-				System.out.print("구매할 아이템 수량 > ");
-				int quantity = Integer.parseInt(sc.nextLine());
-				ShopController.purchaceItem(userId, item_id, quantity);
-			} catch (NumberFormatException e) {
-				System.out.println("올바른 번호를 입력해주세요.");
-			}
-		}
-	}
+            try {
+                int item_id = Integer.parseInt(input);
+                if(item_id < 1 || item_id > 7){
+                    System.out.println("올바른 번호를 입력해주세요.");
+                    continue;
+                }
+                System.out.print("구매할 아이템 수량 > ");
+                int quantity = Integer.parseInt(sc.nextLine());
+                ShopController.purchaceItem(userId, item_id, quantity);
+            } catch (NumberFormatException e) {
+                System.out.println("올바른 번호를 입력해주세요.");
+            }
+        }
+    }
 
 	/**
 	 * 아이템 구매 메뉴

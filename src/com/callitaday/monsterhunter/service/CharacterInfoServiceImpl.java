@@ -25,7 +25,7 @@ public class CharacterInfoServiceImpl implements CharacterInfoService{
         try{
             characterInfoDto = characterInfoDao.getCharacterByUserId(userId);
             if(characterInfoDto == null){
-                throw  new NotFoundException("해당 유저의 캐릭터 정보가 없습니다.");
+                throw new NotFoundException("해당 유저의 캐릭터 정보가 없습니다.");
             }
         }catch (SQLException e){
             throw new NotFoundException("해당 유저의 캐릭터 정보를 찾을 수 없습니다.");
