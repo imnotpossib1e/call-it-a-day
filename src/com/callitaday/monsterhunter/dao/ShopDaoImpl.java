@@ -57,7 +57,17 @@ public class ShopDaoImpl implements ShopDAO{
                 // 무기, 방어구 타입 아이템의 수량이 1을 넘어서는 경우 에러 발생
                 // 쿠폰을 하나 이상 구매하는 경우 에러 발생
                 if(itemDto.getItemType().equals("무기") || itemDto.getItemType().equals("방어구")){
+                    if(item_id == 3 || item_id == 5){
+                        if(characterInfoDto.getStage_id() < 2){
+                            throw new PurchaseFailException("해당 아이템은 스테이지 2를 클리어한 이후에 구매하실 수 있습니다.");
+                        }
+                    }
 
+                    if(item_id == 4 || item_id == 6){
+                        if(characterInfoDto.getStage_id()<4){
+                            throw new PurchaseFailException("해당 아이템은 스테이지 4를 클리어한 이후에 구매하실 수 있습니다.");
+                        }
+                    }
                     if(inventoryDto.getQuantity()+quantity > 1){
                         System.out.println(inventoryDto.getQuantity()+quantity);
                         throw new PurchaseFailException("무기와 방어구는 하나만 보유할 수 있습니다.");
