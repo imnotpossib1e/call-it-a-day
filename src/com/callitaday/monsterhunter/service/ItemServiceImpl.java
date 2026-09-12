@@ -20,15 +20,15 @@ public class ItemServiceImpl implements ItemService{
      */
     @Override
     public List<ItemDto> selectAllItem() throws NotFoundException {
-        List<ItemDto> list = null;
         try{
-            list = itemDao.getAllItemInfo();
+            List<ItemDto> list = itemDao.getAllItemInfo();
             if(list == null || list.size() == 0) throw new NotFoundException("아이템 목록을 불러올 수 없습니다.");
+            return list;
         }catch (SQLException e){
             throw new NotFoundException("아이템 목록을 불러올 수 없습니다.");
         }
 
-        return list;
+
     }
 
     /**
