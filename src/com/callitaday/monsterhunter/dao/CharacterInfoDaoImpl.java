@@ -53,7 +53,7 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
             DbManager.dbClose(null, ps);
         }
 
-        return 0;
+        return re;
     }
 
 

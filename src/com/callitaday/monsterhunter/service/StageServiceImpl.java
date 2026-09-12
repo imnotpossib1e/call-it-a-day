@@ -21,13 +21,12 @@ public class StageServiceImpl implements StageService{
      */
     @Override
     public List<StageDto> selectStage(int userId) throws NotFoundException {
-        List<StageDto> list = null;
         try{
-            list= stageDao.selectAllStage();
+            List<StageDto> list= stageDao.selectAllStage();
             if(list == null || list.size() == 0) throw new NotFoundException("스테이지 목록이 없습니다.");
+            return list;
         } catch (SQLException e) {
             throw  new NotFoundException("스테이지 정보를 찾을 수 없습니다.");
         }
-        return list;
     }
 }

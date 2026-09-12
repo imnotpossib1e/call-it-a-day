@@ -12,8 +12,7 @@ import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.util.DbManager;
 
 public class InventoryDaoImpl implements InventoryDao {
-//	CharactorInfoDao charactorInfoDao = new CharactorInfoDaoImpl();
-	
+
 	/**
      * 내가 보유한 아이템 조회
      *
