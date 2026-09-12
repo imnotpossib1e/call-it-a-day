@@ -10,6 +10,7 @@ import com.callitaday.monsterhunter.controller.StageController;
 import com.callitaday.monsterhunter.controller.UserController;
 import com.callitaday.monsterhunter.dto.UserDto;
 import com.callitaday.monsterhunter.session.SessionSet;
+import com.callitaday.monsterhunter.util.SoundManager;
 
 public class MenuView {
 
@@ -46,6 +47,9 @@ public class MenuView {
 	 * 메인 선택 메뉴 출력
 	 */
 	public static void printMainView(int userId) {
+		
+		SoundManager.playMainBgm();
+		
 		while (true) {
 
 			System.out.println("========2=======");
@@ -54,9 +58,11 @@ public class MenuView {
 			switch (menu) {
 			case "1": // 전투
 				MenuView.stageView(userId);
+				SoundManager.playMainBgm();
 				break;
 			case "2": // 상점
 				MenuView.shopView(userId);
+				SoundManager.playMainBgm();
 				break;
 			case "3": // 인벤토리
 				MenuView.inventoryView(userId);
@@ -64,9 +70,11 @@ public class MenuView {
 			case "4": // 로그아웃
 				boolean choiceY = logout(userId);
 				if (choiceY) {
+					SoundManager.stopBgm();
 					menu();
 					return;
 				}
+				break;
 			default:
 				System.out.println("메뉴를 다시 선택해주세요.");
 			}
@@ -226,6 +234,8 @@ public class MenuView {
      */
     public static void shopView(int userId){
 
+    	SoundManager.playShopBgm();
+    	
         ItemController.selectAllItem();
         boolean validInput = true;
         // 선택지가 유효할 때 까지 반복
