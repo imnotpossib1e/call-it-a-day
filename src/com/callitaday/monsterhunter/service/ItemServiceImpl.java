@@ -30,12 +30,4 @@ public class ItemServiceImpl implements ItemService{
 
 
     }
-
-    /**
-     * 단일 아이템 정보 불러오기
-     */
-    @Override
-    public ItemDto selectItemById() throws NotFoundException {
-        return null;
-    }
 }
