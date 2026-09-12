@@ -36,7 +36,7 @@ public class BattleServiceImpl implements BattleService{
     public static BattleService getInstance(){
         return instance;
     }
-	
+
 	/**
 	 * 현재 stage_id로 전투 시작
 	 */
@@ -301,7 +301,7 @@ public class BattleServiceImpl implements BattleService{
         if(victory) {
         	int rewardResult = stageDao.addRewardItem(userId, enemy.getStageId());
         	
-        	if (rewardResult != 1) {
+        	if (rewardResult == 0) {
                 throw new AddException("보상 지급에 실패했습니다.");
             }
         }
