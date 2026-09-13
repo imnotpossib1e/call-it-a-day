@@ -21,18 +21,16 @@ public class InvenView {
 		int addAtk = 0;
 		int addDef = 0;
 		
-		if(charactorInfoDto.getEquiplist().size()>0 || charactorInfoDto.getEquiplist() != null) {
+		if(charactorInfoDto.getEquiplist() == null) {
+			addAtk = 0;
+			addDef = 0;
+		} else if(charactorInfoDto.getEquiplist() != null || charactorInfoDto.getEquiplist().size() > 0) {
 			for(ItemDto id : charactorInfoDto.getEquiplist()) {
 				if("무기".equals(id.getItemType())) addAtk = id.getItemIncrease();
 				else if("방어구".equals(id.getItemType())) addDef = id.getItemIncrease();
 			}
 		}
-		
-//		System.out.println(charactorInfoDto.getUserId()+"님의 캐릭터 정보");
-//		System.out.println();
-//		System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s%n", "체력", "마나", "공격력 + 무기", "방어력 + 방어구", "소지금", "스테이지");
-//		System.out.printf("%-5d %-5d %d + %-5d %d + %-5d %-5d %-5d%n", charactorInfoDto.getHp(), charactorInfoDto.getMp(), charactorInfoDto.getAtk(), addAtk, charactorInfoDto.getDef(), addDef, charactorInfoDto.getCoin(), 0);
-		
+
 		System.out.println();
 
         printLine();
@@ -122,26 +120,7 @@ public class InvenView {
 	}
 	
 	public static void printInventoryInfo(List<InventoryDto> invenList) {		
-//		System.out.println("아이템, 타입, 회복력, 공격력 증가치, 방어력 증가치, 수량, 장착 여부, 설명");
-//		for(InventoryDto item : invenList) {
-//			int hpIncrease = 0;
-//			int atkIncrease = 0;
-//			int defIncrease = 0;
-//			
-//			String name = item.getItemDto().getItemName();
-//			String type = item.getItemDto().getItemType();
-//			
-//			if (type.equals("포션")) hpIncrease = item.getItemDto().getItemIncrease();
-//			else if (type.equals("무기")) atkIncrease = item.getItemDto().getItemIncrease();
-//			else defIncrease = item.getItemDto().getItemIncrease();
-//			
-//			int qnt = item.getQuantity();
-//			String isEquiped = item.isEquipped() ? "장착" : " X ";
-//			String explain = item.getItemDto().getItemExplanation();
-//			System.out.println(name + ", " + type + ", " + hpIncrease + ", " + atkIncrease + ", " + defIncrease + ", " + qnt  + ", " + isEquiped  + ", " + explain);
-//		}
-		
-		 final int ITEM_WIDTH = 15;
+			final int ITEM_WIDTH = 15;
 		    final int TYPE_WIDTH = 10;
 		    final int HP_WIDTH = 7;
 		    final int ATK_WIDTH = 8;
@@ -181,6 +160,8 @@ public class InvenView {
 		            + "|"
 		            + center("HP", HP_WIDTH)
 		            + "|"
+		            + center("MP", HP_WIDTH)
+		            + "|"
 		            + center("ATK", ATK_WIDTH)
 		            + "|"
 		            + center("DEF", DEF_WIDTH)
@@ -196,35 +177,29 @@ public class InvenView {
 		    System.out.println("+" + "-".repeat(totalWidth) + "+");
 
 		    for (InventoryDto item : invenList) {
-
 		        String hpIncrease = "  ";
+		        String mpIncrease = "  ";
 		        String atkIncrease = "  ";
 		        String defIncrease = "  ";
 
 		        String name = item.getItemDto().getItemName();
 		        String type = item.getItemDto().getItemType();
 
-		        if (type.equals("포션")) {
-
+		        if (type.equals("회복포션")) {
 		            hpIncrease = "+" + item.getItemDto().getItemIncrease();
-
+		        } else if (type.equals("마나포션")) {
+		        	mpIncrease = "+" + item.getItemDto().getItemIncrease();
 		        } else if (type.equals("무기")) {
-
 		            atkIncrease = "+" + item.getItemDto().getItemIncrease();
-
 		        } else if (type.equals("방어구")) {
-
 		            defIncrease = "+" + item.getItemDto().getItemIncrease();
 		        }
 
 		        int qnt = item.getQuantity();
-
 		        String isEquipped =
 		                item.isEquipped() ? "O" : "X";
-
 		        String explain =
 		                item.getItemDto().getItemExplanation();
-
 		        System.out.println(
 		                "|"
 		                + center(name, ITEM_WIDTH)
@@ -232,6 +207,8 @@ public class InvenView {
 		                + center(type, TYPE_WIDTH)
 		                + "|"
 		                + center(hpIncrease, HP_WIDTH)
+		                + "|"
+		                + center(mpIncrease, HP_WIDTH)
 		                + "|"
 		                + center(atkIncrease, ATK_WIDTH)
 		                + "|"
@@ -245,7 +222,6 @@ public class InvenView {
 		                + "|"
 		        );
 		    }
-
 		    System.out.println("+" + "=".repeat(totalWidth) + "+");
 		    System.out.println();
 	}
@@ -328,7 +304,6 @@ public class InvenView {
      * 외곽선 출력
      */
     private static void printLine() {
-
         System.out.println(
                 "+" + "-".repeat(INNER_WIDTH) + "+"
         );
@@ -339,7 +314,6 @@ public class InvenView {
      * 빈 줄 출력
      */
     private static void printEmptyLine() {
-
         System.out.println(
                 "|" + " ".repeat(INNER_WIDTH) + "|"
         );
@@ -350,9 +324,7 @@ public class InvenView {
      * 가운데 정렬된 텍스트 출력
      */
     private static void printCenter(String text) {
-
         String result = center(text, INNER_WIDTH);
-
         System.out.println(
                 "|" + result + "|"
         );
@@ -363,9 +335,7 @@ public class InvenView {
      * 내부에 고정된 텍스트 출력
      */
     private static void printText(String text) {
-
         String result = rightPad(text, INNER_WIDTH);
-
         System.out.println(
                 "|" + result + "|"
         );
@@ -374,18 +344,15 @@ public class InvenView {
 
     /**
      * LABEL : VALUE 형태 출력
-     *
+     * 
      * LABEL → 가운데 정렬
      * VALUE → 오른쪽 정렬
      */
     private static void printValue(
             String label,
             String value) {
-
         String left = center(label, LABEL_WIDTH);
-
         String right = center(value, VALUE_WIDTH);
-
         System.out.println(
                 "|" + left + ":" + right + "|"
         );
@@ -399,24 +366,19 @@ public class InvenView {
      * itemName → 오른쪽 정렬
      */
     private static void printEquippedItem(List<ItemDto> items, String itemType) {
-
         if (items == null || items.isEmpty()) {
             return;
         }
-
         for (ItemDto item : items) {
-
             if (item == null) {
                 continue;
             }
 
             if (itemType.equals(item.getItemType())) {
-
                 printValue(
                         "[" + itemType + "]",
                         item.getItemName()
                 );
-
                 return;
             }
         }
@@ -431,18 +393,13 @@ public class InvenView {
     private static String center(
             String text,
             int width) {
-
         int textWidth = getDisplayWidth(text);
-
         if (textWidth >= width) {
             return text;
         }
-
         int totalPadding = width - textWidth;
-
         int leftPadding = totalPadding / 2;
         int rightPadding = totalPadding - leftPadding;
-
         return " ".repeat(leftPadding)
                 + text
                 + " ".repeat(rightPadding);
@@ -457,13 +414,10 @@ public class InvenView {
     private static String leftPad(
             String text,
             int width) {
-
         int textWidth = getDisplayWidth(text);
-
         if (textWidth >= width) {
             return text;
         }
-
         return " ".repeat(width - textWidth)
                 + text;
     }
@@ -475,13 +429,10 @@ public class InvenView {
     private static String rightPad(
             String text,
             int width) {
-
         int textWidth = getDisplayWidth(text);
-
         if (textWidth >= width) {
             return text;
         }
-
         return text
                 + " ".repeat(width - textWidth);
     }
@@ -494,18 +445,14 @@ public class InvenView {
      * ASCII → 1칸
      */
     private static int getDisplayWidth(String text) {
-
         int width = 0;
-
         for (char c : text.toCharArray()) {
-
             if (isKorean(c)) {
                 width += 2;
             } else {
                 width += 1;
             }
         }
-
         return width;
     }
     
@@ -514,7 +461,6 @@ public class InvenView {
      * 한글 여부
      */
     private static boolean isKorean(char c) {
-
         return (c >= '\u1100' && c <= '\u11FF')
                 || (c >= '\u3130' && c <= '\u318F')
                 || (c >= '\uAC00' && c <= '\uD7A3');
