@@ -26,7 +26,7 @@ public class InventoryDaoImpl implements InventoryDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "select * from v_user_inventory where user_id = ?";
+        String sql = "select * from v_user_inventory where user_id = ? and quantity != 0";
         List<InventoryDto> list = new ArrayList<InventoryDto>();
 
         try{
@@ -68,7 +68,7 @@ public class InventoryDaoImpl implements InventoryDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql = "select * from v_user_inventory where user_id = ? and item_type LIKE ?";
+        String sql = "select * from v_user_inventory where user_id = ? and item_type LIKE ? and quantity != 0";
         List<InventoryDto> list = new ArrayList<InventoryDto>();
 
         try{
