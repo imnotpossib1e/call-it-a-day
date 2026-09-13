@@ -170,11 +170,17 @@ public class StageDaoImpl implements StageDao {
 		            + "set hp = ?, mp = ?, stage_id = ? "
 		            + "where user_id = ?";
 
+		 int hp = character.getHp();
+		 int mp = character.getMp();
 		 int result = 0;
 		 int stageClear=0;
+		 
 		 if(victory){
 			 // 승리한 경우 stage+1
 			 stageClear=1;
+		 } else {
+			 hp = 50;
+			 mp = 100;
 		 }
 
 		 try {
@@ -183,8 +189,8 @@ public class StageDaoImpl implements StageDao {
 
 			ps = con.prepareStatement(sql);
 
-			ps.setInt(1, character.getHp());
-			ps.setInt(2, character.getMp());
+			ps.setInt(1, hp);
+			ps.setInt(2, mp);
 			ps.setInt(3, character.getStage_id()+stageClear);
 			ps.setInt(4, character.getUserId());
 
@@ -202,7 +208,7 @@ public class StageDaoImpl implements StageDao {
 					throw new SQLException();
 				}
 			}
-
+			con.commit();
 		 } finally {
 		 	DbManager.dbClose(con, ps);
 		 }

@@ -199,7 +199,7 @@ public class BattleServiceImpl implements BattleService{
 		boolean result = false;
 
 		// 적의 데미지 계산
-	    if (userDice >= enemyDice) {
+	    if (userDice >= (enemyDice*0.7)) {
 			// 나의 방어가 성공해서 공격 데미지가 반사되는 경우
 	    	if(userDice == 10) {
 	    		int counterDamage = (userDice - enemyDice) * 10;
