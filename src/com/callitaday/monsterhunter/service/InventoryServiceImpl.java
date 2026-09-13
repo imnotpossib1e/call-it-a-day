@@ -37,19 +37,25 @@ public class InventoryServiceImpl implements InventoryService{
 		if(character==null) {
 			throw new NotFoundException("캐릭터 정보를 찾을 수 없습니다. 로그인 정보를 확인해주세요.");
 		}
+		
+		List<ItemDto> equipList = new ArrayList<>();
+		
 		try {
 			List<InventoryDto> invenList = loadInventoryInfo(userId);
 			character.setInvenlist(invenList);
-			if(invenList.size()>0) {
-				List<ItemDto> equipList = new ArrayList<>();
-				for(InventoryDto id : invenList) {
-					if(id.isEquipped()) equipList.add(id.getItemDto());
+			
+			for (InventoryDto inventory : invenList) {
+				if (inventory.isEquipped()) {
+					equipList.add(inventory.getItemDto());
 				}
-				character.setEquiplist(equipList);
 			}
+
+			
 		} catch(NotFoundException e) {
-			return character;
+			character.setInvenlist(new ArrayList<>());
 		}
+		character.setEquiplist(equipList);
+		
 		return character;
 	}
 	
@@ -101,11 +107,12 @@ public class InventoryServiceImpl implements InventoryService{
 					invenD.unequipItem(userId, id.getItemId());
 					invenD.equipItem(userId, findID.getItemId());
 					result = "교체";
-					break;
+					return result;
 				};
 			}
-			invenD.equipItem(userId, findID.getItemId()); // 장착 리스트에 같은 타입의 아이템이 없으니 입력받은 아이템 장착
-		} else invenD.equipItem(userId, findID.getItemId()); // 장착한 아이템이 없다면
+		} 
+		invenD.equipItem(userId, findID.getItemId()); // 장착 리스트에 같은 타입의 아이템이 없으니 입력받은 아이템 장착
+		result = "장착";
 		return result;
 	}
 	

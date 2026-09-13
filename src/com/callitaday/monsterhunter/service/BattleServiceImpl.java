@@ -12,6 +12,8 @@ import com.callitaday.monsterhunter.dao.ItemDao;
 import com.callitaday.monsterhunter.dao.ItemDaoImpl;
 import com.callitaday.monsterhunter.dao.StageDao;
 import com.callitaday.monsterhunter.dao.StageDaoImpl;
+import com.callitaday.monsterhunter.dao.InventoryDao;
+import com.callitaday.monsterhunter.dao.InventoryDaoImpl;
 
 import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
@@ -29,6 +31,7 @@ public class BattleServiceImpl implements BattleService{
 	private final StageDao stageDao = new StageDaoImpl();
 	private final CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
 	private final ItemDao itemDao = new ItemDaoImpl();
+	private final InventoryDao inventoryDao = new InventoryDaoImpl();
 	
 	private final Map<Integer, CharacterInfoDto> users = new HashMap<>();
 	
@@ -62,6 +65,21 @@ public class BattleServiceImpl implements BattleService{
 	private CharacterInfoDto loadUser(int userId) throws SQLException {
 		CharacterInfoDto user = characterInfoDao.getCharacterByUserId(userId);
 		if (user == null) throw new SQLException("캐릭터를 찾을 수 없습니다.");
+		
+		List<InventoryDto> inventoryList = inventoryDao.getItemInfo(userId);
+		for(InventoryDto inventory : inventoryList) {
+			if(!inventory.isEquipped()) {
+				continue;
+			}
+			
+			ItemDto item = inventory.getItemDto();
+			
+			if("무기".equals(item.getItemIncrease())) {
+				user.setAtk(user.getAtk() + item.getItemIncrease());
+			} else if ("방어구".equals(item.getItemIncrease())) {
+				user.setDef(user.getDef() + item.getItemIncrease());
+			}
+		}
 		
 		return user;
 	}
@@ -200,13 +218,16 @@ public class BattleServiceImpl implements BattleService{
 
 		// 적의 데미지 계산
 	    if (userDice >= enemyDice) {
+	    	
+	    	result = true; // 방어 성공
+	    	
 			// 나의 방어가 성공해서 공격 데미지가 반사되는 경우
 	    	if(userDice >= 7) {
 	    		int counterDamage = (userDice - enemyDice) * 10;
 
 				enemy.setEnemyHp(Math.max(0, enemy.getEnemyHp() - counterDamage));
 				// 적이 받는 반사데미지
-				reflectionDamage = Math.max(0, enemy.getEnemyHp() - counterDamage);
+				reflectionDamage = counterDamage;
 				result = true;
 				defendDto = new DefendDto(reflectionDamage, result);
 	    	}
@@ -253,24 +274,26 @@ public class BattleServiceImpl implements BattleService{
 		
 		int current = hpPotion ? user.getHp() : user.getMp();
         int maximum = hpPotion ? MAX_HP : MAX_MP;
+                     
+        if (current >= maximum) {
+            throw new SQLException("수치가 가득 차있어 회복할 수 없습니다.");
+        }
         
         int recovery = Math.min(item.getItemIncrease(), maximum - current);
-        
         int result = stageDao.useItem(userId, itemId);
         
         if (result != 1) {
             throw new SQLException("보유한 포션이 없습니다.");
         }
-        
-        if (current >= maximum) {
-            throw new SQLException("수치가 가득 차있어 회복할 수 없습니다.");
-        }
+
 		
         if (hpPotion) {
             user.setHp(user.getHp() + recovery);
         } else {
             user.setMp(user.getMp() + recovery);
         }
+        
+        SoundManager.playPotion();
 
         return user;
 	}
