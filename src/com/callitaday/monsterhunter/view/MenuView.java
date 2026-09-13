@@ -1,5 +1,10 @@
 package com.callitaday.monsterhunter.view;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 import com.callitaday.monsterhunter.controller.BattleController;
@@ -39,7 +44,18 @@ public class MenuView {
 	 * 로그인 선택 메뉴 출력
 	 */
 	public static void printLoginMenu() {
-		System.out.println("=======1.=======");
+		
+		String fileName = "Image/Main/Main.txt";
+		
+    	try {
+    		List<String> lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
+    		for (String line : lines) {
+    			System.out.println(line);
+    		}
+    	} catch(IOException e) {
+    		System.out.println("메인 이미지 로드 실패");
+    	}
+    	
 		System.out.println("1. 가입  | 2. 로그인  |  Press Any Key : 종료");
 	}
 
@@ -47,12 +63,18 @@ public class MenuView {
 	 * 메인 선택 메뉴 출력
 	 */
 	public static void printMainView(int userId) {
-		
+    	
 		SoundManager.playMainBgm();
 		
 		while (true) {
-
-			System.out.println("========2=======");
+			System.out.println("█   █  ███  █   █  ████ █████ █████ ████     █   █ █   █ █   █ █████ █████ ████    \r\n"
+					+ "██ ██░█ ░░█ ██  █░█ ░░░░ ░█░░░█░░░░░█░░░█    █░  █░█░  █░██  █░ ░█░░░█░░░░░█░░░█   \r\n"
+					+ "█░█ █░█░ ░█░█░█ █░░███░░░ █░░░████░░████░░   █████░█░░ █░█░█ █░░ █░░░████░░████░░  \r\n"
+					+ "█░░░█░█░░ █░█░░██░░ ░░█   █░░ █░░░░ █░░█░ ░  █░░░█░█░░ █░█░░██░░ █░░ █░░░░ █░░█░ ░ \r\n"
+					+ "█░░ █░░███ ░█░░ █░████░░  █░░ █████░█░░░█░   █░░░█░░███ ░█░░ █░░ █░░ █████░█░░░█░  \r\n"
+					+ " ░░  ░░ ░░░ ░░░  ░░░░░░ ░  ░░  ░░░░░ ░░  ░    ░░  ░░ ░░░ ░░░  ░░  ░░  ░░░░░ ░░  ░  \r\n"
+					+ "  ░   ░  ░░░  ░   ░ ░░░░    ░   ░░░░░ ░   ░    ░   ░  ░░░  ░   ░   ░   ░░░░░ ░   ░ ");
+			
 			System.out.println("1. 전투  |  2. 상점  |  3. 인벤토리  |  4. 로그아웃");
 			String menu = sc.nextLine();
 			switch (menu) {
@@ -279,7 +301,6 @@ public class MenuView {
 		while (true) {
 			// Todo 세션 가져오기
 
-			System.out.println("========2=======");
 			InventoryController.getCharacterInfo(userId);
 			System.out.println("1. 인벤토리 조회 |  2. 나가기 ");
 			String menu = sc.nextLine();
@@ -300,7 +321,6 @@ public class MenuView {
 	public static void equipView(int userId) {
 		while (true) {
 
-			System.out.println("========2=======");
 			InventoryController.getInventoryInfo(userId);
 			System.out.println("1. 장비 아이템 장착  |  2. 장착 중인 장비 해제  |  3. 뒤로가기 ");
 			String menu = sc.nextLine();

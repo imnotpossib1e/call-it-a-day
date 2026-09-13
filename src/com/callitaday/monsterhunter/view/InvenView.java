@@ -15,7 +15,7 @@ public class InvenView {
     private static final int LABEL_WIDTH = 14;
 
     // ':' 오른쪽 영역
-    private static final int VALUE_WIDTH = 30;
+    private static final int VALUE_WIDTH = 31;
     
 	public static void printCharacterInfo(CharacterInfoDto charactorInfoDto) {
 		int addAtk = 0;
@@ -48,7 +48,7 @@ public class InvenView {
         printEmptyLine();
 
         // 전투 정보
-        printText("------------ COMBAT STATUS ---------------");
+        printText("-------------- COMBAT STATUS -----------------");
 
         printEmptyLine();
 
@@ -93,7 +93,7 @@ public class InvenView {
         printEmptyLine();
 
         // 기타 정보
-        printText("------------- INFORMATION ----------------");
+        printText("---------------- INFORMATION -----------------");
 
         printEmptyLine();
 
@@ -120,25 +120,27 @@ public class InvenView {
 	}
 	
 	public static void printInventoryInfo(List<InventoryDto> invenList) {		
-			final int ITEM_WIDTH = 15;
-		    final int TYPE_WIDTH = 10;
-		    final int HP_WIDTH = 7;
-		    final int ATK_WIDTH = 8;
-		    final int DEF_WIDTH = 8;
-		    final int QNT_WIDTH = 6;
-		    final int EQUIP_WIDTH = 9;
-		    final int EXPLAIN_WIDTH = 30;
+			final int ITEM_WIDTH = 16;
+		    final int TYPE_WIDTH = 12;
+		    final int HP_WIDTH = 8;
+		    final int MP_WIDTH = 8;
+		    final int ATK_WIDTH = 9;
+		    final int DEF_WIDTH = 9;
+		    final int QNT_WIDTH = 7;
+		    final int EQUIP_WIDTH = 10;
+		    final int EXPLAIN_WIDTH = 65;
 
 		    int totalWidth =
 		            ITEM_WIDTH
 		            + TYPE_WIDTH
 		            + HP_WIDTH
+		            + MP_WIDTH
 		            + ATK_WIDTH
 		            + DEF_WIDTH
 		            + QNT_WIDTH
 		            + EQUIP_WIDTH
 		            + EXPLAIN_WIDTH
-		            + 7 * 3 + 1;
+		            + 8;
 
 		    System.out.println();
 		    System.out.println("+" + "=".repeat(totalWidth) + "+");
@@ -154,23 +156,23 @@ public class InvenView {
 		    // 헤더
 		    System.out.println(
 		            "|"
-		            + center("ITEM", ITEM_WIDTH)
+		            + fitCell("ITEM", ITEM_WIDTH)
 		            + "|"
-		            + center("TYPE", TYPE_WIDTH)
+		            + fitCell("TYPE", TYPE_WIDTH)
 		            + "|"
-		            + center("HP", HP_WIDTH)
+		            + fitCell("HP", HP_WIDTH)
 		            + "|"
-		            + center("MP", HP_WIDTH)
+		            + fitCell("MP", MP_WIDTH)
 		            + "|"
-		            + center("ATK", ATK_WIDTH)
+		            + fitCell("ATK", ATK_WIDTH)
 		            + "|"
-		            + center("DEF", DEF_WIDTH)
+		            + fitCell("DEF", DEF_WIDTH)
 		            + "|"
-		            + center("QTY", QNT_WIDTH)
+		            + fitCell("QTY", QNT_WIDTH)
 		            + "|"
-		            + center("EQUIP", EQUIP_WIDTH)
+		            + fitCell("EQUIP", EQUIP_WIDTH)
 		            + "|"
-		            + center("DESCRIPTION", EXPLAIN_WIDTH)
+		            + fitCell("DESCRIPTION", EXPLAIN_WIDTH)
 		            + "|"
 		    );
 
@@ -200,38 +202,79 @@ public class InvenView {
 		                item.isEquipped() ? "O" : "X";
 		        String explain =
 		                item.getItemDto().getItemExplanation();
-		        System.out.println(
+		        String row =
 		                "|"
-		                + center(name, ITEM_WIDTH)
+		                + fitCell(name, ITEM_WIDTH)
 		                + "|"
-		                + center(type, TYPE_WIDTH)
+		                + fitCell(type, TYPE_WIDTH)
 		                + "|"
-		                + center(hpIncrease, HP_WIDTH)
+		                + fitCell(hpIncrease, HP_WIDTH)
 		                + "|"
-		                + center(mpIncrease, HP_WIDTH)
+		                + fitCell(mpIncrease, MP_WIDTH)
 		                + "|"
-		                + center(atkIncrease, ATK_WIDTH)
+		                + fitCell(atkIncrease, ATK_WIDTH)
 		                + "|"
-		                + center(defIncrease, DEF_WIDTH)
+		                + fitCell(defIncrease, DEF_WIDTH)
 		                + "|"
-		                + center(String.valueOf(qnt), QNT_WIDTH)
+		                + fitCell(String.valueOf(qnt), QNT_WIDTH)
 		                + "|"
-		                + center(isEquipped, EQUIP_WIDTH)
+		                + fitCell(isEquipped, EQUIP_WIDTH)
 		                + "|"
-		                + center(explain, EXPLAIN_WIDTH)
-		                + "|"
-		        );
+		                + fitCell(explain, EXPLAIN_WIDTH)
+		                + "|";
+
+		        System.out.println(row);
 		    }
-		    System.out.println("+" + "=".repeat(totalWidth) + "+");
-		    System.out.println();
+
+	}
+	
+	private static String fitCell(String text, int width) {
+
+	    if (text == null) {
+	        text = "";
+	    }
+
+	    // 양쪽 여백 1칸씩 확보
+	    int contentWidth = width - 2;
+
+	    int textWidth = getDisplayWidth(text);
+
+	    // 글자가 칸보다 너무 길면 자르기
+	    if (textWidth > contentWidth) {
+
+	        StringBuilder result = new StringBuilder();
+	        int currentWidth = 0;
+
+	        for (char c : text.toCharArray()) {
+
+	            int charWidth = isKorean(c) ? 2 : 1;
+
+	            if (currentWidth + charWidth > contentWidth) {
+	                break;
+	            }
+
+	            result.append(c);
+	            currentWidth += charWidth;
+	        }
+
+	        text = result.toString();
+	        textWidth = getDisplayWidth(text);
+	    }
+
+	    int rightSpace = contentWidth - textWidth;
+
+	    return " "
+	            + text
+	            + " ".repeat(rightSpace)
+	            + " ";
 	}
 	
 	public static void printPotionInfo(List<InventoryDto> invenList) {		
-		 final int ITEM_WIDTH = 15;
-		    final int TYPE_WIDTH = 10;
-		    final int HP_WIDTH = 7;
-		    final int QNT_WIDTH = 6;
-		    final int EXPLAIN_WIDTH = 55;
+		 final int ITEM_WIDTH = 16;
+		    final int TYPE_WIDTH = 12;
+		    final int HP_WIDTH = 8;
+		    final int QNT_WIDTH = 7;
+		    final int EXPLAIN_WIDTH = 65;
 
 		    int totalWidth =
 		            ITEM_WIDTH
@@ -239,7 +282,7 @@ public class InvenView {
 		            + HP_WIDTH
 		            + QNT_WIDTH
 		            + EXPLAIN_WIDTH
-		            + 7 * 3 + 1;
+		            + 8;
 
 		    System.out.println();
 		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
