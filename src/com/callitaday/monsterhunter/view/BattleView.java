@@ -33,7 +33,7 @@ public class BattleView {
         SoundManager.playStageBgm(nowStage);
     	
     	while(true) {
-    		BattleView.doBattle(user, sc);
+    		if(BattleView.doBattle(user, sc)) return;
         	
         	String result = sc.nextLine();
         	switch (result) {
@@ -55,7 +55,7 @@ public class BattleView {
 	/**
      * 전투 과정
      */
-    public static void doBattle(CharacterInfoDto user, Scanner sc){
+    public static boolean doBattle(CharacterInfoDto user, Scanner sc){
 
             boolean defeated = user.getHp() <= 0; // 패배 여부 확인
             boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0; // 승리 여부 확인
@@ -67,7 +67,7 @@ public class BattleView {
                 System.out.println(victory ? "승리했습니다!" : "패배했습니다.");
 
                 saveBattleAndExit(user.getUserId(), sc);
-                return;
+                return true;
             }
     		
     		System.out.println("-------------------------------------------");
@@ -87,6 +87,7 @@ public class BattleView {
         	System.out.print("|2. 방어하기									|\n");
         	System.out.print("|3. 아이템 사용								|\n");
         	System.out.println("-------------------------------------------");
+        	return false;
     }
     
     /**

@@ -19,6 +19,8 @@ public class UserController {
 	public static void insertUser(UserDto userDto) {
 		try {
 			userService.insertUser(userDto);
+			CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
+			characterInfoDao.insertCharacterInfo(userDto.getUserId());
 			EndView.printMessage("회원가입이 완료 되었습니다.");
 		} catch (SQLException e) { // DB 오류발생
 			FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
@@ -32,8 +34,6 @@ public class UserController {
 		UserDto userDto = null;
 		try {
 			userDto = userService.login(id, password);
-			CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
-			characterInfoDao.insertCharacterInfo(userDto.getUserId());
 			EndView.printMessage("전장에 입장하였습니다.");
 		} catch (SQLException e) {
 			FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
