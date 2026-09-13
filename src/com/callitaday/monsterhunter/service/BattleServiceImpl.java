@@ -215,6 +215,7 @@ public class BattleServiceImpl implements BattleService{
 	    	}
 			// 내가 받는 데미지는 0, 적이 받는 데미지 있음.
 	    	SoundManager.playDefend(); // 방어 효과음
+	    	defendDto = new DefendDto(reflectionDamage, result);
 			return defendDto;
 	    }
 		// 방어에 실패해서 적의 공격을 받는 경우

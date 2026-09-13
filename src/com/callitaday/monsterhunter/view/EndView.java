@@ -117,13 +117,6 @@ public class EndView {
         System.out.print("[STAGE " + num + "] 입장 하시겠습니까? [Y / N] > ");
     }
 
-    /**
-     * 공격 뷰
-     */
-    public static void attackView(int userId){
-        BattleController.attack(userId);
-    }
-
 
     /**
      * 방어 뷰

@@ -139,9 +139,6 @@ public class BattleController {
                  EndView.attackResult("내 HP -" + defendDto.getDamage());
              }
 
-
-
-
             // Todo 방어 뷰 작성 (방어에성공하셨습니다)
 
     	} catch(SQLException e) {
