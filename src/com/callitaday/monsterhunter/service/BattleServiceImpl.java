@@ -19,6 +19,7 @@ import com.callitaday.monsterhunter.dto.StageDto;
 import com.callitaday.monsterhunter.exception.AddException;
 import com.callitaday.monsterhunter.exception.ModifyException;
 import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.util.SoundManager;
 import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 
 public class BattleServiceImpl implements BattleService{
@@ -151,7 +152,9 @@ public class BattleServiceImpl implements BattleService{
         int missingMana = Math.max(0, manaCost - previousMp); // 내가 잃을 마나 계산
         
         user.setHp(Math.max(0,  user.getHp() - missingMana * 10)); // 나의 마나 차감
-
+        
+        SoundManager.playAttack(); // 공격 효과음
+        
 		return actualDamage; // 현재 적의 데미지 반환 - 왜??
 	}
 
@@ -176,6 +179,8 @@ public class BattleServiceImpl implements BattleService{
         int actualDamage = Math.min(damage, user.getHp());
 
         user.setHp(user.getHp() - actualDamage);
+        
+        SoundManager.playAttack(); // 공격 효과음
 
         return actualDamage;
 	}
@@ -209,6 +214,7 @@ public class BattleServiceImpl implements BattleService{
 				defendDto = new DefendDto(reflectionDamage, result);
 	    	}
 			// 내가 받는 데미지는 0, 적이 받는 데미지 있음.
+	    	SoundManager.playDefend(); // 방어 효과음
 			return defendDto;
 	    }
 		// 방어에 실패해서 적의 공격을 받는 경우

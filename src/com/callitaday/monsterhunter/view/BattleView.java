@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.callitaday.monsterhunter.controller.BattleController;
 import com.callitaday.monsterhunter.dto.CharacterInfoDto;
+import com.callitaday.monsterhunter.util.SoundManager;
 
 public class BattleView {
     /**
@@ -29,6 +30,7 @@ public class BattleView {
 
         int nowStage = user.getStage_id();
         EndView.printMessage("[현재 스테이지: " + nowStage + "]");
+        SoundManager.playStageBgm(nowStage);
     	
     	while(true) {
     		BattleView.doBattle(user, sc);
@@ -41,7 +43,9 @@ public class BattleView {
                     InventoryController.getInventoryByItemTypeInfo(userId);
                     System.out.print("사용할 포션 번호 > ");
                     int itemId = Integer.parseInt(sc.nextLine());
-                    BattleController.useItem(userId, itemId);break;
+                    BattleController.useItem(userId, itemId);
+                    SoundManager.playPotion();
+                    break;
     	    	default: System.out.println("메뉴를 다시 선택해주세요.");
         	}
 
@@ -109,6 +113,7 @@ public class BattleView {
      * 공격 뷰
      */
     public static void attackView(int userId){
+    	
         BattleController.attack(userId);
     }
     
