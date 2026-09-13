@@ -137,21 +137,18 @@ public class BattleServiceImpl implements BattleService{
         int userDice = randomDice();
         int enemyDice = randomDice();
         int manaCost = userDice;
-        int previousMp = user.getMp();
-
+        
 		// 적의 난수가 더 크면 공격 실패?
-        if (userDice <= enemyDice) {
+        if (userDice <= (enemyDice * 0.5)) {
             return 0;
         }
         
-        int damage = Math.max(0, user.getAtk() - enemy.getEnemyDef()); // 데미지 계산
+        int damage = Math.max(0, (user.getAtk() - enemy.getEnemyDef())*2); // 데미지 계산
         int actualDamage = Math.min(damage, enemy.getEnemyHp()); // 들어갈 데미지
         
         enemy.setEnemyHp(enemy.getEnemyHp() - actualDamage); // 적의 데미지 로컬에 적용
         
-        int missingMana = Math.max(0, manaCost - previousMp); // 내가 잃을 마나 계산
-        
-        user.setHp(Math.max(0,  user.getHp() - missingMana * 10)); // 나의 마나 차감
+        user.setMp(Math.max(0,  user.getMp() - (int)(manaCost * 1.5))); // 나의 마나 차감
         
         SoundManager.playAttack(); // 공격 효과음
         
