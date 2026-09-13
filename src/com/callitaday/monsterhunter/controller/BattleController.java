@@ -131,7 +131,6 @@ public class BattleController {
 
 
              DefendDto defendDto = battleService.userDefend(userId);
-             System.out.println(defendDto);
              if(defendDto.isResult()){ // 방어에 성공한 경우
                  EndView.printMessage("방어에 성공하셨습니다. -> 데미지 반사");
                  EndView.attackResult("상대 HP -"+ defendDto.getDamage());
