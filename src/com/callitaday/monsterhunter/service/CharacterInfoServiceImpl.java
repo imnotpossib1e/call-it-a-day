@@ -21,15 +21,15 @@ public class CharacterInfoServiceImpl implements CharacterInfoService{
      */
     @Override
     public CharacterInfoDto selectCharInfoByUserId(int userId) throws NotFoundException {
-        CharacterInfoDto characterInfoDto = null;
         try{
-            characterInfoDto = characterInfoDao.getCharacterByUserId(userId);
+            CharacterInfoDto characterInfoDto = characterInfoDao.getCharacterByUserId(userId);
             if(characterInfoDto == null){
                 throw new NotFoundException("해당 유저의 캐릭터 정보가 없습니다.");
             }
+            return characterInfoDto;
+
         }catch (SQLException e){
             throw new NotFoundException("해당 유저의 캐릭터 정보를 찾을 수 없습니다.");
         }
-        return characterInfoDto;
     }
 }

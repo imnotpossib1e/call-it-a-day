@@ -245,19 +245,8 @@ public class StageDaoImpl implements StageDao {
 		        ps.setInt(1, userId);
 		        ps.setInt(2, badge);
 
-				// 회원 정보 찾기
-				CharacterInfoDto characterInfoDto = null;
-
-				characterInfoDto = characterInfoDao.getCharacterByUserId(userId);
-				if(characterInfoDto == null){
-					con.rollback();
-					throw new NotFoundException("유저 정보를 찾을 수 없습니다.");
-				}
-
 				// 리워드 코인 불러오기
 				int rewardCoin = this.enemyInfoForFight(stageId).getRewardCoin();
-
-
 
 
 				// 증표 인벤토리에 추가
