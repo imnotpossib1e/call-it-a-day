@@ -19,5 +19,5 @@ public interface CharacterInfoDao {
     /**
      * 회원가입 시 유저의 characterInfo 생성하기
      */
-    public int insertCharacterInfo(int user_id) throws SQLException;
+    public int insertCharacterInfo(Connection con, int user_id) throws SQLException;
 }

@@ -63,21 +63,19 @@ public class CharacterInfoDaoImpl implements CharacterInfoDao {
      * @param user_id
      */
     @Override
-    public int insertCharacterInfo(int user_id) throws SQLException {
-        Connection con = null;
+    public int insertCharacterInfo(Connection con, int user_id) throws SQLException {
         PreparedStatement ps = null;
 
         String sql = "insert into character_info(user_id) values(?)";
         int result = 0;
 
         try{
-            con = DbManager.getConnection();
             ps = con.prepareStatement(sql);
             ps.setInt(1, user_id);
 
             result = ps.executeUpdate();
         }finally {
-            DbManager.dbClose(con, ps);
+            DbManager.dbClose(null, ps);
         }
         return result;
     }

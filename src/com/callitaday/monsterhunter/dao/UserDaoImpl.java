@@ -12,6 +12,7 @@ import com.callitaday.monsterhunter.util.DbManager;
 
 // UserDao 를 구현한 클래스
 public class UserDaoImpl implements UserDao {
+	CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
 	Properties pro = DbManager.getQueryProfile();
 
 	// ---------- 회원가입 메소드----------
@@ -19,17 +20,38 @@ public class UserDaoImpl implements UserDao {
 	public int insertUser(UserDto userDto) throws SQLException, AddException {
 		Connection con = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		int result = 0;
 
 		String sql = pro.getProperty("joinQuery");
 
 		try {
 			con = DbManager.getConnection();
-			ps = con.prepareStatement(sql);
+			con.setAutoCommit(false);
+			ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			ps.setString(1, userDto.getId());
 			ps.setInt(2, userDto.getPassword());
 
 			result = ps.executeUpdate();
+			if (result == 0) {
+				con.rollback();
+				throw new AddException("유저 생성에 실패했습니다.");
+			}
+
+			rs = ps.getGeneratedKeys();
+			int userId = -1;
+			if(rs.next()) {
+				userId = rs.getInt(1);
+				System.out.println(userId);
+			}
+
+			// user_insert 성공 시 character_info insert 실행
+			int re = characterInfoDao.insertCharacterInfo(con, userId);
+			if(re == 0){
+				con.rollback();
+				throw new AddException("캐릭터 정보 생성에 실패했습니다.");
+			}
+			con.commit();
 		}finally {
 			DbManager.dbClose(con, ps);
 		}
