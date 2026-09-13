@@ -19,7 +19,7 @@ public class EndView {
         int colWidth = 35; // 한 칸의 너비 지정
 
         // 1. 출력하고 싶은 카테고리 순서를 배열로 미리 지정합니다.
-        String[] targetTypes = {"회복포션", "마나포션", "무기", "방어구", "쿠폰"};
+        String[] targetTypes = {"포션", "방어구", "무기", "쿠폰"};
         for(String targetType : targetTypes){
             StringBuilder nameLine = new StringBuilder();
 //            StringBuilder effectLine = new StringBuilder();
@@ -30,7 +30,15 @@ public class EndView {
             System.out.println("> " + targetType);
 
             for(ItemDto item: list){
-                if(!item.getItemType().equals(targetType)){
+                boolean isTargetType = false;
+                if(targetType.equals("포션")){
+                    isTargetType = item.getItemType().equals("회복포션") ||
+                        item.getItemType().equals("마나포션");
+                } else {
+                    isTargetType = item.getItemType().equals(targetType);
+                }
+
+                if(!isTargetType){
                     continue;
                 }
                 String itemType = "";
@@ -43,12 +51,12 @@ public class EndView {
                 }
 
                 // 데이터 누적
-                nameLine.append(padRight(item.getItemName() + " " + itemType + " +" + item.getItemIncrease(), colWidth));
+                nameLine.append(padRight(item.getItemId()+". " +item.getItemName() + " [" + itemType + " +" + item.getItemIncrease() + "]", colWidth));
 //                effectLine.append(padRight("효과 " + itemType+  " +" +item.getItemIncrease(), colWidth));
                 if(item.getItemType().equals("쿠폰")){
-                    priceLine.append(padRight("가격 증표 " + item.getItemPrice() + "개", colWidth));
+                    priceLine.append(padRight("증표 " + item.getItemPrice() + "개", colWidth));
                 }else{
-                    priceLine.append(padRight("가격 " + item.getItemPrice(), colWidth));
+                    priceLine.append(padRight(item.getItemPrice() + " COIN", colWidth));
                 }
                 if(item.getItemType().equals("무기") || item.getItemType().equals("방어구")){
                     String explanation = item.getItemExplanation();
