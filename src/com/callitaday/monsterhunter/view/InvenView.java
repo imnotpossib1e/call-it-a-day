@@ -21,7 +21,11 @@ public class InvenView {
 		int addAtk = 0;
 		int addDef = 0;
 		
-		if(charactorInfoDto.getEquiplist().size()>0 || charactorInfoDto.getEquiplist() != null) {
+		if(charactorInfoDto.getEquiplist() == null) {
+			addAtk = 0;
+			addDef = 0;
+		}
+		else if(charactorInfoDto.getEquiplist() != null || charactorInfoDto.getEquiplist().size()>0) {
 			for(ItemDto id : charactorInfoDto.getEquiplist()) {
 				if("무기".equals(id.getItemType())) addAtk = id.getItemIncrease();
 				else if("방어구".equals(id.getItemType())) addDef = id.getItemIncrease();
