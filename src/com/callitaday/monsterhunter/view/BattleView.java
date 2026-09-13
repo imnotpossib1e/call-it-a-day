@@ -1,6 +1,13 @@
 package com.callitaday.monsterhunter.view;
 
 import com.callitaday.monsterhunter.controller.InventoryController;
+
+import java.io.IOError;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 import com.callitaday.monsterhunter.controller.BattleController;
@@ -30,7 +37,8 @@ public class BattleView {
 
         int nowStage = user.getStage_id();
         EndView.printMessage("[현재 스테이지: " + nowStage + "]");
-        SoundManager.playStageBgm(nowStage);
+        printEnemy(nowStage); // stage별 적 이미지 출력
+        SoundManager.playStageBgm(nowStage); // stage bgm
     	
     	while(true) {
     		if(BattleView.doBattle(user, sc)) return;
@@ -83,9 +91,9 @@ public class BattleView {
     		System.out.println("-------------------------------------------");
     		System.out.println();
         	System.out.println("-------------------------------------------");
-        	System.out.print("|1. 공격하기									|\n");
-        	System.out.print("|2. 방어하기									|\n");
-        	System.out.print("|3. 아이템 사용								|\n");
+        	System.out.print("1. 공격하기\n");
+        	System.out.print("2. 방어하기\n");
+        	System.out.print("3. 아이템 사용\n");
         	System.out.println("-------------------------------------------");
         	return false;
     }
@@ -123,5 +131,40 @@ public class BattleView {
      */
     public static void attackResult(String message){
         System.out.println(message);
+    }
+    
+    /**
+     * 적 몬스터 이미지 출력
+     */
+    private static void printEnemy(int stageId) {
+    	
+    	String fileName = "";
+    	switch (stageId) {
+    	case 1:
+    		fileName = "Image/enemyMonster/villainR.txt";
+    		break;
+    	case 2:
+    		fileName = "Image/enemyMonster/villainE.txt";
+    		break;
+    	case 3:
+    		fileName = "Image/enemyMonster/villainD.txt";
+    		break;
+    	case 4:
+    		fileName = "Image/enemyMonster/villainB.txt";
+    		break;
+    	case 5:
+    		fileName = "Image/enemyMonster/villainL.txt";
+    		break;
+    	}
+    	
+    	try {
+    		List<String> lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
+    		for (String line : lines) {
+    			System.out.println(line);
+    		}
+    	} catch(IOException e) {
+    		System.out.println("적의 이미지를 불러오지 못했습니다.");
+    	}
+    	
     }
 }
