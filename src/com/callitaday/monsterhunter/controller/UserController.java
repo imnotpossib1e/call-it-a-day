@@ -32,8 +32,7 @@ public class UserController {
 		UserDto userDto = null;
 		try {
 			userDto = userService.login(id, password);
-			CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
-			characterInfoDao.insertCharacterInfo(userDto.getUserId());
+
 			EndView.printMessage("전장에 입장하였습니다.");
 		} catch (SQLException e) {
 			FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
