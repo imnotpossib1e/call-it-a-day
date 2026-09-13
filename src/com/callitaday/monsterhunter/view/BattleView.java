@@ -50,9 +50,12 @@ public class BattleView {
     	    	case "3":
                     InventoryController.getInventoryByItemTypeInfo(userId);
                     System.out.print("사용할 포션 번호 > ");
+                    try {
+                    	int itemId = Integer.parseInt(sc.nextLine());
+                    	BattleController.useItem(userId, itemId);
+                    }
                     int itemId = Integer.parseInt(sc.nextLine());
                     BattleController.useItem(userId, itemId);
-                    SoundManager.playPotion();
                     break;
     	    	default: System.out.println("메뉴를 다시 선택해주세요.");
         	}
