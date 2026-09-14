@@ -56,12 +56,12 @@ public class BattleView {
                     boolean validInput = true;
                     while(validInput){
                         InventoryController.getInventoryByItemTypeInfo(userId);
+                        System.out.println("소지한 아이템이 없을 경우, Enter를 눌러주세요.");
                         System.out.print("포션 번호 > ");
                         String itemId = sc.nextLine();
-
-                    	if(BattleController.useItem(userId, itemId)){
-                            validInput=false;
-                        }
+                        
+                        if(itemId == "") validInput=false;
+                        else if(BattleController.useItem(userId, itemId)) validInput=false;
                     }
                     break;
     	    	default: System.out.println("메뉴를 다시 선택해 주세요.");
