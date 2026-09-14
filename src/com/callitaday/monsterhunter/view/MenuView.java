@@ -34,7 +34,7 @@ public class MenuView {
 			case "2": // 로그인
 				MenuView.login();
 			default:
-				System.out.println("안녕히가세요");
+				EndView.printNotice("게임을 종료합니다.");
 				System.exit(0);
 			}
 		}
@@ -55,8 +55,13 @@ public class MenuView {
     	} catch(IOException e) {
     		System.out.println("메인 이미지 로드 실패");
     	}
-    	
-		System.out.println("1. 가입  | 2. 로그인  |  Press Any Key : 종료");
+		System.out.println("╔════════════════════════════════════════╗");
+		System.out.println("║             MONSTER HUNTER             ║");
+		System.out.println("╠════════════════════════════════════════╣");
+		System.out.println("║  1. 회원가입  │  2. 로그인  │  종료    ║");
+		System.out.println("╚════════════════════════════════════════╝");
+		System.out.print("⚔ 선택 > ");
+
 	}
 
 	/**
@@ -67,6 +72,7 @@ public class MenuView {
 		SoundManager.playMainBgm();
 		
 		while (true) {
+			timeDelay(500);
 			System.out.println("█   █  ███  █   █  ████ █████ █████ ████     █   █ █   █ █   █ █████ █████ ████    \r\n"
 					+ "██ ██░█ ░░█ ██  █░█ ░░░░ ░█░░░█░░░░░█░░░█    █░  █░█░  █░██  █░ ░█░░░█░░░░░█░░░█   \r\n"
 					+ "█░█ █░█░ ░█░█░█ █░░███░░░ █░░░████░░████░░   █████░█░░ █░█░█ █░░ █░░░████░░████░░  \r\n"
@@ -74,8 +80,15 @@ public class MenuView {
 					+ "█░░ █░░███ ░█░░ █░████░░  █░░ █████░█░░░█░   █░░░█░░███ ░█░░ █░░ █░░ █████░█░░░█░  \r\n"
 					+ " ░░  ░░ ░░░ ░░░  ░░░░░░ ░  ░░  ░░░░░ ░░  ░    ░░  ░░ ░░░ ░░░  ░░  ░░  ░░░░░ ░░  ░  \r\n"
 					+ "  ░   ░  ░░░  ░   ░ ░░░░    ░   ░░░░░ ░   ░    ░   ░  ░░░  ░   ░   ░   ░░░░░ ░   ░ ");
-			
-			System.out.println("1. 전투  |  2. 상점  |  3. 인벤토리  |  4. 로그아웃");
+
+			timeDelay(500);
+			System.out.println("╔════════════════════════════════════════╗");
+			System.out.println("║             MONSTER HUNTER             ║");
+			System.out.println("╠════════════════════════════════════════╣");
+			System.out.println("║  1. 전투  │  2. 상점  │  3. 인벤토리   ║");
+			System.out.println("║              4. 로그아웃               ║");
+			System.out.println("╚════════════════════════════════════════╝");
+			System.out.print("⚔ 선택 > ");
 			String menu = sc.nextLine();
 			switch (menu) {
 			case "1": // 전투
@@ -98,7 +111,7 @@ public class MenuView {
 				}
 				break;
 			default:
-				System.out.println("메뉴를 다시 선택해주세요.");
+				System.out.println("⚠ 메뉴를 다시 선택해 주세요.");
 			}
 		}
 	}
@@ -107,35 +120,45 @@ public class MenuView {
 	 * 로그인 메뉴
 	 */
 	public static void login() {
-		System.out.print("아이디를 입력하세요 ");
+		System.out.println();
 		String id = null;
 		boolean idSuccess = false;
 
 		for (int i = 1; i <= 3; i++) {
+			System.out.print("아이디 > ");
 			id = sc.nextLine();
 			UserDto existUser = UserController.selectById(id);
 			if (existUser != null) {
 				idSuccess = true;
 				break;
 			}
-			System.out.print(" 존재하지 않는 아이디입니다. 다시 입력하세요 ");
+			System.out.println("╔════════════════════════════════════════╗");
+			System.out.println("║      ⚠ 존재하지 않는 아이디입니다.     ║");
+			System.out.println("║           다시 입력해 주세요.          ║");
+			System.out.println("╚════════════════════════════════════════╝");
 		}
 
 		if (!idSuccess) {
-			System.out.println("아이디 3회 오류로 메인화면으로 돌아갑니다");
+			System.out.println("╔════════════════════════════════════════╗");
+			System.out.println("║           ⚠ 아이디 3회 오류            ║");
+			System.out.println("║        메인화면으로 돌아갑니다.        ║");
+			System.out.println("╚════════════════════════════════════════╝");
 			menu();
 			return;
 		}
 
-		System.out.print("비밀번호를 입력하세요 ");
 		int password = 0;
 		int pwSuccess = 0;
 		String passwordInput = null;
 
 		for (int i = 1; i <= 3; i++) {
+			System.out.print("비밀번호 > ");
 			passwordInput = sc.nextLine();
 			if (!passwordInput.matches("\\d{4}")) {
-				System.out.print(" -- 4자리 숫자로 입력하세요. 다시 입력하세요 -- ");
+				System.out.println("╔════════════════════════════════════════╗");
+				System.out.println("║       ⚠ 4자리 숫자로 입력하세요.       ║");
+				System.out.println("║           다시 입력해 주세요.          ║");
+				System.out.println("╚════════════════════════════════════════╝");
 				continue;
 			}
 
@@ -144,11 +167,18 @@ public class MenuView {
 			UserDto loginUser = UserController.login(id, password); // 먼저 UserDto로 받기
 			if (loginUser != null) {
 				pwSuccess = loginUser.getUserId(); // null이 아닐 때만 getUserId() 호출
+				System.out.println();
 				printMainView(pwSuccess);
+				System.out.println();
 			}
-			System.out.print("비밀번호를 다시 입력하세요 ");
+			System.out.println("╔════════════════════════════════════════╗");
+			System.out.println("║    ⚠ 비밀번호를 다시 입력해 주세요.    ║");
+			System.out.println("╚════════════════════════════════════════╝");
 		}
-		System.out.println("비밀번호 3회 오류로 메인화면으로 돌아갑니다");
+		System.out.println("╔════════════════════════════════════════╗");
+		System.out.println("║          ⚠ 비밀번호 3회 오류           ║");
+		System.out.println("║        메인화면으로 돌아갑니다.        ║");
+		System.out.println("╚════════════════════════════════════════╝");
 		menu();
 	}
 
@@ -161,7 +191,7 @@ public class MenuView {
 
 		// 선택지가 유효할 때 까지 반복
 		while (out) {
-			System.out.print("로그아웃 하시겠습니까? (Y/N) ");
+			System.out.print("ℹ 로그아웃 하시겠습니까? [Y / N]  > ");
 			choice = sc.nextLine();
 			switch (choice) {
 			case "Y", "y", "ㅛ":
@@ -170,7 +200,7 @@ public class MenuView {
 			case "N", "n", "ㅜ":
 				return false;
 			default:
-				System.out.println("다시 입력해주세요.");
+				System.out.println("⚠ 다시 입력해 주세요.");
 			}
 		}
 		return out;
@@ -180,30 +210,36 @@ public class MenuView {
 	 * 회원가입 메뉴
 	 */
 	public static void registor() {
-		System.out.println(" -- 회원가입을 진행합니다. 아이디 입력하세요 -- ");
+		System.out.println("╔════════════════════════════════════════╗");
+		System.out.println("║                회원가입                ║");
+		System.out.println("╠════════════════════════════════════════╣");
+		System.out.println("║   🔑 아이디: 10자리 이하의 영문       ║");
+		System.out.println("║   🔐 비밀번호: 숫자 4자리             ║");
+		System.out.println("╚════════════════════════════════════════╝");
 		String id;
 		UserDto existUser;
 
 		while (true) {
+			System.out.print("아이디 > ");
 			id = sc.nextLine();
 
 			if (id.length() > 10) {
-				System.out.println("아이디는 10자리 이하로 작성해주세요");
+				System.out.println(" ⚠ 아이디는 10자리 이하로 작성해 주세요");
 				continue;
 			}
 
 			existUser = UserController.selectById(id);
 
 			if (existUser == null) {
-				System.out.println(" -- 사용 가능한 아이디입니다.-- ");
+				System.out.println(" ✓ 사용 가능한 아이디입니다.");
 				break;
 			}
-			System.out.println(" -- 이미 존재하는 아이디입니다. 다시 입력해주세요.-- ");
+			System.out.println(" ⚠ 이미 존재하는 아이디입니다.");
 		}
-		System.out.println(" -- 등록할 비밀번호를 입력해주세요.( 4자리 숫자 ) -- ");
 		String passwordInput;
 		boolean pwSuccess = false;
 		for (int i = 1; i <= 3; i++) {
+			System.out.print("비밀번호 > ");
 			passwordInput = sc.nextLine();
 			if (passwordInput.matches("\\d{4}")) {
 				pwSuccess = true;
@@ -212,10 +248,13 @@ public class MenuView {
 				UserController.insertUser(userDto);
 				break; // 성공했으니 반복 종료
 			}
-			System.out.println(" 비밀번호는 ( 4자리 숫자 ) 입니다!!!!! ");
+			System.out.println(" ⚠ 4자리 숫자로 입력해 주세요.");
 		}
 		if (!pwSuccess) {
-			System.out.println(" -- 3회 모두 실패하여 메뉴로 돌아갑니다. -- ");
+			System.out.println("╔════════════════════════════════════════╗");
+			System.out.println("║          ⚠ 비밀번호 3회 오류           ║");
+			System.out.println("║        메인화면으로 돌아갑니다.        ║");
+			System.out.println("╚════════════════════════════════════════╝");
 		}
 		menu();
 	}
@@ -227,6 +266,7 @@ public class MenuView {
 		boolean validInput = true;
 		// 선택지가 유효할 때 까지 반복
 		while (validInput) {
+			System.out.println();
 			StageController.selectStage(userId);
 			String choice = sc.nextLine();
 			switch (choice) {
@@ -235,11 +275,11 @@ public class MenuView {
 				validInput = false;
 				break;
 			case "N":
-				System.out.println("메인 메뉴로 돌아갑니다.");
+				System.out.println("ℹ 메인 메뉴로 돌아갑니다.");
 				validInput = false;
 				break;
 			default:
-				System.out.println("다시 입력해주세요.");
+				System.out.println("⚠ 다시 입력해 주세요.");
 			}
 		}
 	}
@@ -275,24 +315,18 @@ public class MenuView {
             try {
                 int item_id = Integer.parseInt(input);
                 if(item_id < 1 || item_id > 7){
-                    System.out.println("올바른 번호를 입력해주세요.");
+                    System.out.println("올바른 번호를 입력해 주세요.");
                     continue;
                 }
                 System.out.print("구매할 아이템 수량 > ");
                 int quantity = Integer.parseInt(sc.nextLine());
                 ShopController.purchaceItem(userId, item_id, quantity);
             } catch (NumberFormatException e) {
-                System.out.println("올바른 번호를 입력해주세요.");
+                System.out.println("올바른 번호를 입력해 주세요.");
             }
         }
     }
 
-	/**
-	 * 아이템 구매 메뉴
-	 */
-	public static void shopChoiceView(int userId) {
-
-	}
 
 	/**
 	 * 인벤토리 메뉴
@@ -312,7 +346,7 @@ public class MenuView {
 				return;
 
 			default:
-				System.out.println("메뉴를 다시 선택해주세요.");
+				System.out.println("메뉴를 다시 선택해 주세요.");
 			}
 		}
 
@@ -326,10 +360,12 @@ public class MenuView {
 			String menu = sc.nextLine();
 			switch (menu) {
 			case "1": // 장비 장착 및 교체
+				System.out.print("장착할 아이템 이름 > ");
 				String equipName = sc.nextLine();
 				InventoryController.equipItem(userId, equipName);
 				break;
 			case "2": // 장비 해제
+				System.out.print("장착 해제할 아이템 이름 > ");
 				String unequipName = sc.nextLine();
 				InventoryController.unequipItem(userId, unequipName);
 				break;
@@ -337,9 +373,16 @@ public class MenuView {
 				return;
 
 			default:
-				System.out.println("메뉴를 다시 선택해주세요.");
+				System.out.println("메뉴를 다시 선택해 주세요.");
 			}
 		}
 
+	}
+	private static void timeDelay(int time){
+		try {
+			Thread.sleep(time); // 1.0초 동안 지연
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

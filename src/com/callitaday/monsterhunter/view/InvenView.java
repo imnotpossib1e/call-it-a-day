@@ -99,9 +99,9 @@ public class InvenView {
 
         // 소지금
         printValue(
-                "GOLD",
+                "COIN",
                 String.format(
-                        "%,d G",
+                        "%,d COIN",
                         charactorInfoDto.getCoin()
                 )
         );
@@ -225,6 +225,7 @@ public class InvenView {
 
 		        System.out.println(row);
 		    }
+		System.out.println("+" + "=".repeat(totalWidth) + "+");
 
 	}
 	
@@ -274,7 +275,7 @@ public class InvenView {
 		    final int TYPE_WIDTH = 12;
 		    final int HP_WIDTH = 8;
 		    final int QNT_WIDTH = 7;
-		    final int EXPLAIN_WIDTH = 65;
+		    final int EXPLAIN_WIDTH = 40;
 
 		    int totalWidth =
 		            ITEM_WIDTH
@@ -285,15 +286,15 @@ public class InvenView {
 		            + 8;
 
 		    System.out.println();
-		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
+		    System.out.println("+" + "=".repeat(totalWidth-3) + "+");
 
 		    System.out.println(
 		            "|"
-		            + center("INVENTORY INFORMATION", totalWidth-25)
+		            + center("INVENTORY INFORMATION", totalWidth-3)
 		            + "|"
 		    );
 
-		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
+		    System.out.println("+" + "=".repeat(totalWidth-3) + "+");
 
 		    // 헤더
 		    System.out.println(
@@ -310,7 +311,7 @@ public class InvenView {
 		            + "|"
 		    );
 
-		    System.out.println("+" + "-".repeat(totalWidth-25) + "+");
+		    System.out.println("+" + "-".repeat(totalWidth-3) + "+");
 
 		    for (InventoryDto item : invenList) {
 
@@ -339,7 +340,7 @@ public class InvenView {
 		        );
 		    }
 
-		    System.out.println("+" + "=".repeat(totalWidth-25) + "+");
+		    System.out.println("+" + "=".repeat(totalWidth-3) + "+");
 		    System.out.println();
 	}
 	

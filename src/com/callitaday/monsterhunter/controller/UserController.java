@@ -19,11 +19,11 @@ public class UserController {
 	public static void insertUser(UserDto userDto) {
 		try {
 			userService.insertUser(userDto);
-			EndView.printMessage("회원가입이 완료 되었습니다.");
+			EndView.printNotice("       회원가입이 완료되었습니다.       ");
 		} catch (SQLException e) { // DB 오류발생
-			FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
+			FailView.errorMessage("⚠ DB 처리 오류 : " + e.getMessage());
 		} catch (AddException a) {
-			FailView.errorMessage("회원가입 등록 오류 : " + a.getMessage());
+			FailView.errorMessage("⚠ 회원가입 등록 오류 : " + a.getMessage());
 		}
 
 	}
@@ -33,11 +33,11 @@ public class UserController {
 		try {
 			userDto = userService.login(id, password);
 
-			EndView.printMessage("전장에 입장하였습니다.");
+			EndView.printNotice("        ⚔ 전장에 입장하였습니다.        ");
 		} catch (SQLException e) {
-			FailView.errorMessage("DB 처리 오류 : " + e.getMessage());
+			FailView.errorMessage("⚠ DB 처리 오류 : " + e.getMessage());
 		} catch (NotFoundException n) {
-			FailView.errorMessage("로그인 정보 오류 : " + n.getMessage());
+			FailView.errorMessage("⚠ 로그인 정보 오류 : " + n.getMessage());
 		}
 		return userDto;
 
@@ -47,7 +47,7 @@ public class UserController {
 		try {
 			return userService.selectById(id);
 		} catch (SQLException e) {
-			System.out.println("DB 처리 오류: " + e.getMessage());
+			System.out.println("⚠ DB 처리 오류: " + e.getMessage());
 			return null;
 		}
 

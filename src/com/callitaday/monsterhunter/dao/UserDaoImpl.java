@@ -42,7 +42,6 @@ public class UserDaoImpl implements UserDao {
 			int userId = -1;
 			if(rs.next()) {
 				userId = rs.getInt(1);
-				System.out.println(userId);
 			}
 
 			// user_insert 성공 시 character_info insert 실행

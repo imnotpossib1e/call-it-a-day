@@ -166,21 +166,15 @@ public class StageDaoImpl implements StageDao {
 	 public int saveBattle(CharacterInfoDto character, boolean victory) throws SQLException {
 		 Connection con = null;
 		 PreparedStatement ps = null;
-		 String sql = "update character_info "
-		            + "set hp = ?, mp = ?, stage_id = ? "
+		 String sql = "update character_info set stage_id = ? "
 		            + "where user_id = ?";
 
-		 int hp = character.getHp();
-		 int mp = character.getMp();
 		 int result = 0;
 		 int stageClear=0;
 		 
 		 if(victory){
 			 // 승리한 경우 stage+1
 			 stageClear=1;
-		 } else {
-			 hp = 50;
-			 mp = 100;
 		 }
 
 		 try {
@@ -189,10 +183,9 @@ public class StageDaoImpl implements StageDao {
 
 			ps = con.prepareStatement(sql);
 
-			ps.setInt(1, hp);
-			ps.setInt(2, mp);
-			ps.setInt(3, character.getStage_id()+stageClear);
-			ps.setInt(4, character.getUserId());
+
+			ps.setInt(1, character.getStage_id()+stageClear);
+			ps.setInt(2, character.getUserId());
 
 			result = ps.executeUpdate();
 			if(result == 0){

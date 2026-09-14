@@ -78,25 +78,19 @@ public class BattleController {
                 return;
             }
 
-            EndView.printMessage("공격합니다.");
-
-            timeDelay();
 
             // 유저의 공격
     		int myDamage = battleService.userAttack(userId);
-    		BattleView.attackResult("상대 HP -"+myDamage);
+    		BattleView.displayMyAttack(myDamage);
 
-            timeDelay();
-
-            EndView.printMessage("상대의 공격 차례입니다.");
-            timeDelay();
+            timeDelay(300);
 
             // 유저의 체력이 0 이상이거나 적의 체력이 0 이상인 경우
     		if (user.getHp() > 0 && user.getStageDto().getEnemyHp() > 0) {
                 // 적의 공격
                 int enemyDamage = battleService.enemyAttack(userId);
-                BattleView.attackResult("내 HP -"+enemyDamage);
-                timeDelay();
+                BattleView.displayEnemyAttack(enemyDamage);
+                timeDelay(300);
             }
 
     	} catch (SQLException e) {
@@ -104,9 +98,9 @@ public class BattleController {
     	} 
     }
 
-    private static void timeDelay(){
+    private static void timeDelay(int time){
         try {
-            Thread.sleep(200); // 1.0초 동안 지연
+            Thread.sleep(time); // 1.0초 동안 지연
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -124,22 +118,14 @@ public class BattleController {
     		if (user.getHp() <= 0 || user.getStageDto().getEnemyHp() <= 0) {
                 return;
             }
-            EndView.printMessage("적의 공격을 방어합니다.");
-            timeDelay();
-            // 방어 서비스 호출
-            EndView.printMessage("적의 턴입니다.");
-
 
              DefendDto defendDto = battleService.userDefend(userId);
              if(defendDto.isResult()){ // 방어에 성공한 경우
-                 EndView.printMessage("방어에 성공하셨습니다. -> 데미지 반사");
-                 EndView.attackResult("상대 HP -"+ defendDto.getDamage());
+                 BattleView.displayMyDefenceSuccess(defendDto.getDamage());
              }else{
-                 EndView.printMessage("방어에 실패했습니다.");
-                 EndView.attackResult("내 HP -" + defendDto.getDamage());
+                 BattleView.displayMyDefenceFail(defendDto.getDamage());
              }
-
-            // Todo 방어 뷰 작성 (방어에성공하셨습니다)
+            timeDelay(300);
 
     	} catch(SQLException e) {
     		FailView.errorMessage(e.getMessage());
@@ -150,20 +136,24 @@ public class BattleController {
     /**
      * 아이템 사용
      * @param userId
-     * @param itemId
+     * @param input
      */
-    public static void useItem(int userId, int itemId) {
+    public static boolean useItem(int userId, String input) {
     	try {
     		CharacterInfoDto user = battleService.getBattleUser(userId);
     		if (user.getHp() <= 0 || user.getStageDto().getEnemyHp() <= 0) {
-                return;
+                return false;
     		}
-
+            int itemId = Integer.parseInt(input);
     		battleService.useItem(userId, itemId);
-    		
-		} catch (SQLException  e) {
-			// TODO Auto-generated catch block
+    		return true;
+		}catch (NumberFormatException e){
+            FailView.errorMessage("⚠ 아이템에 해당하는 번호를 입력해 주세요.");
+            return false;
+        }
+        catch (SQLException  e) {
 			FailView.errorMessage(e.getMessage());
+            return false;
 		}
     }
 
