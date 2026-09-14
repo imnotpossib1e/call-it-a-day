@@ -25,7 +25,7 @@ public class StageController {
             // 현재 스테이지 조회
             CharacterInfoDto characterInfoDto = characterInfoService.selectCharInfoByUserId(userId);
             int stageId = characterInfoDto.getStage_id();
-
+            
             //엔드뷰
             EndView.printStageSelect(list, stageId);
         }catch (NotFoundException e){

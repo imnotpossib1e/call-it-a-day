@@ -94,14 +94,14 @@ public class ShopServiceImpl implements ShopService{
         // 무기, 방어구 레벨 별 구매 제한
         if(itemId == ARMOR_1 || itemId == SWORD_1){
             if(characterInfoDto.getStage_id() < 2){
-                throw new PurchaseFailException("해당 아이템은 스테이지 2를 클리어한 이후에 구매하실 수 있습니다.");
+                throw new PurchaseFailException("해당 아이템은 스테이지 1을 클리어한 이후에 구매하실 수 있습니다.");
             }
             if(inventoryDto !=null && inventoryDto.getQuantity()+quantity > 1){
                 throw new PurchaseFailException("무기와 방어구는 하나만 보유할 수 있습니다.");
             }
         }
         if(itemId == ARMOR_2 || itemId == SWORD_2){
-            if(characterInfoDto.getStage_id()<4){
+            if(characterInfoDto.getStage_id()==5){
                 throw new PurchaseFailException("해당 아이템은 스테이지 4를 클리어한 이후에 구매하실 수 있습니다.");
             }
             if(inventoryDto !=null && inventoryDto.getQuantity()+quantity > 1){
