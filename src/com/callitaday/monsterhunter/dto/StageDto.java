@@ -8,6 +8,8 @@ public class StageDto {
 	private int rewardCoin;
 	private int itemId;
 	
+	private ItemDto itemdto;
+	
 	public StageDto() {}
 
 	public StageDto(int stageId, int enemyHp, int enemyAtk, int enemyDef, int rewardCoin, int itemId) {
@@ -68,6 +70,14 @@ public class StageDto {
 		this.itemId = itemId;
 	}
 
+	public ItemDto getItemdto() {
+		return itemdto;
+	}
+
+	public void setItemdto(ItemDto itemdto) {
+		this.itemdto = itemdto;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -81,9 +91,7 @@ public class StageDto {
 		builder.append(enemyDef);
 		builder.append(", rewardCoin=");
 		builder.append(rewardCoin);
-		builder.append(", itemId=");
-		builder.append(itemId);
-		builder.append("]");
+		builder.append(", rewardItem=");
 		return builder.toString();
 	}
 

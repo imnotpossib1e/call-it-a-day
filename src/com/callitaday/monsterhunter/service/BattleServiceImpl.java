@@ -1,0 +1,340 @@
+package com.callitaday.monsterhunter.service;
+
+import com.callitaday.monsterhunter.dto.DefendDto;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.callitaday.monsterhunter.dao.CharacterInfoDao;
+import com.callitaday.monsterhunter.dao.CharacterInfoDaoImpl;
+import com.callitaday.monsterhunter.dao.ItemDao;
+import com.callitaday.monsterhunter.dao.ItemDaoImpl;
+import com.callitaday.monsterhunter.dao.StageDao;
+import com.callitaday.monsterhunter.dao.StageDaoImpl;
+import com.callitaday.monsterhunter.dao.InventoryDao;
+import com.callitaday.monsterhunter.dao.InventoryDaoImpl;
+
+import com.callitaday.monsterhunter.dto.InventoryDto;
+import com.callitaday.monsterhunter.dto.ItemDto;
+import com.callitaday.monsterhunter.dto.StageDto;
+import com.callitaday.monsterhunter.exception.AddException;
+import com.callitaday.monsterhunter.exception.ModifyException;
+import com.callitaday.monsterhunter.exception.NotFoundException;
+import com.callitaday.monsterhunter.util.SoundManager;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
+
+public class BattleServiceImpl implements BattleService{
+	private static final int MAX_HP = 100;
+	private static final int MAX_MP = 100;
+	
+	private final StageDao stageDao = new StageDaoImpl();
+	private final CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
+	private final ItemDao itemDao = new ItemDaoImpl();
+	private final InventoryDao inventoryDao = new InventoryDaoImpl();
+	
+	private final Map<Integer, CharacterInfoDto> users = new HashMap<>();
+	
+	private static final BattleService instance = new BattleServiceImpl();
+	
+    public static BattleService getInstance(){
+        return instance;
+    }
+
+	/**
+	 * 현재 stage_id로 전투 시작
+	 */
+	@Override
+	public StageDto startBattle(int userId) throws SQLException {
+		// TODO Auto-generated method stub
+		CharacterInfoDto user = loadUser(userId);
+		
+		return prepareBattle(user, user.getStage_id());
+	}
+
+	/**
+	 * 지정한 스테이지로 전투 시작
+	 */
+	@Override
+	public StageDto startBattle(int userId, int stageId) throws SQLException {
+		CharacterInfoDto user = loadUser(userId);
+		
+		return prepareBattle(user, stageId);
+	}
+	
+	private CharacterInfoDto loadUser(int userId) throws SQLException {
+		CharacterInfoDto user = characterInfoDao.getCharacterByUserId(userId);
+		if (user == null) throw new SQLException("캐릭터를 찾을 수 없습니다.");
+		
+		List<InventoryDto> inventoryList = inventoryDao.getItemInfo(userId);
+		for(InventoryDto inventory : inventoryList) {
+			if(!inventory.isEquipped()) {
+				continue;
+			}
+			
+			ItemDto item = inventory.getItemDto();
+			
+			if("무기".equals(item.getItemIncrease())) {
+				user.setAtk(user.getAtk() + item.getItemIncrease());
+			} else if ("방어구".equals(item.getItemIncrease())) {
+				user.setDef(user.getDef() + item.getItemIncrease());
+			}
+		}
+		
+		return user;
+	}
+	
+	/**
+	 * 적 로딩하기
+	 */
+	private StageDto prepareBattle(CharacterInfoDto user, int stageId) throws SQLException {
+		
+		if (user.getHp() <= 0) {
+            throw new SQLException("체력이 0이므로 입장할 수 없습니다.");
+        }
+
+		StageDto enemy = stageDao.enemyInfoForFight(stageId);
+		
+		if (enemy == null) {
+            throw new SQLException("해당 스테이지를 찾을 수 없습니다.");
+        }
+		
+		if (enemy.getEnemyHp() <= 0) {
+			throw new SQLException("적의 체력이 비정상적 수치입니다.");
+		}
+		
+		user.setStage_id(stageId);
+        user.setStageDto(enemy);
+        
+        users.put(user.getUserId(), user);
+        
+        return enemy;
+	}
+	
+	/**
+	 * 전투 중인 user 객체 반환
+	 */
+	@Override
+    public CharacterInfoDto getBattleUser(int userId) throws SQLException {
+		CharacterInfoDto user = users.get(userId);
+		
+		if (user == null) {
+            throw new SQLException("먼저 전투를 시작하세요.");
+        }
+		
+		return user;
+	}
+	
+	/**
+	 * 랜덤 다이스 생성
+	 */
+	@Override
+	public int randomDice() {
+		// TODO Auto-generated method stub
+		int num = (int)(Math.random() * 11);
+		return num;
+	}
+
+	/**
+	 * 유저의 공격
+	 */
+	@Override
+	public int userAttack(int userId) throws SQLException {
+		// TODO Auto-generated method stub
+		CharacterInfoDto user = getBattleUser(userId);
+        StageDto enemy = user.getStageDto();
+        
+        if (user.getMp() <= 0) {
+            throw new SQLException("공격을 위한 마나가 부족합니다.");
+        }
+		
+        int userDice = randomDice();
+        int enemyDice = randomDice();
+        int manaCost = userDice;
+        
+		// 적의 난수가 더 크면 공격 실패?
+        if (userDice <= (enemyDice * 0.5)) {
+            return 0;
+        }
+        
+        int damage = Math.max(0, (user.getAtk() - enemy.getEnemyDef())*2); // 데미지 계산
+        int actualDamage = Math.min(damage, enemy.getEnemyHp()); // 들어갈 데미지
+        
+        enemy.setEnemyHp(enemy.getEnemyHp() - actualDamage); // 적의 데미지 로컬에 적용
+        
+        user.setMp(Math.max(0,  user.getMp() - (int)(manaCost * 1.5))); // 나의 마나 차감
+        
+        SoundManager.playAttack(); // 공격 효과음
+        
+		return actualDamage; // 현재 적의 데미지 반환 - 왜??
+	}
+
+	/**
+	 * 적의 공격
+	 */
+	@Override
+	public int enemyAttack(int userId) throws SQLException {
+		// TODO Auto-generated method stub
+		CharacterInfoDto user = getBattleUser(userId);
+		StageDto enemy = user.getStageDto();
+		
+		int userDice = randomDice();
+        int enemyDice = randomDice();
+		
+        if (enemyDice <= userDice) {
+            return 0;
+        }
+        
+        int damage = Math.max(0, enemy.getEnemyAtk() - user.getDef());
+        
+        int actualDamage = Math.min(damage, user.getHp());
+
+        user.setHp(user.getHp() - actualDamage);
+        
+        SoundManager.playAttack(); // 공격 효과음
+
+        return actualDamage;
+	}
+	
+	/**
+	 * 유저의 방어
+	 */
+	@Override
+	public DefendDto userDefend(int userId) throws SQLException {
+		CharacterInfoDto user = getBattleUser(userId);
+		// 적의 상태 불러오기
+	    StageDto enemy = user.getStageDto();
+
+		DefendDto defendDto = null;
+	    
+	    int userDice = randomDice();
+	    int enemyDice = randomDice();
+		int reflectionDamage = 0;
+		boolean result = false;
+
+		// 적의 데미지 계산
+	    if (userDice >= enemyDice) {
+	    	
+	    	result = true; // 방어 성공
+	    	
+			// 나의 방어가 성공해서 공격 데미지가 반사되는 경우
+	    	if(userDice >= 7) {
+	    		int counterDamage = (userDice - enemyDice) * 10;
+	    		
+	    		if(counterDamage >= enemy.getEnemyHp()) {
+	    			reflectionDamage = enemy.getEnemyHp();
+	    		} else reflectionDamage = counterDamage;
+
+				enemy.setEnemyHp(Math.max(0, enemy.getEnemyHp() - counterDamage));
+
+				result = true;
+				defendDto = new DefendDto(reflectionDamage, result);
+	    	}
+			// 내가 받는 데미지는 0, 적이 받는 데미지 있음.
+	    	SoundManager.playDefend(); // 방어 효과음
+	    	defendDto = new DefendDto(reflectionDamage, result);
+			return defendDto;
+	    }
+		// 방어에 실패해서 적의 공격을 받는 경우
+	    int damage = Math.max(0, enemy.getEnemyAtk() - user.getDef());
+	    int actualDamage = Math.min(damage, user.getHp());
+
+		// 유저 데미지 적용
+	    user.setHp(user.getHp() - actualDamage);
+		defendDto = new DefendDto(actualDamage, result);
+
+		// 유저가 받는 데미지
+	    return defendDto;
+	}
+
+	/**
+	 * 포션 아이템 사용
+	 */
+	@Override
+	public CharacterInfoDto useItem(int userId, int itemId) throws SQLException {
+		// TODO Auto-generated method stub
+		CharacterInfoDto user = getBattleUser(userId);		
+		ItemDto item = itemDao.getItemByItemId(itemId);
+		
+		if (item == null) {
+            throw new SQLException("아이템을 찾을 수 없습니다.");
+        }
+		
+		boolean hpPotion = "회복포션".equals(item.getItemType());		
+		boolean mpPotion = "마나포션".equals(item.getItemType());
+		
+		if (!hpPotion && !mpPotion) {
+            throw new SQLException("포션만 사용할 수 있습니다.");
+        }
+		
+		if (item.getItemIncrease() <= 0) {
+            throw new SQLException("포션 회복량이 올바르지 않습니다.");
+        }
+		
+		int current = hpPotion ? user.getHp() : user.getMp();
+        int maximum = hpPotion ? MAX_HP : MAX_MP;
+                     
+        if (current >= maximum) {
+            throw new SQLException("수치가 가득 차있어 회복할 수 없습니다.");
+        }
+        
+        int recovery = Math.min(item.getItemIncrease(), maximum - current);
+        int result = stageDao.useItem(userId, itemId);
+        
+        if (result != 1) {
+            throw new SQLException("보유한 포션이 없습니다.");
+        }
+
+		
+        if (hpPotion) {
+            user.setHp(user.getHp() + recovery);
+        } else {
+            user.setMp(user.getMp() + recovery);
+        }
+        
+        SoundManager.playPotion();
+
+        return user;
+	}
+	
+	/**
+	 * 스테이지 클리어 저장
+	 */
+	@Override
+	public int saveBattle(int userId) throws SQLException, NotFoundException, AddException, ModifyException {
+		CharacterInfoDto user = getBattleUser(userId);
+        StageDto enemy = user.getStageDto();
+        
+        boolean victory = user.getHp() > 0 && enemy.getEnemyHp() <= 0;
+        int result = stageDao.saveBattle(user, victory);
+        
+        if (result > 1) {
+            throw new ModifyException("user 정보가 중복됩니다.");
+        }
+        
+        if (result == 0) {
+            CharacterInfoDto stored = characterInfoDao.getCharacterByUserId(userId);
+
+            if (stored == null
+                    || stored.getHp() != user.getHp()
+                    || stored.getMp() != user.getMp()
+                    || stored.getStage_id() != user.getStage_id()) {
+
+                throw new ModifyException("저장에 실패했습니다.");
+            }
+        }
+        
+        if(victory) {
+        	int rewardResult = stageDao.addRewardItem(userId, enemy.getStageId());
+        	
+        	if (rewardResult == 0) {
+                throw new AddException("보상 지급에 실패했습니다.");
+            }
+        }
+        
+        users.remove(userId);
+        
+        return result;
+	}
+	
+}

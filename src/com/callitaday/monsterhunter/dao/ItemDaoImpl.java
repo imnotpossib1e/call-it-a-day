@@ -1,28 +1,18 @@
 package com.callitaday.monsterhunter.dao;
 
+import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.util.DbManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDaoImpl implements ItemDao {
 
-    /**
-     * 아이템 구매
-     *
-     * 인벤토리: Insert
-     * 코인 : update
-     *
-     * @param itemId
-     */
-    @Override
-    public int getItemPurchase(int itemId) {
-
-        return 0;
-    }
+    CharacterInfoDao characterInfoDao = new CharacterInfoDaoImpl();
 
     /**
      * 내가 보유한 아이템 조회
@@ -31,21 +21,8 @@ public class ItemDaoImpl implements ItemDao {
      *
      * @param userId
      */
-    /**
-     * 내가 보유한 아이템 조회
-     *
-     * Select
-     *
-     * @param userId
-     */
     @Override
-    public List<ItemDto> getItemInfo(int userId) {
-        return List.of();
-    }
-
-    /*
-    @Override
-    public List<InventoryDto> getItemInfo(int userId) {
+    public List<InventoryDto> getItemInfo(int userId) throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -63,15 +40,14 @@ public class ItemDaoImpl implements ItemDao {
                 InventoryDto inventoryDto = new InventoryDto();
                 inventoryDto.setUserId(rs.getInt("user_id"));
                 inventoryDto.setQuantity(rs.getInt("quantity"));
-                inventoryDto.setIsEquipped(rs.getInt("is_equipped"));
+                inventoryDto.setEquipped("T".equals(rs.getString("is_equipped")));
                 ItemDto itemDto = new ItemDto();
                 itemDto.setItemName(rs.getString("item_name"));
                 itemDto.setItemIncrease(rs.getInt("item_increase"));
-                itemDto.setItemType(rs.getInt("item_type"));
+                itemDto.setItemType(rs.getString("item_type"));
+                inventoryDto.setItemDto(itemDto);
                 list.add(inventoryDto);
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
         finally {
             DbManager.dbClose(con, ps, rs);
@@ -79,13 +55,41 @@ public class ItemDaoImpl implements ItemDao {
 
         return list;
     }
-    */
+
+    /**
+     * 아이템 단일 조회
+     *
+     * @param item_id
+     */
+    @Override
+    public ItemDto getItemByItemId(int item_id) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select * from item where item_id = ?";
+        ItemDto itemDto = null;
+
+        try{
+            con = DbManager.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, item_id);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                itemDto = new ItemDto(rs.getInt("item_id"), rs.getString("item_name"), rs.getInt("item_price"), rs.getInt("item_increase"), rs.getString("item_explanation"), rs.getString("item_type"));
+            }
+        }finally {
+            DbManager.dbClose(con, ps, rs);
+        }
+
+        return itemDto;
+    }
+
 
     /**
      * 전체 아이템 조회
      */
     @Override
-    public List<ItemDto> getAllItemInfo() {
+    public List<ItemDto> getAllItemInfo() throws SQLException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -103,15 +107,15 @@ public class ItemDaoImpl implements ItemDao {
                     rs.getString("item_name"),
                     rs.getInt("item_price"),
                     rs.getInt("item_increase"),
-                    rs.getInt("item_type") );
+                    rs.getString("item_explanation"),
+                    rs.getString("item_type") );
                 list.add(itemdto);
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }finally {
             DbManager.dbClose(con, ps, rs);
         }
 
         return list;
     }
+
 }

@@ -1,0 +1,512 @@
+package com.callitaday.monsterhunter.view;
+
+import java.util.List;
+
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
+import com.callitaday.monsterhunter.dto.InventoryDto;
+import com.callitaday.monsterhunter.dto.ItemDto;
+
+public class InvenView {
+	// 전체 가로 길이 = 48
+    // 내부 영역 = 46
+    private static final int INNER_WIDTH = 46;
+
+    // ':' 왼쪽 영역
+    private static final int LABEL_WIDTH = 14;
+
+    // ':' 오른쪽 영역
+    private static final int VALUE_WIDTH = 31;
+    
+	public static void printCharacterInfo(CharacterInfoDto charactorInfoDto) {
+		int addAtk = 0;
+		int addDef = 0;
+		
+		if(charactorInfoDto.getEquiplist() == null) {
+			addAtk = 0;
+			addDef = 0;
+		} else if(charactorInfoDto.getEquiplist() != null || charactorInfoDto.getEquiplist().size() > 0) {
+			for(ItemDto id : charactorInfoDto.getEquiplist()) {
+				if("무기".equals(id.getItemType())) addAtk = id.getItemIncrease();
+				else if("방어구".equals(id.getItemType())) addDef = id.getItemIncrease();
+			}
+		}
+
+		System.out.println();
+
+        printLine();
+        printCenter("CHARACTER STATUS");
+        printLine();
+
+        printEmptyLine();
+
+        // HP
+        printValue("HP", String.valueOf(charactorInfoDto.getHp()));
+
+        // MP
+        printValue("MP", String.valueOf(charactorInfoDto.getMp()));
+
+        printEmptyLine();
+
+        // 전투 정보
+        printText("-------------- COMBAT STATUS -----------------");
+
+        printEmptyLine();
+
+        // 공격력
+        int totalAttack =
+        		charactorInfoDto.getAtk()
+                + addAtk;
+
+        printValue(
+                "ATTACK",
+                String.format(
+                        "%d  +  %d  =  %d",
+                        charactorInfoDto.getAtk(),
+                        addAtk,
+                        totalAttack
+                )
+        );
+
+        // 장착 무기
+        printEquippedItem(charactorInfoDto.getEquiplist(), "무기");
+
+        printEmptyLine();
+
+        // 방어력
+        int totalDefense =
+        		charactorInfoDto.getDef()
+                + addDef;
+
+        printValue(
+                "DEFENSE",
+                String.format(
+                        "%d  +  %d  =  %d",
+                        charactorInfoDto.getDef(),
+                        addDef,
+                        totalDefense
+                )
+        );
+
+        // 장착 방어구
+        printEquippedItem(charactorInfoDto.getEquiplist(), "방어구");
+
+        printEmptyLine();
+
+        // 기타 정보
+        printText("---------------- INFORMATION -----------------");
+
+        printEmptyLine();
+
+        // 소지금
+        printValue(
+                "COIN",
+                String.format(
+                        "%,d COIN",
+                        charactorInfoDto.getCoin()
+                )
+        );
+        
+        String realStageNum = (charactorInfoDto.getStage_id()<=5 ? (charactorInfoDto.getStage_id()+""):"All Clear");
+        // 스테이지
+        printValue(
+                "STAGE",
+                String.valueOf(realStageNum)
+        );
+
+        printEmptyLine();
+
+        printLine();
+
+        System.out.println();
+	}
+	
+	public static void printInventoryInfo(List<InventoryDto> invenList) {		
+			final int ITEM_WIDTH = 16;
+		    final int TYPE_WIDTH = 12;
+		    final int HP_WIDTH = 8;
+		    final int MP_WIDTH = 8;
+		    final int ATK_WIDTH = 9;
+		    final int DEF_WIDTH = 9;
+		    final int QNT_WIDTH = 7;
+		    final int EQUIP_WIDTH = 10;
+		    final int EXPLAIN_WIDTH = 65;
+
+		    int totalWidth =
+		            ITEM_WIDTH
+		            + TYPE_WIDTH
+		            + HP_WIDTH
+		            + MP_WIDTH
+		            + ATK_WIDTH
+		            + DEF_WIDTH
+		            + QNT_WIDTH
+		            + EQUIP_WIDTH
+		            + EXPLAIN_WIDTH
+		            + 8;
+
+		    System.out.println();
+		    System.out.println("+" + "=".repeat(totalWidth) + "+");
+
+		    System.out.println(
+		            "|"
+		            + center("INVENTORY INFORMATION", totalWidth)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "=".repeat(totalWidth) + "+");
+
+		    // 헤더
+		    System.out.println(
+		            "|"
+		            + fitCell("ITEM", ITEM_WIDTH)
+		            + "|"
+		            + fitCell("TYPE", TYPE_WIDTH)
+		            + "|"
+		            + fitCell("HP", HP_WIDTH)
+		            + "|"
+		            + fitCell("MP", MP_WIDTH)
+		            + "|"
+		            + fitCell("ATK", ATK_WIDTH)
+		            + "|"
+		            + fitCell("DEF", DEF_WIDTH)
+		            + "|"
+		            + fitCell("QTY", QNT_WIDTH)
+		            + "|"
+		            + fitCell("EQUIP", EQUIP_WIDTH)
+		            + "|"
+		            + fitCell("DESCRIPTION", EXPLAIN_WIDTH)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "-".repeat(totalWidth) + "+");
+
+		    for (InventoryDto item : invenList) {
+		        String hpIncrease = "  ";
+		        String mpIncrease = "  ";
+		        String atkIncrease = "  ";
+		        String defIncrease = "  ";
+
+		        String name = item.getItemDto().getItemName();
+		        String type = item.getItemDto().getItemType();
+
+		        if (type.equals("회복포션")) {
+		            hpIncrease = "+" + item.getItemDto().getItemIncrease();
+		        } else if (type.equals("마나포션")) {
+		        	mpIncrease = "+" + item.getItemDto().getItemIncrease();
+		        } else if (type.equals("무기")) {
+		            atkIncrease = "+" + item.getItemDto().getItemIncrease();
+		        } else if (type.equals("방어구")) {
+		            defIncrease = "+" + item.getItemDto().getItemIncrease();
+		        }
+
+		        int qnt = item.getQuantity();
+		        String isEquipped =
+		                item.isEquipped() ? "O" : "X";
+		        String explain =
+		                item.getItemDto().getItemExplanation();
+		        String row =
+		                "|"
+		                + fitCell(name, ITEM_WIDTH)
+		                + "|"
+		                + fitCell(type, TYPE_WIDTH)
+		                + "|"
+		                + fitCell(hpIncrease, HP_WIDTH)
+		                + "|"
+		                + fitCell(mpIncrease, MP_WIDTH)
+		                + "|"
+		                + fitCell(atkIncrease, ATK_WIDTH)
+		                + "|"
+		                + fitCell(defIncrease, DEF_WIDTH)
+		                + "|"
+		                + fitCell(String.valueOf(qnt), QNT_WIDTH)
+		                + "|"
+		                + fitCell(isEquipped, EQUIP_WIDTH)
+		                + "|"
+		                + fitCell(explain, EXPLAIN_WIDTH)
+		                + "|";
+
+		        System.out.println(row);
+		    }
+		System.out.println("+" + "=".repeat(totalWidth) + "+");
+
+	}
+	
+	private static String fitCell(String text, int width) {
+
+	    if (text == null) {
+	        text = "";
+	    }
+
+	    // 양쪽 여백 1칸씩 확보
+	    int contentWidth = width - 2;
+
+	    int textWidth = getDisplayWidth(text);
+
+	    // 글자가 칸보다 너무 길면 자르기
+	    if (textWidth > contentWidth) {
+
+	        StringBuilder result = new StringBuilder();
+	        int currentWidth = 0;
+
+	        for (char c : text.toCharArray()) {
+
+	            int charWidth = isKorean(c) ? 2 : 1;
+
+	            if (currentWidth + charWidth > contentWidth) {
+	                break;
+	            }
+
+	            result.append(c);
+	            currentWidth += charWidth;
+	        }
+
+	        text = result.toString();
+	        textWidth = getDisplayWidth(text);
+	    }
+
+	    int rightSpace = contentWidth - textWidth;
+
+	    return " "
+	            + text
+	            + " ".repeat(rightSpace)
+	            + " ";
+	}
+	
+	public static void printPotionInfo(List<InventoryDto> invenList) {		
+		 final int ITEM_WIDTH = 16;
+		    final int TYPE_WIDTH = 12;
+		    final int HP_WIDTH = 8;
+		    final int QNT_WIDTH = 7;
+		    final int EXPLAIN_WIDTH = 40;
+
+		    int totalWidth =
+		            ITEM_WIDTH
+		            + TYPE_WIDTH
+		            + HP_WIDTH
+		            + QNT_WIDTH
+		            + EXPLAIN_WIDTH
+		            + 8;
+
+		    System.out.println();
+		    System.out.println("+" + "=".repeat(totalWidth-3) + "+");
+
+		    System.out.println(
+		            "|"
+		            + center("INVENTORY INFORMATION", totalWidth-3)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "=".repeat(totalWidth-3) + "+");
+
+		    // 헤더
+		    System.out.println(
+		            "|"
+		            + center("ITEM", ITEM_WIDTH)
+		            + "|"
+		            + center("TYPE", TYPE_WIDTH)
+		            + "|"
+		            + center("HP", HP_WIDTH)
+		            + "|"
+		            + center("QTY", QNT_WIDTH)
+		            + "|"
+		            + center("DESCRIPTION", EXPLAIN_WIDTH)
+		            + "|"
+		    );
+
+		    System.out.println("+" + "-".repeat(totalWidth-3) + "+");
+
+		    for (InventoryDto item : invenList) {
+		        int hpIncrease = item.getItemDto().getItemIncrease();
+
+		        String name = item.getItemDto().getItemName();
+		        String type = item.getItemDto().getItemType();
+
+		        int qnt = item.getQuantity();
+
+		        String explain =
+		                item.getItemDto().getItemExplanation();
+
+		        System.out.println(
+		                "|"
+		                + center(name, ITEM_WIDTH)
+		                + "|"
+		                + center(type, TYPE_WIDTH)
+		                + "|"
+		                + center("+" + String.valueOf(hpIncrease), HP_WIDTH)
+		                + "|"
+		                + center(String.valueOf(qnt), QNT_WIDTH)
+		                + "|"
+		                + center(explain, EXPLAIN_WIDTH)
+		                + "|"
+		        );
+		    }
+
+		    System.out.println("+" + "=".repeat(totalWidth-3) + "+");
+		    System.out.println();
+	}
+	
+	/**
+     * 외곽선 출력
+     */
+    private static void printLine() {
+        System.out.println(
+                "+" + "-".repeat(INNER_WIDTH) + "+"
+        );
+    }
+
+
+    /**
+     * 빈 줄 출력
+     */
+    private static void printEmptyLine() {
+        System.out.println(
+                "|" + " ".repeat(INNER_WIDTH) + "|"
+        );
+    }
+
+
+    /**
+     * 가운데 정렬된 텍스트 출력
+     */
+    private static void printCenter(String text) {
+        String result = center(text, INNER_WIDTH);
+        System.out.println(
+                "|" + result + "|"
+        );
+    }
+
+
+    /**
+     * 내부에 고정된 텍스트 출력
+     */
+    private static void printText(String text) {
+        String result = rightPad(text, INNER_WIDTH);
+        System.out.println(
+                "|" + result + "|"
+        );
+    }
+
+
+    /**
+     * LABEL : VALUE 형태 출력
+     * 
+     * LABEL → 가운데 정렬
+     * VALUE → 오른쪽 정렬
+     */
+    private static void printValue(
+            String label,
+            String value) {
+        String left = center(label, LABEL_WIDTH);
+        String right = center(value, VALUE_WIDTH);
+        System.out.println(
+                "|" + left + ":" + right + "|"
+        );
+    }
+
+
+    /**
+     * 장착 아이템 출력
+     *
+     * [무기] / [방어구] → 가운데 정렬
+     * itemName → 오른쪽 정렬
+     */
+    private static void printEquippedItem(List<ItemDto> items, String itemType) {
+        if (items == null || items.isEmpty()) {
+            return;
+        }
+        for (ItemDto item : items) {
+            if (item == null) {
+                continue;
+            }
+
+            if (itemType.equals(item.getItemType())) {
+                printValue(
+                        "[" + itemType + "]",
+                        item.getItemName()
+                );
+                return;
+            }
+        }
+    }
+
+
+    /**
+     * 문자열 가운데 정렬
+     *
+     * 한글은 2칸으로 계산
+     */
+    private static String center(
+            String text,
+            int width) {
+        int textWidth = getDisplayWidth(text);
+        if (textWidth >= width) {
+            return text;
+        }
+        int totalPadding = width - textWidth;
+        int leftPadding = totalPadding / 2;
+        int rightPadding = totalPadding - leftPadding;
+        return " ".repeat(leftPadding)
+                + text
+                + " ".repeat(rightPadding);
+    }
+
+
+    /**
+     * 문자열 오른쪽 정렬
+     *
+     * 한글은 2칸으로 계산
+     */
+    private static String leftPad(
+            String text,
+            int width) {
+        int textWidth = getDisplayWidth(text);
+        if (textWidth >= width) {
+            return text;
+        }
+        return " ".repeat(width - textWidth)
+                + text;
+    }
+
+
+    /**
+     * 문자열 오른쪽에 공백 추가
+     */
+    private static String rightPad(
+            String text,
+            int width) {
+        int textWidth = getDisplayWidth(text);
+        if (textWidth >= width) {
+            return text;
+        }
+        return text
+                + " ".repeat(width - textWidth);
+    }
+
+
+    /**
+     * 콘솔 표시 폭 계산
+     *
+     * 한글 → 2칸
+     * ASCII → 1칸
+     */
+    private static int getDisplayWidth(String text) {
+        int width = 0;
+        for (char c : text.toCharArray()) {
+            if (isKorean(c)) {
+                width += 2;
+            } else {
+                width += 1;
+            }
+        }
+        return width;
+    }
+    
+
+    /**
+     * 한글 여부
+     */
+    private static boolean isKorean(char c) {
+        return (c >= '\u1100' && c <= '\u11FF')
+                || (c >= '\u3130' && c <= '\u318F')
+                || (c >= '\uAC00' && c <= '\uD7A3');
+    }
+}

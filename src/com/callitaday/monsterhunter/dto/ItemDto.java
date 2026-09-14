@@ -5,23 +5,34 @@ public class ItemDto {
     private String itemName;
     private int itemPrice;
     private int itemIncrease;
-    private int itemType;
-
-    private ItemTypeDto itemTypeDto;
-
+    private String itemExplanation;
+    private String itemType;
 
     public ItemDto() {
     }
 
-    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, int itemType) {
-        this.itemId = itemId;
+    public ItemDto(int itemId, String itemName) {
+    	this.itemId = itemId;
         this.itemName = itemName;
+    }
+    
+    public ItemDto(int itemId, String itemName, int itemPrice, int itemIncrease, String itemExplanation, String itemType) {
+        this(itemId, itemName);
         this.itemPrice = itemPrice;
         this.itemIncrease = itemIncrease;
+        this.itemExplanation = itemExplanation;
         this.itemType = itemType;
     }
 
-    public int getItemId() {
+    public String getItemExplanation() {
+		return itemExplanation;
+	}
+
+	public void setItemExplanation(String itemExplanation) {
+		this.itemExplanation = itemExplanation;
+	}
+
+	public int getItemId() {
         return itemId;
     }
 
@@ -53,20 +64,12 @@ public class ItemDto {
         this.itemIncrease = itemIncrease;
     }
 
-    public int getItemType() {
+    public String getItemType() {
         return itemType;
     }
 
-    public void setItemType(int itemType) {
+    public void setItemType(String itemType) {
         this.itemType = itemType;
-    }
-
-    public ItemTypeDto getItemTypeDto() {
-        return itemTypeDto;
-    }
-
-    public void setItemTypeDto(ItemTypeDto itemTypeDto) {
-        this.itemTypeDto = itemTypeDto;
     }
 
 
@@ -77,6 +80,7 @@ public class ItemDto {
         sb.append(", itemName='").append(itemName).append('\'');
         sb.append(", itemPrice=").append(itemPrice);
         sb.append(", itemIncrease=").append(itemIncrease);
+        sb.append(", itemExplanation='").append(itemExplanation).append('\'');
         sb.append(", itemType=").append(itemType);
         sb.append('}');
         return sb.toString();

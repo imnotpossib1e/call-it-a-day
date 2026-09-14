@@ -1,29 +1,29 @@
 package com.callitaday.monsterhunter.dao;
 
+import com.callitaday.monsterhunter.dto.InventoryDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ItemDao {
 
     /**
-     * 플아이템 구매
-     *
-     * 인벤토리: Insert
-     * 코인 : update
-     */
-    public int getItemPurchase(int itemId);
-
-    /**
      * 내가 보유한 아이템 조회
      *
      * Select
+     *
+     * @param userId
      */
-    public List<ItemDto> getItemInfo(int userId);
+    public List<InventoryDto> getItemInfo(int userId) throws SQLException;
+
+    /**
+     * 아이템 단일 조회
+     */
+    public ItemDto getItemByItemId(int item_id) throws SQLException;
+
 
     /**
      * 전체 아이템 조회
      */
-    public List<ItemDto> getAllItemInfo();
-
-
+    public List<ItemDto> getAllItemInfo() throws SQLException;
 }
