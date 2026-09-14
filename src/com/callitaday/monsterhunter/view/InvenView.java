@@ -315,7 +315,6 @@ public class InvenView {
 		    System.out.println("+" + "-".repeat(totalWidth-3) + "+");
 
 		    for (InventoryDto item : invenList) {
-
 		        int hpIncrease = item.getItemDto().getItemIncrease();
 
 		        String name = item.getItemDto().getItemName();

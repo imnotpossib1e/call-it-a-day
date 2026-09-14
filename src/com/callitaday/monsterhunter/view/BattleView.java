@@ -53,9 +53,6 @@ public class BattleView {
     	    	case "1":BattleView.attackView(userId);break;
     	    	case "2":EndView.defendView(userId);break;
     	    	case "3":
-                    if(!InventoryController.getInventoryByItemTypeInfo(userId)){
-                        break;
-                    }
                     boolean validInput = true;
                     while(validInput){
                         InventoryController.getInventoryByItemTypeInfo(userId);
@@ -64,8 +61,6 @@ public class BattleView {
 
                     	if(BattleController.useItem(userId, itemId)){
                             validInput=false;
-                        }else {
-                            InventoryController.getInventoryByItemTypeInfo(userId);
                         }
                     }
                     break;
