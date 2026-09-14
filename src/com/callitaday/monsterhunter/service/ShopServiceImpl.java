@@ -101,7 +101,7 @@ public class ShopServiceImpl implements ShopService{
             }
         }
         if(itemId == ARMOR_2 || itemId == SWORD_2){
-            if(characterInfoDto.getStage_id()==5){
+            if(characterInfoDto.getStage_id()<=4){
                 throw new PurchaseFailException("해당 아이템은 스테이지 4를 클리어한 이후에 구매하실 수 있습니다.");
             }
             if(inventoryDto !=null && inventoryDto.getQuantity()+quantity > 1){
