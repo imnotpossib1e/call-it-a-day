@@ -119,7 +119,7 @@ public class ShopServiceImpl implements ShopService{
             // 증표 개수 확인
             for(int i = 1; i <=5; i++){
                 InventoryDto token = inventoryDao.getItemQuantity(characterInfoDto.getUserId(), 100+i);
-                if (token == null || token.getQuantity() >= 1){
+                if (token == null || token.getQuantity() != 1){
                     throw new PurchaseFailException("증표가 부족합니다.");
                 }
             }
