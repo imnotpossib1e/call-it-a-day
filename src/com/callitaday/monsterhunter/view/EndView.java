@@ -96,9 +96,16 @@ public class EndView {
                         b = true;
 
                     }
-                }else {
+                }else if(item.getItemType().equals("쿠폰")){
+                    String explanation = item.getItemExplanation();
+
+                    if (explanation != null && explanation.contains("-")) {
+                        explanation = explanation.substring(0, explanation.indexOf("-")).trim();
+                    }
+                    descLine.append(padRight(explanation, colWidth));
+                }else{
                     descLine.append(padRight(item.getItemExplanation(), colWidth));
-                }
+                } 
 
             }
             // 출력
