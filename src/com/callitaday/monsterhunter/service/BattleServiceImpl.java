@@ -220,10 +220,13 @@ public class BattleServiceImpl implements BattleService{
 			// 나의 방어가 성공해서 공격 데미지가 반사되는 경우
 	    	if(userDice >= 7) {
 	    		int counterDamage = (userDice - enemyDice) * 10;
+	    		
+	    		if(counterDamage >= enemy.getEnemyHp()) {
+	    			reflectionDamage = enemy.getEnemyHp();
+	    		} else reflectionDamage = counterDamage;
 
 				enemy.setEnemyHp(Math.max(0, enemy.getEnemyHp() - counterDamage));
-				// 적이 받는 반사데미지
-				reflectionDamage = counterDamage;
+
 				result = true;
 				defendDto = new DefendDto(reflectionDamage, result);
 	    	}

@@ -105,11 +105,12 @@ public class InvenView {
                         charactorInfoDto.getCoin()
                 )
         );
-
+        
+        String realStageNum = (charactorInfoDto.getStage_id()<=5 ? (charactorInfoDto.getStage_id()+""):"All Clear");
         // 스테이지
         printValue(
                 "STAGE",
-                String.valueOf(charactorInfoDto.getStage_id())
+                String.valueOf(realStageNum)
         );
 
         printEmptyLine();

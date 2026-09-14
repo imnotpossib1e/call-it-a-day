@@ -143,7 +143,7 @@ public class EndView {
      * 스테이지 선택 뷰
      */
     public static void printStageSelect(List<StageDto> stageList,  int num){
-        for(int i = 0; i<stageList.size(); i++){
+        for(int i = 0; i<5; i++){
             if (i < num - 1) {
                 System.out.print("\u001B[1m\u001B[32m[STAGE " + stageList.get(i).getStageId() + "] ✓ CLEAR" + "\u001B[0m" );
                 System.out.print("\t\t");
@@ -154,7 +154,9 @@ public class EndView {
         }
         System.out.println();
         System.out.println();
-        System.out.print("[STAGE " + num + "] 입장하시겠습니까? [Y / N] > ");
+        if(num == 6) {
+        	System.out.print("모든 스테이지를 클리어하셨습니다. 뒤로 가시려면 Enter 키를 눌러주세요.");
+        } else System.out.print("[STAGE " + num + "] 입장하시겠습니까? [Y / N] > ");
     }
 
 

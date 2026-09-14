@@ -278,6 +278,9 @@ public class MenuView {
 				System.out.println("ℹ 메인 메뉴로 돌아갑니다.");
 				validInput = false;
 				break;
+			case "":
+				validInput = false;
+				break;
 			default:
 				System.out.println("⚠ 다시 입력해 주세요.");
 			}
@@ -337,6 +340,7 @@ public class MenuView {
 
 			InventoryController.getCharacterInfo(userId);
 			System.out.println("1. 인벤토리 조회 |  2. 나가기 ");
+			System.out.print("⚔ 선택 > ");
 			String menu = sc.nextLine();
 			switch (menu) {
 			case "1": // 인벤토리 조회
@@ -357,6 +361,7 @@ public class MenuView {
 
 			InventoryController.getInventoryInfo(userId);
 			System.out.println("1. 장비 아이템 장착  |  2. 장착 중인 장비 해제  |  3. 뒤로가기 ");
+			System.out.print("⚔ 선택 > ");
 			String menu = sc.nextLine();
 			switch (menu) {
 			case "1": // 장비 장착 및 교체
