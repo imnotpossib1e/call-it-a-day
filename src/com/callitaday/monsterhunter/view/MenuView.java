@@ -278,6 +278,9 @@ public class MenuView {
 				System.out.println("ℹ 메인 메뉴로 돌아갑니다.");
 				validInput = false;
 				break;
+			case "":
+				validInput = false;
+				break;
 			default:
 				System.out.println("⚠ 다시 입력해 주세요.");
 			}
