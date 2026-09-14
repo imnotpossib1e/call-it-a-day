@@ -270,11 +270,11 @@ public class MenuView {
 			StageController.selectStage(userId);
 			String choice = sc.nextLine();
 			switch (choice) {
-			case "Y":
+			case "Y", "y", "ㅛ":
 				battleView(userId);
 				validInput = false;
 				break;
-			case "N":
+			case "N", "n", "ㅜ":
 				System.out.println("ℹ 메인 메뉴로 돌아갑니다.");
 				validInput = false;
 				break;
@@ -307,7 +307,7 @@ public class MenuView {
             System.out.print("구매할 아이템 번호 > ");
             String input = sc.nextLine();
 
-            if (input.equalsIgnoreCase("Q")) {
+            if (input.equalsIgnoreCase("Q") || input.equalsIgnoreCase("q") || input.equalsIgnoreCase("ㅂ")) {
                 System.out.println("메인 메뉴로 돌아갑니다.");
                 break;
             }

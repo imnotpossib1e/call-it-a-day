@@ -127,16 +127,20 @@ public class InventoryServiceImpl implements InventoryService{
 	@Override
 	public String unequipStatement(int userId, String itemName) throws NotFoundException, SQLException {
 		CharacterInfoDto character = loadCharInvenInfo(userId);
-		int result = 0;
-		if(character.getEquiplist().size()>0) {
-			for(ItemDto id : character.getEquiplist()){
-				if(itemName.equals(id.getItemName())) result = invenD.unequipItem(userId, id.getItemId());
+		if(!itemName.isEmpty()) {
+			int result = 0;
+			if(character.getEquiplist().size()>0) {
+				for(ItemDto id : character.getEquiplist()){
+					if(itemName.equals(id.getItemName())) result = invenD.unequipItem(userId, id.getItemId());
 				}
-			if(result == 0) throw new NotFoundException("입력하신 아이템을 장착하고 있지 않습니다.");
+				if(result == 0) throw new NotFoundException("입력하신 아이템을 장착하고 있지 않습니다.");
 			} else throw new NotFoundException("장착 중인 아이템이 없습니다."); // 장착한 아이템이 없다면
-		return itemName + " 장비를 헤제합니다.";
-	}
+			return itemName + " 장비를 헤제합니다.";
+		} else {
+			throw new NotFoundException("입력하신 아이템을 장착하고 있지 않습니다.");
+		}
 
+	}
 	/**
 	 * 소지한 아이템 목록 중 입력받은 아이템 타입에 해당하는 아이템들만 조회
 	 * */
