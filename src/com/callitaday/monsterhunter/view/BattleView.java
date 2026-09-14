@@ -2,6 +2,9 @@ package com.callitaday.monsterhunter.view;
 
 import com.callitaday.monsterhunter.controller.InventoryController;
 
+import com.callitaday.monsterhunter.dto.StageDto;
+import com.callitaday.monsterhunter.dto.UserDto;
+import com.callitaday.monsterhunter.session.SessionSet;
 import java.io.IOError;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +18,7 @@ import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.util.SoundManager;
 
 public class BattleView {
+    static SessionSet ss = SessionSet.getInstance();
     /**
      * 전투 진입
      */
@@ -36,7 +40,8 @@ public class BattleView {
         if(user == null) return;
 
         int nowStage = user.getStage_id();
-        EndView.printMessage("[현재 스테이지: " + nowStage + "]");
+		EndView.printMessage("");
+        EndView.printMessage("[스테이지: " + nowStage + "]");
         printEnemy(nowStage); // stage별 적 이미지 출력
         SoundManager.playStageBgm(nowStage); // stage bgm
     	
@@ -48,18 +53,23 @@ public class BattleView {
     	    	case "1":BattleView.attackView(userId);break;
     	    	case "2":EndView.defendView(userId);break;
     	    	case "3":
-                    InventoryController.getInventoryByItemTypeInfo(userId);
-                    System.out.print("사용할 포션 번호 > ");
-                    try {
-                    	int itemId = Integer.parseInt(sc.nextLine());
-                    	BattleController.useItem(userId, itemId);
-                    } catch (NumberFormatException e) {
-                    	System.out.println("아이템 번호를 입력하시오/");
+                    if(!InventoryController.getInventoryByItemTypeInfo(userId)){
+                        break;
                     }
-                    int itemId = Integer.parseInt(sc.nextLine());
-                    BattleController.useItem(userId, itemId);
+                    boolean validInput = true;
+                    while(validInput){
+                        InventoryController.getInventoryByItemTypeInfo(userId);
+                        System.out.print("포션 번호 > ");
+                        String itemId = sc.nextLine();
+
+                    	if(BattleController.useItem(userId, itemId)){
+                            validInput=false;
+                        }else {
+                            InventoryController.getInventoryByItemTypeInfo(userId);
+                        }
+                    }
                     break;
-    	    	default: System.out.println("메뉴를 다시 선택해주세요.");
+    	    	default: System.out.println("메뉴를 다시 선택해 주세요.");
         	}
 
     	}
@@ -70,37 +80,40 @@ public class BattleView {
      */
     public static boolean doBattle(CharacterInfoDto user, Scanner sc){
 
-            boolean defeated = user.getHp() <= 0; // 패배 여부 확인
-            boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0; // 승리 여부 확인
+        boolean defeated = user.getHp() <= 0; // 패배 여부 확인
+        boolean victory = user.getHp() > 0 && user.getStageDto().getEnemyHp() <= 0; // 승리 여부 확인
 
-            /**
-             * 전투 결과 저장
-             */
-            if (defeated || victory) {
-                System.out.println(victory ? "승리했습니다!" : "패배했습니다.");
-
-                saveBattleAndExit(user.getUserId(), sc);
-                return true;
+        /**
+         * 전투 결과 저장
+         */
+        if (defeated || victory) {
+            EndView.printNotice(victory ?  "전투에 승리했습니다!" : "전투에 패배했습니다.");
+            if(victory){
+                EndView.printVictory(user);
             }
-    		
-    		System.out.println("-------------------------------------------");
-    		System.out.println("몬스터 HP: " + user.getStageDto().getEnemyHp());
-    		System.out.println("-------------------------------------------");
-    		System.out.println();
-    		System.out.println();
-    		System.out.println();
-    		System.out.println("-------------------------------------------");
-    		System.out.println ("내 HP: " + user.getHp()				
-                    + "   내 MP: " + user.getMp()
-                    );
-    		System.out.println("-------------------------------------------");
-    		System.out.println();
-        	System.out.println("-------------------------------------------");
-        	System.out.print("1. 공격하기\n");
-        	System.out.print("2. 방어하기\n");
-        	System.out.print("3. 아이템 사용\n");
-        	System.out.println("-------------------------------------------");
-        	return false;
+            saveBattleAndExit(user.getUserId(), sc);
+            return true;
+        }
+
+        System.out.println("╔════════════════════════════════════════╗");
+        System.out.println("║                                        ║ ");
+        System.out.println("║"+center("몬스터", 40) +"║");
+        System.out.println("║"+center("HP " + user.getStageDto().getEnemyHp(), 40) +"║");
+        System.out.println("║                                        ║ ");
+        System.out.println("║"+center("⚔ "+ss.getList().getId(), 40)+"║");
+        System.out.println("║" + center("HP " + user.getHp() + "    MP " + user.getMp(), 40)+"║");
+        System.out.println("║                                        ║ ");
+        System.out.println("╚════════════════════════════════════════╝");
+
+        System.out.println("╔════════════════════════════════════════╗");
+        System.out.println("║" + center("⚔ 행동 선택", 40) +"║");
+        System.out.println("╠════════════════════════════════════════╣");
+        System.out.println("║"+center("1. 공격하기", 40)+"║");
+        System.out.println("║"+center("2. 방어하기", 40)+"║");
+        System.out.println("║"+center("3. 아이템 사용", 40)+"║");
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.print("⚔ 선택 > " );
+        return false;
     }
     
     /**
@@ -110,15 +123,11 @@ public class BattleView {
 
         while (true) {
             if (BattleController.save(userId)) {
-                System.out.println("전투 결과를 저장했습니다.");
+                EndView.printNotice("전투 결과를 저장했습니다.");
                 return;
             }
 
-            System.out.println(
-                    "저장을 완료하지 못했습니다. "
-                    + "Enter를 누르면 저장을 재시도합니다."
-            );
-
+            EndView.printNotice2Line("⚠ 저장을 완료하지 못했습니다.", "Enter를 누르면 저장을 재시도합니다.");
             sc.nextLine();
         }
     }
@@ -171,5 +180,48 @@ public class BattleView {
     		System.out.println("적의 이미지를 불러오지 못했습니다.");
     	}
     	
+    }
+
+    public static void displayMyAttack(int damage) {
+        System.out.println("⚔ 공격합니다!");
+        System.out.println("  → " + "몬스터 HP -" + damage);
+    }
+
+    public static void displayEnemyAttack(int damage) {
+        System.out.println("⚡ 몬스터의 공격!");
+        System.out.println("  → " + "내 HP -" + damage);
+    }
+
+    public static void displayMyDefenceSuccess(int damage) {
+        System.out.println("█ 방어합니다 !");
+        System.out.println("  데미지 반사 → " + "몬스터 HP -" + damage);
+    }
+    public static void displayMyDefenceFail(int damage) {
+        System.out.println("█ 방어합니다!");
+        System.out.println("  방어 실패 → "   + " HP -" + damage);
+    }
+
+
+
+    // 중앙 정렬 함수
+    public static String center(String text, int width) {
+        int visibleLength = getVisibleLength(text);
+        int padding = (width - visibleLength) / 2;
+        return " ".repeat(padding) + text +
+            " ".repeat(width - padding - visibleLength);
+    }
+
+
+    public static int getVisibleLength(String text) {
+        String cleaned = text.replaceAll("\u001B\\[[0-9;]*m", "");
+        int length = 0;
+        for (char c : cleaned.toCharArray()) {
+            if (c >= 0xAC00 && c <= 0xD7A3) {
+                length += 2;  // 한글은 2칸
+            } else {
+                length += 1;  // 영어는 1칸
+            }
+        }
+        return length;
     }
 }

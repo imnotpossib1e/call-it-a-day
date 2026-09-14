@@ -41,11 +41,13 @@ public class InventoryController {
     /**
 	 * 소지한 아이템 목록 중 포션 아이템만 조회
 	 * */
-    public static void getInventoryByItemTypeInfo(int user_id){
+    public static boolean getInventoryByItemTypeInfo(int user_id){
         try{
         	InvenView.printPotionInfo(service.loadInventoryByItemTypeInfo(user_id, "포션"));
+            return true;
         }catch (NotFoundException | SQLException e){
             FailView.errorMessage(e.getMessage());
+            return false;
         }
     }
     

@@ -1,6 +1,7 @@
 package com.callitaday.monsterhunter.view;
 
 import com.callitaday.monsterhunter.controller.BattleController;
+import com.callitaday.monsterhunter.dto.CharacterInfoDto;
 import com.callitaday.monsterhunter.dto.ItemDto;
 import com.callitaday.monsterhunter.dto.StageDto;
 import java.util.List;
@@ -9,7 +10,34 @@ public class EndView {
     public static void printMessage(String message) {
 		    System.out.println(message);
     }
-  
+
+    public static void printNotice(String message){
+        System.out.println();
+        System.out.println("╔════════════════════════════════════════╗");
+        System.out.println("║"+BattleView.center(message, 40)+"║"  );
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println();
+    }
+
+    public static void printNotice2Line(String message, String message2){
+        System.out.println();
+        System.out.println("╔════════════════════════════════════════╗");
+        System.out.println("║"+BattleView.center(message, 40)+"║"  );
+        System.out.println("║"+BattleView.center(message2, 40)+"║"  );
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println();
+    }
+
+    public static void printVictory(CharacterInfoDto characterInfoDto){
+        System.out.println();
+        System.out.println("╔════════════════════════════════════════╗");
+        System.out.println("║" + BattleView.center("⚔ 승리 보상 목록", 40) +"║");
+        System.out.println("╠════════════════════════════════════════╣");
+        System.out.println("║"+BattleView.center(characterInfoDto.getStageDto().getRewardCoin() + "Coin", 40)+"║");
+        System.out.println("║"+BattleView.center(characterInfoDto.getStageDto().getItemdto().getItemName(), 40)+"║");
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println();
+    }
 
     /**
      * 아이템 전체 출력
@@ -56,7 +84,8 @@ public class EndView {
                 if(item.getItemType().equals("쿠폰")){
                     priceLine.append(padRight("증표 " + item.getItemPrice() + "개", colWidth));
                 }else{
-                    priceLine.append(padRight(item.getItemPrice() + " COIN", colWidth));
+                    String formattedPrice = String.format("%,d COIN", item.getItemPrice());
+                    priceLine.append(padRight(formattedPrice, colWidth));
                 }
                 if(item.getItemType().equals("무기") || item.getItemType().equals("방어구")){
                     String explanation = item.getItemExplanation();
@@ -115,14 +144,17 @@ public class EndView {
      */
     public static void printStageSelect(List<StageDto> stageList,  int num){
         for(int i = 0; i<stageList.size(); i++){
-            System.out.print("[STAGE " + stageList.get(i).getStageId() + "]");
-            if(i<num-1){
-                System.out.print(" - CLEAR");
+            if (i < num - 1) {
+                System.out.print("\u001B[1m\u001B[32m[STAGE " + stageList.get(i).getStageId() + "] ✓ CLEAR" + "\u001B[0m" );
+                System.out.print("\t\t");
+            }else{
+                System.out.print("[STAGE " + stageList.get(i).getStageId() + "]");
+                System.out.print("\t\t\t");
             }
-            System.out.print("\t\t");
         }
         System.out.println();
-        System.out.print("[STAGE " + num + "] 입장 하시겠습니까? [Y / N] > ");
+        System.out.println();
+        System.out.print("[STAGE " + num + "] 입장하시겠습니까? [Y / N] > ");
     }
 
 
@@ -133,12 +165,6 @@ public class EndView {
         BattleController.defend(userId);
     }
 
-    /**
-     * 공격 성공/실패 여부 출력
-     */
-    public static void attackResult(String message){
-        System.out.println(message);
-    }
 
 }
 

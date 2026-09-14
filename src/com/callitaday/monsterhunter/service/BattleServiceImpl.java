@@ -92,11 +92,7 @@ public class BattleServiceImpl implements BattleService{
 		if (user.getHp() <= 0) {
             throw new SQLException("체력이 0이므로 입장할 수 없습니다.");
         }
-		
-		if (stageDao.isStageCleared(user.getUserId(), stageId)) {
-            throw new SQLException("이미 클리어한 스테이지입니다.");
-        }
-		
+
 		StageDto enemy = stageDao.enemyInfoForFight(stageId);
 		
 		if (enemy == null) {
