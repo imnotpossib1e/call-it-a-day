@@ -7,8 +7,9 @@ public class FailView {
     public static void errorMessage(String message){
         System.out.println();
         System.out.println("╔════════════════════════════════════════╗");
-        System.out.println("║"+BattleView.center("⚠ "+message, 40)+"║"  );
+        System.out.println("║"+BattleView.center("⚠ "+message, 80)+"║"  );
         System.out.println("╚════════════════════════════════════════╝");
         System.out.println();
     }
+
 }
